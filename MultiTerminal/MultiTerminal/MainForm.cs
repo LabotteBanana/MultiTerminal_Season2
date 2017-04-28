@@ -1211,7 +1211,7 @@ namespace MultiTerminal
         #region
         private void PortListGrid_CellValueChanged(object sender, DataGridViewCellEventArgs e) // 그리드뷰 체크박스 클릭 이벤트
         {
-            if (e.ColumnIndex == 3 && e.RowIndex != -1) // 열이 3번째이고, 행이 1개 이상 있을때 조건 발생!
+            if (e.ColumnIndex == 4 && e.RowIndex != -1) // 열이 3번째이고, 행이 1개 이상 있을때 조건 발생!
             {
                 if ( gridview[e.RowIndex].TxCheckedState == false)  // 그리드뷰의 현재 클릭 행, 번째의 그리드뷰 클래스안에 체크박스 속성 건드려버리기~
                 { gridview[e.RowIndex].TxCheckedState = true; }
@@ -1219,13 +1219,14 @@ namespace MultiTerminal
                 { gridview[e.RowIndex].TxCheckedState = false; }           
             }
 
-            if (e.ColumnIndex == 4 && e.RowIndex != -1)
+            if (e.ColumnIndex == 5 && e.RowIndex != -1)
             {
                 if (gridview[e.RowIndex].RxCheckedState == false)
                 { gridview[e.RowIndex].RxCheckedState = true; }
                 else
                 { gridview[e.RowIndex].RxCheckedState = false; }
             }
+
         }
 
        
@@ -1238,17 +1239,29 @@ namespace MultiTerminal
 
         private void PortListGrid_CellMouseUp(object sender, DataGridViewCellMouseEventArgs e)
         {
-            if (e.ColumnIndex == 3 && e.RowIndex != -1)
+            if (e.ColumnIndex == 4 && e.RowIndex != -1)
             {
                 PortListGrid.EndEdit();
             }
-            if (e.ColumnIndex == 4 && e.RowIndex != -1)
+            if (e.ColumnIndex == 5 && e.RowIndex != -1)
             {
                 PortListGrid.EndEdit();
             }
         }
 
         #endregion
+
+        // 그리드뷰 버튼 클릭 이벤트 ^0^
+        private void PortListGrid_CellValue(object sender, DataGridViewCellEventArgs e)
+        {
+            var senderGrid = (DataGridView)sender;
+
+            if (senderGrid.Columns[e.ColumnIndex] is DataGridViewButtonColumn &&
+                e.RowIndex >= 0)
+            {
+                MessageBox.Show("3423"); //TODO - Button Clicked - Execute Code Here
+            }
+        }
     }
 
 }

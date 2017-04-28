@@ -10,6 +10,7 @@ namespace MultiTerminal
     class GridView
     {
         private int num;
+        private string type;
         private string portname;
         private string time;
         private bool txCheckedState;
@@ -63,6 +64,19 @@ namespace MultiTerminal
             set
             {
                 time = value;
+            }
+        }
+
+        public string Type
+        {
+            get
+            {
+                return type;
+            }
+
+            set
+            {
+                type = value;
             }
         }
 

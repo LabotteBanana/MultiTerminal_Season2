@@ -31,7 +31,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.metroPanel1 = new MetroFramework.Controls.MetroPanel();
             this.button1 = new System.Windows.Forms.Button();
             this.panel5 = new System.Windows.Forms.Panel();
@@ -214,6 +214,7 @@
             this.PortListGrid.RowTemplate.Height = 23;
             this.PortListGrid.Size = new System.Drawing.Size(701, 108);
             this.PortListGrid.TabIndex = 0;
+            this.PortListGrid.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.PortListGrid_CellValue);
             this.PortListGrid.CellMouseUp += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.PortListGrid_CellMouseUp);
             this.PortListGrid.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.PortListGrid_CellValueChanged);
             // 
@@ -1326,9 +1327,9 @@
             // DisCon
             // 
             this.DisCon.DataPropertyName = "Discon";
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle1.NullValue = "dd";
-            this.DisCon.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle3.NullValue = "dd";
+            this.DisCon.DefaultCellStyle = dataGridViewCellStyle3;
             this.DisCon.HeaderText = "X";
             this.DisCon.Name = "DisCon";
             this.DisCon.Resizable = System.Windows.Forms.DataGridViewTriState.True;
