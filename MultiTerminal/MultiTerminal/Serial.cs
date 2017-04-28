@@ -17,7 +17,7 @@ namespace MultiTerminal
 
         public Serial()
         {
-          
+
         }
 
         public bool IsOpen()
@@ -149,12 +149,6 @@ namespace MultiTerminal
                 { Global.globalVar = strRecData; }
                 else
                 { Global.globalVar = Encoding.UTF8.GetString(buff); }
-                for (int iTemp = 0; iTemp < intRecSize; iTemp++)
-                {
-                    Console.Write(Convert.ToString(buff[iTemp], 2));
-                    
-                }
-            Console.WriteLine();
             }
 
         }

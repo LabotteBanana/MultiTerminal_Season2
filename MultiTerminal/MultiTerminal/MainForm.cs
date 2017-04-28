@@ -41,19 +41,16 @@ namespace MultiTerminal
         public System.Timers.Timer aftertimer = null;
         private DateTime nowTime;
 
-        private List<string> connetName = new List<string>();
-
         public MainForm()
         {
-
             InitializeComponent();
         }
 
         private void MainForm_Load(object sender, EventArgs e)  // 폼 열렸을 때
         {
             this.Style = MetroFramework.MetroColorStyle.Yellow;
-
             UI_Init();
+            Serial_Combo_Init();
         }
 
         #region Timer(타임스탬프)
@@ -93,7 +90,7 @@ namespace MultiTerminal
                     {
                     */
                         serial[0].SerialSend(this.SendBox1.Text);
-                    
+                        ReceiveWindowBox.Text += "송신 : " + GetTimer() + SendBox1.Text + "\n";
                     /*
                     else if (Flag_AEAS[0] == 1)
                     {
@@ -123,7 +120,9 @@ namespace MultiTerminal
                                 this.Invoke(new Action(() =>
                                 {
                                     tserv.SendMsg(SendBox1.Text);
-                                    ReceiveWindowBox.Text += "송신 : " + GetTimer() + SendBox1.Text + "\n";
+                                    ReceiveWindowBox.AppendText("송신 : " + GetTimer() + SendBox1.Text + "\n");
+                                    ReceiveWindowBox.SelectionStart = ReceiveWindowBox.Text.Length;
+                                    ReceiveWindowBox.ScrollToCaret();
                                 }));
                             }));
                             SendThread.Start();
@@ -140,7 +139,9 @@ namespace MultiTerminal
                                 {
                                     tcla.SendMsg(SendBox1.Text);
 
-                                    ReceiveWindowBox.Text += "송신 : " + GetTimer() + SendBox1.Text + "\n";
+                                    ReceiveWindowBox.AppendText("송신 : " + GetTimer() + SendBox1.Text + "\n");
+                                    this.ReceiveWindowBox.SelectionStart = ReceiveWindowBox.Text.Length;
+                                    this.ReceiveWindowBox.ScrollToCaret();
                                 }));
                             }));
                             SendThread.Start();
@@ -166,7 +167,9 @@ namespace MultiTerminal
                                 {
                                     userv.SendMessage(SendBox1.Text);
 
-                                    ReceiveWindowBox.Text += "송신 : " + GetTimer() + SendBox1.Text + "\n";
+                                    ReceiveWindowBox.AppendText("송신 : " + GetTimer() + SendBox1.Text + "\n");
+                                    this.ReceiveWindowBox.SelectionStart = ReceiveWindowBox.Text.Length;
+                                    this.ReceiveWindowBox.ScrollToCaret();
                                 }));
                             }));
                             SendThread.Start();
@@ -183,7 +186,9 @@ namespace MultiTerminal
                                 {
                                     ucla.SendMessage(SendBox1.Text);
                                    
-                                    ReceiveWindowBox.Text += "송신 : " + GetTimer() + SendBox1.Text + "\n";
+                                    ReceiveWindowBox.AppendText("송신 : " + GetTimer() + SendBox1.Text + "\n");
+                                    this.ReceiveWindowBox.SelectionStart = ReceiveWindowBox.Text.Length;
+                                    this.ReceiveWindowBox.ScrollToCaret();
                                 }));
                             }));
                             SendThread.Start();
@@ -303,7 +308,7 @@ namespace MultiTerminal
                        
                           break;
                     }
-                case 2:
+                case 2://시리얼
                     {
                         connectType = 2;
                         SerialPanel.Location = Loc;
@@ -311,7 +316,7 @@ namespace MultiTerminal
 
                         TcpPanel.Visible = false;
                         UdpPanel.Visible = false;
-                        Serial_Combo_Init();
+                        //Serial_Combo_Init();
                         if (tserv != null)
                             tserv.ServerStop();
                         if (tcla != null)
@@ -324,7 +329,7 @@ namespace MultiTerminal
 
                     }
                     break;
-                case 5:
+                case 5://tcp
                     {
                         connectType = 5;
                         TcpPanel.Location = Loc;
@@ -338,7 +343,7 @@ namespace MultiTerminal
 
                     }
                     break;
-                case 6:
+                case 6://udp
                     {
                         connectType = 6;
                         UdpPanel.Location = Loc;
@@ -370,22 +375,10 @@ namespace MultiTerminal
         }
 
         #region 시리얼 설정 부분~!
-        // 시리얼 설정 부분 선택지    
-        private void Serial_Combo_Init()
+        //시리얼 포트 초기화
+        private void serial_port_Init()
         {
-
-            // 시리얼 옵션 콤보박스 초기화
-
-            this.Serial_Combo_Port.DropDownStyle = ComboBoxStyle.DropDownList;
-            this.Serial_Combo_Baud.DropDownStyle = ComboBoxStyle.DropDownList;
-            this.Serial_Combo_Data.DropDownStyle = ComboBoxStyle.DropDownList;
-            this.Serial_Combo_FlowCon.DropDownStyle = ComboBoxStyle.DropDownList;
-            this.Serial_Combo_Parity.DropDownStyle = ComboBoxStyle.DropDownList;
-            this.Serial_Combo_StopBit.DropDownStyle = ComboBoxStyle.DropDownList;
-
-           
-            // 이 부분에서 포트 없는 상태에서 불러올때마다 에러생기는 듯. 조건식 필요~!
-            List<string> data = new List<string>();     
+            List<string> data = new List<string>();
             foreach (string s in SerialPort.GetPortNames())
             {
                 data.Add(s);
@@ -431,12 +424,28 @@ namespace MultiTerminal
             }
             if (Serial_Combo_Port.Items.Count != 0)
                 Serial_Combo_Port.SelectedIndex = 0;
+        }
 
-            //로그 분석할거양
-            for (int i = 0; i < Serial_Combo_Port.Items.Count; i++)
-            {
-                connetName.Add(Serial_Combo_Port.Items[i].ToString());
-            }
+        //시리얼 새로고침 버튼
+        private void serial_Refresh_Click(object sender, EventArgs e)
+        {
+            Serial_Combo_Port.Items.Clear();
+            serial_port_Init();
+        }
+
+        // 시리얼 설정 부분 선택지    
+        private void Serial_Combo_Init()
+        {
+            // 시리얼 옵션 콤보박스 초기화
+
+            this.Serial_Combo_Port.DropDownStyle = ComboBoxStyle.DropDownList;
+            this.Serial_Combo_Baud.DropDownStyle = ComboBoxStyle.DropDownList;
+            this.Serial_Combo_Data.DropDownStyle = ComboBoxStyle.DropDownList;
+            this.Serial_Combo_FlowCon.DropDownStyle = ComboBoxStyle.DropDownList;
+            this.Serial_Combo_Parity.DropDownStyle = ComboBoxStyle.DropDownList;
+            this.Serial_Combo_StopBit.DropDownStyle = ComboBoxStyle.DropDownList;
+
+            serial_port_Init();
 
             List<string> data2 = new List<string>();
             string[] Baud = { "4800", "9600", "14400", "19200" };
@@ -556,15 +565,16 @@ namespace MultiTerminal
         // 수신 텍스트박스 업데이트 이벤트
         public void UpdateWindowText(object sender, SerialDataReceivedEventArgs e)
         {
-            Thread thread = new Thread(new ThreadStart(delegate ()
-            {
-                this.Invoke(new Action(() =>
-                {
-                    this.ReceiveWindowBox.Text = Global.globalVar;
+            //Thread thread = new Thread(new ThreadStart(delegate ()
+            //{
+            //    this.Invoke(new Action(() =>
+            //    {
+                    this.ReceiveWindowBox.AppendText("수신["+"Name"+"] : " + GetTimer() + Global.globalVar + "\n");
+                    this.ReceiveWindowBox.SelectionStart = ReceiveWindowBox.Text.Length;
                     this.ReceiveWindowBox.ScrollToCaret();
-                }));
-            }));
-            thread.Start();
+            //    }));
+            //}));
+            //thread.Start();
         }
 
         #endregion
@@ -717,12 +727,16 @@ namespace MultiTerminal
                     if (isServ == true && tserv.client.Connected == true)
                     {
                         tserv.SendMsg(SendBox1.Text);
-                        ReceiveWindowBox.Text += "송신 : " + GetTimer() + SendBox1.Text + "\n";
+                        ReceiveWindowBox.AppendText("송신 : " + GetTimer() + SendBox1.Text + "\n");
+                        ReceiveWindowBox.SelectionStart = ReceiveWindowBox.Text.Length;
+                        ReceiveWindowBox.ScrollToCaret();
                     }
                     if (isServ == false && tcla.client.Connected == true)
                     {
                         tcla.SendMsg(SendBox1.Text);
-                        ReceiveWindowBox.Text += "송신 : " + GetTimer() + SendBox1.Text + "\n";
+                        ReceiveWindowBox.AppendText("송신 : " + GetTimer() + SendBox1.Text + "\n");
+                        ReceiveWindowBox.SelectionStart = ReceiveWindowBox.Text.Length;
+                        ReceiveWindowBox.ScrollToCaret();
                     }
                 }
                 if (connectType == 6)
@@ -734,8 +748,10 @@ namespace MultiTerminal
                               this.Invoke(new Action(() =>
                               {
                                   userv.SendMessage(SendBox1.Text);
-
-                                  ReceiveWindowBox.Text += "송신 : " + GetTimer() + SendBox1.Text + "\n";
+                                  
+                                  ReceiveWindowBox.AppendText("송신 : " + GetTimer() + SendBox1.Text + "\n");
+                                  ReceiveWindowBox.SelectionStart = ReceiveWindowBox.Text.Length;
+                                  ReceiveWindowBox.ScrollToCaret();
                               }));
                           }));
                         SendThread.Start();
@@ -747,7 +763,9 @@ namespace MultiTerminal
                              this.Invoke(new Action(() =>
                              {
                                  ucla.SendMessage(SendBox1.Text);
-                                 ReceiveWindowBox.Text += "송신 : " + GetTimer() + SendBox1.Text + "\n";
+                                 ReceiveWindowBox.AppendText("송신 : " + GetTimer() + SendBox1.Text + "\n");
+                                 ReceiveWindowBox.SelectionStart = ReceiveWindowBox.Text.Length;
+                                 ReceiveWindowBox.ScrollToCaret();
                              }));
                          }));
                         SendThread.Start();
@@ -878,6 +896,9 @@ namespace MultiTerminal
                 if ( arr[i] == 1)   // 체크박스 송신 체크되있으면 전송하긔
                 {
                     serial[i].SerialSend(msg);
+                    ReceiveWindowBox.AppendText("송신 : " + GetTimer() + msg + "\n");
+                    this.ReceiveWindowBox.SelectionStart = ReceiveWindowBox.Text.Length;
+                    this.ReceiveWindowBox.ScrollToCaret();
                 }
             }
             

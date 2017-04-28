@@ -135,10 +135,10 @@
             this.SendBox1 = new System.Windows.Forms.RichTextBox();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.asdfasdfToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.ddfdfToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.로그저장ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.로그불러오기ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ddfdfToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.metroPanel1.SuspendLayout();
             this.panel5.SuspendLayout();
             this.panel4.SuspendLayout();
@@ -177,6 +177,7 @@
             // 
             // panel5
             // 
+            this.panel5.Controls.Add(this.panel1);
             this.panel5.Controls.Add(this.listView1);
             this.panel5.Location = new System.Drawing.Point(5, 386);
             this.panel5.Name = "panel5";
@@ -239,6 +240,7 @@
             this.Serial_Btn_F5.TabIndex = 15;
             this.Serial_Btn_F5.Text = "새로고침";
             this.Serial_Btn_F5.UseVisualStyleBackColor = true;
+            this.Serial_Btn_F5.Click += new System.EventHandler(this.serial_Refresh_Click);
             // 
             // Serial_Combo_FlowCon
             // 
@@ -438,7 +440,6 @@
             // 
             // LogPanel
             // 
-            this.LogPanel.Controls.Add(this.panel1);
             this.LogPanel.Controls.Add(this.metroLabel7);
             this.LogPanel.Controls.Add(this.ReceiveWindowBox);
             this.LogPanel.HorizontalScrollbarBarColor = true;
@@ -480,7 +481,7 @@
             this.panel1.Controls.Add(this.Sport_label2);
             this.panel1.Controls.Add(this.Sport_label1);
             this.panel1.Controls.Add(this.label12);
-            this.panel1.Location = new System.Drawing.Point(376, 126);
+            this.panel1.Location = new System.Drawing.Point(0, 6);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(159, 183);
             this.panel1.TabIndex = 22;
@@ -1126,7 +1127,6 @@
             this.Btn_Send3.TabIndex = 27;
             this.Btn_Send3.Text = "송신";
             this.Btn_Send3.UseVisualStyleBackColor = true;
-            //this.Btn_Send3.Click += new System.EventHandler(this.Btn_Send3_Click);
             // 
             // SendBox3
             // 
@@ -1150,7 +1150,6 @@
             this.Btn_Send4.TabIndex = 25;
             this.Btn_Send4.Text = "송신";
             this.Btn_Send4.UseVisualStyleBackColor = true;
-            //this.Btn_Send4.Click += new System.EventHandler(this.Btn_Send4_Click);
             // 
             // Btn_Send2
             // 
@@ -1160,7 +1159,6 @@
             this.Btn_Send2.TabIndex = 24;
             this.Btn_Send2.Text = "송신";
             this.Btn_Send2.UseVisualStyleBackColor = true;
-            //this.Btn_Send2.Click += new System.EventHandler(this.Btn_Send2_Click);
             // 
             // SendBox4
             // 
@@ -1243,6 +1241,20 @@
             this.asdfasdfToolStripMenuItem.Size = new System.Drawing.Size(43, 19);
             this.asdfasdfToolStripMenuItem.Text = "메인";
             // 
+            // 로그저장ToolStripMenuItem
+            // 
+            this.로그저장ToolStripMenuItem.Name = "로그저장ToolStripMenuItem";
+            this.로그저장ToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
+            this.로그저장ToolStripMenuItem.Text = "로그 저장";
+            this.로그저장ToolStripMenuItem.Click += new System.EventHandler(this.saveLog_Click);
+            // 
+            // 로그불러오기ToolStripMenuItem
+            // 
+            this.로그불러오기ToolStripMenuItem.Name = "로그불러오기ToolStripMenuItem";
+            this.로그불러오기ToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
+            this.로그불러오기ToolStripMenuItem.Text = "로그 불러오기";
+            this.로그불러오기ToolStripMenuItem.Click += new System.EventHandler(this.openLog_Click);
+            // 
             // ddfdfToolStripMenuItem
             // 
             this.ddfdfToolStripMenuItem.Name = "ddfdfToolStripMenuItem";
@@ -1253,20 +1265,6 @@
             // 
             this.contextMenuStrip1.Name = "contextMenuStrip1";
             this.contextMenuStrip1.Size = new System.Drawing.Size(61, 4);
-            // 
-            // 로그저장ToolStripMenuItem
-            // 
-            this.로그저장ToolStripMenuItem.Name = "로그저장ToolStripMenuItem";
-            this.로그저장ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.로그저장ToolStripMenuItem.Text = "로그 저장";
-            this.로그저장ToolStripMenuItem.Click += new System.EventHandler(this.saveLog_Click);
-            // 
-            // 로그불러오기ToolStripMenuItem
-            // 
-            this.로그불러오기ToolStripMenuItem.Name = "로그불러오기ToolStripMenuItem";
-            this.로그불러오기ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.로그불러오기ToolStripMenuItem.Text = "로그 불러오기";
-            this.로그불러오기ToolStripMenuItem.Click += new System.EventHandler(this.openLog_Click);
             // 
             // MainForm
             // 
