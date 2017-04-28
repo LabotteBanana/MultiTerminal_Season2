@@ -22,6 +22,7 @@ namespace MultiTerminal
         public udpClient ucla = new udpClient();
         public static Thread macroThread;
         public static Thread SendThread;
+        public static Thread AcceptThread;
         public static Thread RecvThread;
         public delegate void TRecvCallBack();
 
@@ -80,7 +81,53 @@ namespace MultiTerminal
                 }
             }
         }
+        private void WaitAccept(Object source,System.Timers.ElapsedEventArgs e)
+        {
+            if (connectType == 5)
+            {
+                try
+                {
+                    if (tserv != null)
+                    {
+                        if (isServ == true)
+                        {
+                            tserv.ServerWait();
+                            //AcceptThread = new Thread(new ThreadStart(delegate ()
+                            //{
+                            //    this.Invoke(new Action(() =>
+                            //    {
 
+                            //    }));
+                            //}));
+                            //AcceptThread.Start();
+
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.ToString());
+                }
+            }
+            if (connectType == 6)
+            {
+                try
+                {
+                    if (userv != null)
+                    {
+                        if (isServ == true)
+                        {
+
+                                //udp서버 대기
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.ToString());
+                }
+            }
+        }
         private void OnMacro(Object soruce, System.Timers.ElapsedEventArgs e)
         {
             if (connectType == 2)
@@ -107,7 +154,7 @@ namespace MultiTerminal
                 }
                 catch (Exception ex)
                 {
-                    //MessageBox.Show(ex.Message);
+                    MessageBox.Show(ex.Message);
                 }
             }
             if (connectType == 5)
@@ -578,6 +625,9 @@ namespace MultiTerminal
                 int port = Int32.Parse(PortNumber.Text);
                 tserv = new Tserv(this, port);
                 tserv.ServerStart();
+                //AcceptThread = new Thread(() => tserv.ServerWait());
+                //AcceptThread.Start();
+
 
             }
             else
@@ -591,17 +641,20 @@ namespace MultiTerminal
         #region TCP서버여부
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
-            if (ServerCheck.Checked == true)
+            if(isServ==false)
             {
                 IpNumber.Enabled = false;
                 isServ = true;
+                mactimer.Elapsed += WaitAccept;
+
 
             }
-            else
+            else if(ServerCheck.Checked == false)
             {
                 IpNumber.Enabled = true;
                 isServ = false;
             }
+            
 
         }
         #endregion
@@ -695,6 +748,7 @@ namespace MultiTerminal
             aftertimer.AutoReset = true;
             timer.Elapsed += OnTimeEvent;
             timer.Elapsed += RecvEvent;
+            timer.Elapsed += WaitAccept;
         }
         #endregion
         #region 보내기 버튼 묶음
@@ -714,7 +768,7 @@ namespace MultiTerminal
                 }
                 if (connectType == 5)
                 {
-                    if (isServ == true && tserv.client.Connected == true)
+                    if (isServ == true && tserv.m_clientCount>0)
                     {
                         tserv.SendMsg(SendBox1.Text);
                         ReceiveWindowBox.Text += "송신 : " + GetTimer() + SendBox1.Text + "\n";
@@ -757,7 +811,7 @@ namespace MultiTerminal
             }
             catch (Exception ex)
             {
-                //MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message);
             }
         }
 
