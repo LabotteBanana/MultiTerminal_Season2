@@ -26,6 +26,10 @@ namespace MultiTerminal
             if (sPort.IsOpen) { return true; }
             else { return false; }
         }
+        public string Portname()
+        {
+            return sPort.PortName;
+        }
         public void SerialOpen(String Port, String Baud, String Data, String parity, String stopbits, String RT, String WT)
         {
 

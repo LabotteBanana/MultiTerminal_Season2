@@ -41,13 +41,18 @@ namespace MultiTerminal
         public System.Timers.Timer aftertimer = null;
         private DateTime nowTime;
 
+        // 다중 연결 리스트 부분
+        private GridView[] gridview = new GridView[9];
+        private int GridNum = 0;
         private List<string> connetName = new List<string>();
+
 
         public MainForm()
         {
-
             InitializeComponent();
+
         }
+
 
         private void MainForm_Load(object sender, EventArgs e)  // 폼 열렸을 때
         {
@@ -519,24 +524,21 @@ namespace MultiTerminal
         private void Serial_Btn_OK_Click(object sender, EventArgs e)    // 시리얼 오~픈~!!
         {
             try
-            {
+            {           
+   
                 serial[Sport_Count] = new Serial();
-                serial[Sport_Count].SerialOpen(SerialOpt[0], SerialOpt[1], SerialOpt[2], SerialOpt[3], SerialOpt[4], "500", "500");
+                serial[Sport_Count].SerialOpen(SerialOpt[0], SerialOpt[1], SerialOpt[2], SerialOpt[3], SerialOpt[4], "500", "500");              
                 serial[Sport_Count].sPort.DataReceived += new SerialDataReceivedEventHandler(UpdateWindowText);
+                
                 if (serial[Sport_Count].IsOpen())
                 {
-                    Sport_Count++;
-                    switch (Sport_Count)
-                    {
-                        case 1: Sport_label1.Visible = true; Serial_select_CHK1.Visible = true; Serial_select_CHK11.Visible = true; break;
-                        case 2: Sport_label2.Visible = true; Serial_select_CHK2.Visible = true; Serial_select_CHK22.Visible = true; break;
-                        case 3: Sport_label3.Visible = true; Serial_select_CHK3.Visible = true; Serial_select_CHK33.Visible = true; break;
-                        case 4: Sport_label4.Visible = true; Serial_select_CHK4.Visible = true; Serial_select_CHK44.Visible = true; break;
-                        case 5: Sport_label5.Visible = true; Serial_select_CHK5.Visible = true; Serial_select_CHK55.Visible = true; break;
-                        case 6: Sport_label6.Visible = true; Serial_select_CHK6.Visible = true; Serial_select_CHK66.Visible = true; break;
-                        case 7: Sport_label7.Visible = true; Serial_select_CHK7.Visible = true; Serial_select_CHK77.Visible = true; break;
-                        case 8: Sport_label8.Visible = true; Serial_select_CHK8.Visible = true; Serial_select_CHK88.Visible = true; break;
-                    }
+                    string portname = Serial_Combo_Port.Items[Serial_Combo_Port.SelectedIndex].ToString();  // 연결에 성공한 시리얼 객체의 포트네임 가져옴
+                    gridview[GridNum] = new GridView(0, portname);  // 그리드뷰 객체에 적용
+                    DrawGrid(gridview[GridNum].Num, gridview[GridNum].Portname, gridview[GridNum].Time); // 그리드뷰 객체를 UI에 적용
+
+                    if (GridNum < 9) { GridNum++; } else { MessageBox.Show("최대 그리드 초과, 연결을 삭제해주세요."); } 
+                    if (Sport_Count < 9) { Sport_Count++; } else { MessageBox.Show("최대 시리얼 연결 초과, 시리얼 연결을 삭제해주세요."); }
+
                 }
                 
             }   
@@ -549,7 +551,11 @@ namespace MultiTerminal
                        
         }
         #endregion
-
+        private void DrawGrid(int num, string name, string time)
+        {
+            string[] row = new string[] { num.ToString(), name, time };
+            PortListGrid.Rows.Add(row);
+        }
 
         #region 리치 텍스트 박스
 
@@ -695,6 +701,13 @@ namespace MultiTerminal
             aftertimer.AutoReset = true;
             timer.Elapsed += OnTimeEvent;
             timer.Elapsed += RecvEvent;
+
+            DataGridViewCellStyle headerstyle = new DataGridViewCellStyle();
+            headerstyle.BackColor = Color.Beige;
+            headerstyle.Font = new Font("verdana", 10, FontStyle.Bold);
+            PortListGrid.ColumnHeadersDefaultCellStyle = headerstyle;
+
+
         }
         #endregion
         #region 보내기 버튼 묶음
@@ -1192,6 +1205,50 @@ namespace MultiTerminal
             }
             return maxLen;
         }
+
+
+        // gridview 체크박스 관련 ^-^
+        #region
+        private void PortListGrid_CellValueChanged(object sender, DataGridViewCellEventArgs e) // 그리드뷰 체크박스 클릭 이벤트
+        {
+            if (e.ColumnIndex == 3 && e.RowIndex != -1) // 열이 3번째이고, 행이 1개 이상 있을때 조건 발생!
+            {
+                if ( gridview[e.RowIndex].TxCheckedState == false)  // 그리드뷰의 현재 클릭 행, 번째의 그리드뷰 클래스안에 체크박스 속성 건드려버리기~
+                { gridview[e.RowIndex].TxCheckedState = true; }
+                else
+                { gridview[e.RowIndex].TxCheckedState = false; }           
+            }
+
+            if (e.ColumnIndex == 4 && e.RowIndex != -1)
+            {
+                if (gridview[e.RowIndex].RxCheckedState == false)
+                { gridview[e.RowIndex].RxCheckedState = true; }
+                else
+                { gridview[e.RowIndex].RxCheckedState = false; }
+            }
+        }
+
+       
+        private void button1_Click(object sender, EventArgs e)
+        {
+            bool fuck1 = gridview[0].TxCheckedState;
+            bool fuck2 = gridview[0].RxCheckedState;
+            MessageBox.Show(fuck1.ToString() +" "+ fuck2.ToString());
+        }
+
+        private void PortListGrid_CellMouseUp(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (e.ColumnIndex == 3 && e.RowIndex != -1)
+            {
+                PortListGrid.EndEdit();
+            }
+            if (e.ColumnIndex == 4 && e.RowIndex != -1)
+            {
+                PortListGrid.EndEdit();
+            }
+        }
+
+        #endregion
     }
 
 }
