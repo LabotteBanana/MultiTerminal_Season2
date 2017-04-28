@@ -279,11 +279,13 @@ namespace MultiTerminal
                 {
                     for (int i = 0; i < m_clientCount; i++)
                     {
-                        if(m_ClientList[i].Connected==false)
-                        {
-                            m_ClientList[i].Disconnect(true);
-                        }
-                        while (m_ClientList[i].Connected)
+                        //if(m_ClientList[i].Connected==false)
+                        //{
+                        //    m_ClientList[i].Disconnect(true);
+                        //}
+                        
+                        if (m_ClientList[i].Connected)
+                            //if 대신 while이였음
                         {
                             string msg = m_sr[i].ReadLine();
 
