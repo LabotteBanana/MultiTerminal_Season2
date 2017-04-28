@@ -8,8 +8,8 @@ using System.Windows.Forms;
 
 namespace MultiTerminal
 {
-
-    public class Serial
+    
+    public class Serial // 시리얼 연결 클래스
     {
         
         public SerialPort sPort = null;
