@@ -283,9 +283,8 @@ namespace MultiTerminal
                         //{
                         //    m_ClientList[i].Disconnect(true);
                         //}
-                        
-                        if (m_ClientList[i].Connected)
-                            //if 대신 while이였음
+
+                        while (m_ClientList[i].Connected)
                         {
                             string msg = m_sr[i].ReadLine();
 
@@ -302,7 +301,6 @@ namespace MultiTerminal
                             }
                         }
                     }
-
                 }
             }
             catch (Exception ex)
