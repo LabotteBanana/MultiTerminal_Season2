@@ -29,6 +29,8 @@ namespace MultiTerminal
             main = Main;
             port = Port;
             ip = IP;
+            ipep = new IPEndPoint(IPAddress.Parse(ip), port);
+
         }
 
         #region Client
@@ -38,7 +40,6 @@ namespace MultiTerminal
             try
             {
 
-                IPEndPoint ipep = new IPEndPoint(IPAddress.Parse(ip), port);
                 client = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 client.Connect(ipep);
                 client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);

@@ -1273,14 +1273,18 @@ namespace MultiTerminal
                 if (isServ == true)
                 {
                     if (tserv != null)
-
+                    {
                         tserv.ServerStop();
+                        tserv = null;
+                    }
                 }
                 else
                 {
                     if (tcla != null)
-
+                    {
                         tcla.DisConnect();
+                        tcla = null;
+                    }
                 }
                 Tcp_Btn_DisCon.Text = "연결";
                 return;
