@@ -50,7 +50,14 @@ namespace MultiTerminal
         {
             this.Style = MetroFramework.MetroColorStyle.Yellow;
             UI_Init();
-            Serial_Combo_Init();
+            Thread thread = new Thread(new ThreadStart(delegate ()
+            {
+                this.Invoke(new Action(() =>
+                {
+                    Serial_Combo_Init();
+                }));
+            }));
+            thread.Start();
         }
 
         #region Timer(타임스탬프)
@@ -89,19 +96,21 @@ namespace MultiTerminal
                     if (Flag_AEAS[0] == 0)
                     {
                     */
-                        serial[0].SerialSend(this.SendBox1.Text);
-                        ReceiveWindowBox.Text += "송신 : " + GetTimer() + SendBox1.Text + "\n";
+                    serial[0].SerialSend(this.SendBox1.Text);
+                    ReceiveWindowBox.AppendText("송신 : " + GetTimer() + SendBox1.Text + "\n");
+                    ReceiveWindowBox.SelectionStart = ReceiveWindowBox.Text.Length;
+                    ReceiveWindowBox.ScrollToCaret();
                     /*
-                    else if (Flag_AEAS[0] == 1)
-                    {
-                        serial.SerialSend(SendBox1.Text.Insert(SendBox1.Text.Length, "\n"));
-                    }
-                    else
-                    {
-                        serial.SerialSend(SendBox1.Text.Insert(SendBox1.Text.Length, " "));
-                    }
-                    */
+                else if (Flag_AEAS[0] == 1)
+                {
+                    serial.SerialSend(SendBox1.Text.Insert(SendBox1.Text.Length, "\n"));
                 }
+                else
+                {
+                    serial.SerialSend(SendBox1.Text.Insert(SendBox1.Text.Length, " "));
+                }
+                */
+            }
                 catch (Exception ex)
                 {
                     //MessageBox.Show(ex.Message);
@@ -1213,6 +1222,11 @@ namespace MultiTerminal
             }
             return maxLen;
         }
+        //분석 폼 열기
+        private void freq_Click(object obj, EventArgs e)
+        {
+            analysisForm aF = new analysisForm(ReceiveWindowBox);
+            aF.Show();
+        }
     }
-
 }

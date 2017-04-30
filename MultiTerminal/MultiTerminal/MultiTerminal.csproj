@@ -78,6 +78,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="analysisForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="analysisForm.Designer.cs">
+      <DependentUpon>analysisForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="frequency.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
@@ -93,6 +99,9 @@
     <Compile Include="udpServer.cs" />
     <Compile Include="Tserv.cs" />
     <Compile Include="UIThread.cs" />
+    <EmbeddedResource Include="analysisForm.resx">
+      <DependentUpon>analysisForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
