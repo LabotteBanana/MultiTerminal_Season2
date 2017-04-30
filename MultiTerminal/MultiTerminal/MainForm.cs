@@ -14,8 +14,11 @@ namespace MultiTerminal
 {
     public partial class MainForm : MetroFramework.Forms.MetroForm
     {
+        // 연결 타입 정의 ^0^/
+        enum TYPE { SERIAL=0, TCP, UDP };
+
         public bool isServ = false;
-        public int connectType = 1;
+        private TYPE connectType;
         public Tserv tserv = null;
         public Tserv tcla = null;
         public udpServer userv = new udpServer();
@@ -28,6 +31,7 @@ namespace MultiTerminal
         // 체크박스 부분
         static public int Chk_Hexa_Flag = 0;
 
+        // 시리얼 부분.
         public Serial[] serial = new Serial[9];
         public int Sport_Count = 0;
         public int[] Serial_Send_Arr = new int[8];       // 시리얼 선택적 송신 체크 옵션
@@ -42,9 +46,14 @@ namespace MultiTerminal
         private DateTime nowTime;
 
         // 다중 연결 리스트 부분
-        private GridView[] gridview = new GridView[9];
-        private int GridNum = 0;
+        private GridView[] gridview = new GridView[20];
+        private int Grid_Count = 0;
         private List<string> connetName = new List<string>();
+
+        //리스트를 이용한 다중연결 관리
+        private List<Serial> SerialList = new List<Serial>();
+        private List<GridView> GridList = new List<GridView>();
+        
 
 
         public MainForm()
@@ -57,7 +66,6 @@ namespace MultiTerminal
         private void MainForm_Load(object sender, EventArgs e)  // 폼 열렸을 때
         {
             this.Style = MetroFramework.MetroColorStyle.Yellow;
-
             UI_Init();
         }
 
@@ -69,7 +77,7 @@ namespace MultiTerminal
 
         private void RecvEvent(Object source, System.Timers.ElapsedEventArgs e)
         {
-            if (connectType == 6)
+            if (connectType == TYPE.UDP)
             {
                 if (userv != null)
                 {
@@ -88,7 +96,7 @@ namespace MultiTerminal
 
         private void OnMacro(Object soruce, System.Timers.ElapsedEventArgs e)
         {
-            if (connectType == 2)
+            if (connectType == TYPE.SERIAL)
             {
                 ///여기에 시리얼 센드부분
                 try
@@ -115,7 +123,7 @@ namespace MultiTerminal
                     //MessageBox.Show(ex.Message);
                 }
             }
-            if (connectType == 5)
+            if (connectType == TYPE.TCP)
             {
                 try
                 {
@@ -157,7 +165,7 @@ namespace MultiTerminal
                     MessageBox.Show(ex.ToString());
                 }
             }
-            if (connectType == 6)
+            if (connectType == TYPE.UDP)
             {
                 try
                 {
@@ -245,7 +253,7 @@ namespace MultiTerminal
         // 연결 방법 선택 1 ~ 6 및 박스 색깔 변경 //
         private void UART_Tile_Click(object sender, EventArgs e)
         {
-            OptionSelect(2);
+            OptionSelect(0);
             this.UART_Tile.Style = MetroFramework.MetroColorStyle.Pink; // 클릭시 박스 색 변경
             this.TCP_Tile.Style = MetroFramework.MetroColorStyle.Silver;
             this.UDP_Tile.Style = MetroFramework.MetroColorStyle.Silver;
@@ -253,7 +261,7 @@ namespace MultiTerminal
         }
         private void TCP_Tile_Click(object sender, EventArgs e)
         {
-            OptionSelect(5);
+            OptionSelect(1);
             isServ = false;
             
             this.UART_Tile.Style = MetroFramework.MetroColorStyle.Silver; // 클릭시 박스 색 변경
@@ -265,7 +273,7 @@ namespace MultiTerminal
         }
         private void UDP_Tile_Click(object sender, EventArgs e)
         {
-            OptionSelect(6);
+            OptionSelect(2);
             this.UART_Tile.Style = MetroFramework.MetroColorStyle.Silver; // 클릭시 박스 색 변경
             this.TCP_Tile.Style = MetroFramework.MetroColorStyle.Silver;
             this.UDP_Tile.Style = MetroFramework.MetroColorStyle.Pink;
@@ -279,40 +287,11 @@ namespace MultiTerminal
 
             switch (OptionNumber)
             {
-                case 1:
+                case 0:
                     {
-                        connectType = 1;
-                        this.SerialPanel.Visible = false;
-                        if (tserv != null)
-                       tserv.ServerStop();
-                         if (tcla != null)
-                           tcla.DisConnect();
-                        if (userv != null)
-                           userv.DisConnect();
-                           if (ucla != null)
-                         ucla.DisConnect();
-                   
-                          break;
-                    }
-                case 3:
-                    {
-                        connectType = 3;
-                         if (tserv != null)
-                       tserv.ServerStop();
-                       if (tcla != null)
-                            tcla.DisConnect();
-                       if (userv != null)
-                            userv.DisConnect();
-                       if (ucla != null)
-                            ucla.DisConnect();
-                       
-                          break;
-                    }
-                case 2:
-                    {
-                        connectType = 2;
+                        connectType = TYPE.SERIAL;
                         SerialPanel.Location = Loc;
-                        this.SerialPanel.Visible = true;    // 시리얼 패널 보이기
+                        SerialPanel.Visible = true;    // 시리얼 패널 보이기
 
                         TcpPanel.Visible = false;
                         UdpPanel.Visible = false;
@@ -325,15 +304,14 @@ namespace MultiTerminal
                             userv.DisConnect();
                         if (ucla != null)
                             ucla.DisConnect();
-
-
                     }
                     break;
-                case 5:
+                case 1:
                     {
-                        connectType = 5;
+                        connectType = TYPE.TCP;
                         TcpPanel.Location = Loc;
                         TcpPanel.Visible = true;
+
                         SerialPanel.Visible = false;
                         UdpPanel.Visible = false;
                         if (userv != null)
@@ -343,25 +321,41 @@ namespace MultiTerminal
 
                     }
                     break;
-                case 6:
+                case 2:
                     {
-                        connectType = 6;
+                        connectType = TYPE.UDP;
                         UdpPanel.Location = Loc;
+                        UdpPanel.Visible = true;
+
                         SerialPanel.Visible = false;
                         TcpPanel.Visible = false;
-                        UdpPanel.Visible = true;
                         if (tserv != null)
                             tserv.ServerStop();
                         if (tcla != null)
                             tcla.DisConnect();
                     }
                     break;
+                default:
+                    {
+                        SerialPanel.Visible = false;
+                        TcpPanel.Visible = false;
+                        UdpPanel.Visible = false;
+                        if (tserv != null)
+                            tserv.ServerStop();
+                        if (tcla != null)
+                            tcla.DisConnect();
+                        if (userv != null)
+                            userv.DisConnect();
+                        if (ucla != null)
+                            ucla.DisConnect();
+
+                    }break;
             }
         }
 
         private void DisConBtn_Click(object sender, EventArgs e)    // 연결 해제 버튼
         {
-            if (connectType == 2) //시리얼
+            if (connectType == TYPE.SERIAL) //시리얼
             {
                 //serial.DisConSerial();
             }
@@ -527,28 +521,33 @@ namespace MultiTerminal
             {           
    
                 serial[Sport_Count] = new Serial();
-                serial[Sport_Count].SerialOpen(SerialOpt[0], SerialOpt[1], SerialOpt[2], SerialOpt[3], SerialOpt[4], "500", "500");              
+                serial[Sport_Count].SerialOpen(SerialOpt[0], SerialOpt[1], SerialOpt[2], SerialOpt[3], SerialOpt[4], "500", "500");
+                serial[Sport_Count].MyNum = Sport_Count;    // 시리얼 오픈될 객체에 순번 저장 ^-^
                 serial[Sport_Count].sPort.DataReceived += new SerialDataReceivedEventHandler(UpdateWindowText);
                 
-                if (serial[Sport_Count].IsOpen())
-                {
-                    string portname = Serial_Combo_Port.Items[Serial_Combo_Port.SelectedIndex].ToString();  // 연결에 성공한 시리얼 객체의 포트네임 가져옴
-                    gridview[GridNum] = new GridView(0, portname);  // 그리드뷰 객체에 적용
-                    DrawGrid(gridview[GridNum].Num, gridview[GridNum].Portname, gridview[GridNum].Time); // 그리드뷰 객체를 UI에 적용
-
-                    if (GridNum < 9) { GridNum++; } else { MessageBox.Show("최대 그리드 초과, 연결을 삭제해주세요."); } 
-                    if (Sport_Count < 9) { Sport_Count++; } else { MessageBox.Show("최대 시리얼 연결 초과, 시리얼 연결을 삭제해주세요."); }
-
-                }
+                
                 
             }   
             catch(Exception E)
             {
                 MessageBox.Show(E.ToString());
-            }     
+            }
             
-            
-                       
+            if (serial[Sport_Count].IsOpen())
+            {
+                string portname = Serial_Combo_Port.Items[Serial_Combo_Port.SelectedIndex].ToString();  // 연결에 성공한 시리얼 객체의 포트네임 가져옴
+                gridview[Grid_Count] = new GridView(Grid_Count, portname, "SERIAL", Sport_Count);  // 그리드뷰 객체에 적용,   타입형태(시리얼,UDP..), 타입의 순번도 그리드 객체로 슝들어감.
+                DrawGrid(gridview[Grid_Count].MyNum, gridview[Grid_Count].Portname, gridview[Grid_Count].Time); // 그리드뷰 객체를 UI에 적용
+                               
+                GridList.Add(gridview[Grid_Count]);
+                Sport_Count++;
+                Grid_Count++;
+                // 최대 그리드뷰는 귀찮;; 걍 만들다 넘치면 알아서 프로그램 뻗겠지 ^오^
+                //if (Grid_Count < 14) { Grid_Count++; } else { MessageBox.Show("최대 그리드 초과, 연결을 삭제해주세요."); }             
+
+            }
+
+
         }
         #endregion
         private void DrawGrid(int num, string name, string time)
@@ -716,7 +715,7 @@ namespace MultiTerminal
         {
             try
             {
-                if (connectType == 2)
+                if (connectType == TYPE.SERIAL)
                 {
                     //serial[0].SerialSend(SendBox1.Text);
                     // 우선 버튼 1에만 멀티 전송 구현
@@ -725,7 +724,7 @@ namespace MultiTerminal
                     ReceiveWindowBox.SelectionStart = ReceiveWindowBox.Text.Length;
                     ReceiveWindowBox.ScrollToCaret();
                 }
-                if (connectType == 5)
+                if (connectType == TYPE.TCP)
                 {
                     if (isServ == true && tserv.client.Connected == true)
                     {
@@ -738,7 +737,7 @@ namespace MultiTerminal
                         ReceiveWindowBox.Text += "송신 : " + GetTimer() + SendBox1.Text + "\n";
                     }
                 }
-                if (connectType == 6)
+                if (connectType == TYPE.UDP)
                 {
                     if (isServ == true)
                     {
@@ -1251,7 +1250,7 @@ namespace MultiTerminal
 
         #endregion
 
-        // 그리드뷰 버튼 클릭 이벤트 ^0^
+        // 그리드뷰 연결 취소 버튼 클릭 이벤트 ^0^
         private void PortListGrid_CellValue(object sender, DataGridViewCellEventArgs e)
         {
             var senderGrid = (DataGridView)sender;
@@ -1259,7 +1258,31 @@ namespace MultiTerminal
             if (senderGrid.Columns[e.ColumnIndex] is DataGridViewButtonColumn &&
                 e.RowIndex >= 0)
             {
-                MessageBox.Show("3423"); //TODO - Button Clicked - Execute Code Here
+                int Selected_Grid_Num = e.RowIndex;
+                string Selected_Grid_Type = gridview[Selected_Grid_Num].Type;
+
+                switch (Selected_Grid_Type)
+                {
+                    case "SERIAL" :
+                        {
+                            // 시리얼 연결 해제 ^-^
+                        }
+                        break;
+
+                    case "TCP":
+                        {
+
+                        }
+                        break;
+
+                    case "UDP":
+                        {
+
+                        }
+                        break;
+
+                }
+                MessageBox.Show(Selected_Grid_Num.ToString()); //TODO - Button Clicked - Execute Code Here
             }
         }
     }

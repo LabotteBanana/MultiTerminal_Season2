@@ -9,8 +9,9 @@ namespace MultiTerminal
 {
     class GridView
     {
-        private int num;
-        private string type;
+        public int MyNum;   // 그리드 자신의 순번
+        private string type;    // 들어온 타입의 형태, 스트링 유디피~
+        private int typenum; // 들어온 타입의 순번
         private string portname;
         private string time;
         private bool txCheckedState;
@@ -28,18 +29,7 @@ namespace MultiTerminal
             set { rxCheckedState = value; }
         }
 
-        public int Num
-        {
-            get
-            {
-                return num;
-            }
-
-            set
-            {
-                num = value;
-            }
-        }
+   
 
         public string Portname
         {
@@ -80,9 +70,12 @@ namespace MultiTerminal
             }
         }
 
-        public GridView(int num , string portname)
+
+        public GridView(int num , string portname, string type, int typenum)
         {
-            this.num = num;
+            this.MyNum = num;
+            this.type = type;
+            this.typenum = typenum;
             this.portname = portname;
             this.time = System.DateTime.Now.ToString("HH-mm-ss");
             this.txCheckedState = false;

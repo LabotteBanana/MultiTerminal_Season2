@@ -14,6 +14,7 @@ namespace MultiTerminal
         
         public SerialPort sPort = null;
         public string receivedata = null;   // 시리얼 데이터 받기위한 임시 전역 변수...
+        public int MyNum;
 
         public Serial()
         {
