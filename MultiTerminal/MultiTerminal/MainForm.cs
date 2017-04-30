@@ -620,23 +620,7 @@ namespace MultiTerminal
         private void button3_Click(object sender, EventArgs e)
         {
             //comboBox5 -> IP, comboBox6 -> Port
-            if (ServerCheck.Checked == true)
-            {
-                int port = Int32.Parse(PortNumber.Text);
-                tserv = new Tserv(this, port);
-                tserv.ServerStart();
-                //AcceptThread = new Thread(() => tserv.ServerWait());
-                //AcceptThread.Start();
 
-
-            }
-            else
-            {
-                int port = Int32.Parse(PortNumber.Text);
-                string ip = IpNumber.Text;
-                tcla = new Tserv(this, ip, port);
-                tcla.Connect();
-            }
         }
         #region TCP서버여부
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
@@ -1245,6 +1229,63 @@ namespace MultiTerminal
                 }
             }
             return maxLen;
+        }
+
+        private void Udp_Btn_DisCon_Click(object sender, EventArgs e)
+        {
+            if(isServ==true)
+            {
+                if(userv!=null)
+                userv.DisConnect();
+            }
+            else
+            {
+                if (ucla != null)
+
+                    ucla.DisConnect();
+            }
+        }
+
+        private void Tcp_Btn_DisCon_Click(object sender, EventArgs e)
+        {
+            if (Tcp_Btn_DisCon.Text.Equals("연결"))
+            {
+                if (ServerCheck.Checked == true)
+                {
+                    int port = Int32.Parse(PortNumber.Text);
+                    tserv = new Tserv(this, port);
+                    tserv.ServerStart();
+                    //AcceptThread = new Thread(() => tserv.ServerWait());
+                    //AcceptThread.Start();
+                }
+                else
+                {
+                    int port = Int32.Parse(PortNumber.Text);
+                    string ip = IpNumber.Text;
+                    tcla = new Tserv(this, ip, port);
+                    tcla.Connect();
+                }
+                Tcp_Btn_DisCon.Text = "연결해제";
+                return;
+            }
+            else if (Tcp_Btn_DisCon.Text.Equals("연결해제"))
+            {
+                if (isServ == true)
+                {
+                    if (tserv != null)
+
+                        tserv.ServerStop();
+                }
+                else
+                {
+                    if (tcla != null)
+
+                        tcla.DisConnect();
+                }
+                Tcp_Btn_DisCon.Text = "연결";
+                return;
+
+            }
         }
     }
 

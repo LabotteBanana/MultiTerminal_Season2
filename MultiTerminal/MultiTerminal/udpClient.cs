@@ -74,8 +74,8 @@ namespace MultiTerminal
         }
         public void DisConnect()
         {
-            if(client !=null)
-            client.Close();
+            if (client != null)
+                client.Disconnect(true);
             m_isConnected = false;
         }
         public bool isConnected()
