@@ -17,7 +17,6 @@ namespace MultiTerminal
         MainForm main = null;
         public Socket server =null;
         public Socket client = null;
-        private string ip;
         private IPEndPoint ipep;
         private Dictionary<int, string> m_ipList = new Dictionary<int, string>();
         private int port;
@@ -35,13 +34,6 @@ namespace MultiTerminal
         {
             main = Main;
             port = Port;
-        }
-
-        public Tserv(MainForm Main, string IP, int Port) //클라로 만들때
-        {
-            main = Main;
-            port = Port;
-            ip = IP;
         }
 
         public void ServerWait()
@@ -191,58 +183,7 @@ namespace MultiTerminal
         }
         #endregion 
 
-        #region Client
-        //채팅 서버와 연결 시도
-        public bool Connect()
-        {
-            try
-            {
-
-                IPEndPoint ipep = new IPEndPoint(IPAddress.Parse(ip), port);
-                client = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                client.Connect(ipep);
-                client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
-                NetworkStream ns = new NetworkStream(client);
-                StreamReader sr = new StreamReader(ns);
-                StreamWriter sw = new StreamWriter(ns);
-
-                Thread th = new Thread(new ThreadStart(RecvMsg)); //상대 문자열 수신 쓰레드 가동
-                th.Start();
-           //     DisplayNetworkInfo();
-                return true;
-            }
-            catch(Exception ex)
-            {
-                System.Windows.Forms.MessageBox.Show(ex.ToString());
-                return false;
-            }
-        }
-        //채팅 서버와의 연결 종료
-        public void DisConnect()
-        {
-            try
-            {
-                if (client != null)
-                {
-                    if (client.Connected)
-                    {
-                        NetworkStream ns = new NetworkStream(client);
-                        StreamReader sr = new StreamReader(ns);
-                        StreamWriter sw = new StreamWriter(ns);
-
-                        if (ns != null) ns.Close();
-                        if (sw != null) sw.Close();
-                        if (sr != null) sr.Close();
-                        client.Close();
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                System.Windows.Forms.MessageBox.Show(ex.Message);
-            }
-        }
-        #endregion
+       
 
 
         #region SendMsg,RecvMsg
@@ -252,18 +193,7 @@ namespace MultiTerminal
             {
                 ///Client의 Send
 
-                if (client != null)
-                {
-                    if (client.Connected)
-                    {
-                        NetworkStream ns = new NetworkStream(client);
-                        StreamReader sr = new StreamReader(ns);
-                        StreamWriter sw = new StreamWriter(ns);
-                        sw.WriteLine(msg);
-                        sw.Flush();
-                    }
-                }
-                else if (m_clientCount > 0)
+                if (server != null && m_clientCount > 0)
                 {
                         for (int i = 0; i < m_clientCount; i++)
                         {
@@ -277,40 +207,16 @@ namespace MultiTerminal
             }
             catch (Exception ex)
             {
-                System.Windows.Forms.MessageBox.Show(ex.ToString());
+                int lineNum = Convert.ToInt32(ex.StackTrace.Substring(ex.StackTrace.LastIndexOf(' ')));
+                System.Windows.Forms.MessageBox.Show(lineNum + "에서 발생" + ex.Message);
             }
         }
         public void RecvMsg()
         {
             try
             {
-                ///Client의 Recv
-                if (client != null)
-                {
-                    if (client.Connected == false)
-                    {
-                        client.Disconnect(true);
-                    }
-                    else
-                    {
-                        while (client.Connected)
-                        {
-                            NetworkStream ns = new NetworkStream(client);
-                            StreamReader sr = new StreamReader(ns);
-                            StreamWriter sw = new StreamWriter(ns);
-                            string msg = sr.ReadLine();
-                            if (main.InvokeRequired)
-                            {
-                                main.Invoke(new Action(() => main.ReceiveWindowBox.Text += "수신 : " + main.GetTimer() + msg + "\n"));
-                            }
-                            else
-                            {
-                                main.ReceiveWindowBox.Text += "수신 : " + main.GetTimer() + msg + "\n";
-                            }
-                        }
-                    }
-                }
-                else if (server != null)
+                ///server의 Recv
+                if (server != null)
                 {
                     for (int i = 0; i < m_clientCount; i++)
                     {

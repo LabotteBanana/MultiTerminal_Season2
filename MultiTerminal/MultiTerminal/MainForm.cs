@@ -17,7 +17,7 @@ namespace MultiTerminal
         public bool isServ = false;
         public int connectType = 1;
         public Tserv tserv = null;
-        public Tserv tcla = null;
+        public Tcla tcla = null;
         public udpServer userv = new udpServer();
         public udpClient ucla = new udpClient();
         public static Thread macroThread;
@@ -1262,7 +1262,7 @@ namespace MultiTerminal
                 {
                     int port = Int32.Parse(PortNumber.Text);
                     string ip = IpNumber.Text;
-                    tcla = new Tserv(this, ip, port);
+                    tcla = new Tcla(this, ip, port);
                     tcla.Connect();
                 }
                 Tcp_Btn_DisCon.Text = "연결해제";
