@@ -1325,7 +1325,7 @@ namespace MultiTerminal
                     for (int i = Selected_Grid_Num + 1; i <= GridList.Count - 1; i++)
                     {
                         gridview[i].MyNum = gridview[i].MyNum - 1;
-                        PortListGrid.Rows[i].Cells[0].Value = gridview[i].MyNum.ToString();
+                        PortListGrid.Rows[i].Cells[0].Value = gridview[i].MyNum.ToString(); // 다이렉트로 순번을 수정함!
                     }
                 }
                 GridList.RemoveAt(Selected_Grid_Num);           // 자체 그리드 객체에서의 리스트 삭제
@@ -1339,7 +1339,7 @@ namespace MultiTerminal
             }
         }
 
-        private void DrawGrid(int num, string name, string time)
+        private void DrawGrid(int num, string name, string time)    // 그리드에 열 추가 ~~
         {
             string[] row = new string[] { num.ToString(), name, time };
             PortListGrid.Rows.Add(row);
