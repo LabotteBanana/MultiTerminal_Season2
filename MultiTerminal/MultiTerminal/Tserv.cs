@@ -106,10 +106,16 @@ namespace MultiTerminal
 
                 //       DisplayNetworkInfo();
             }
+            catch (SocketException ex)
+            {
+                int lineNum = Convert.ToInt32(ex.StackTrace.Substring(ex.StackTrace.LastIndexOf(' ')));
+                System.Windows.Forms.MessageBox.Show("소켓에러 " + lineNum + "에서 발생" + ex.Message);
+            }
+
             catch (Exception ex)
             {
                 int lineNum = Convert.ToInt32(ex.StackTrace.Substring(ex.StackTrace.LastIndexOf(' ')));
-                System.Windows.Forms.MessageBox.Show(lineNum + "에서 발생" + ex.Message);
+                System.Windows.Forms.MessageBox.Show("기타에러" + lineNum + "에서 발생" + ex.Message);
             }
         }
 
@@ -205,10 +211,16 @@ namespace MultiTerminal
                         }
                 }
             }
+            catch (SocketException ex)
+            {
+                int lineNum = Convert.ToInt32(ex.StackTrace.Substring(ex.StackTrace.LastIndexOf(' ')));
+                System.Windows.Forms.MessageBox.Show("소켓에러 " + lineNum + "에서 발생" + ex.Message);
+            }
+
             catch (Exception ex)
             {
                 int lineNum = Convert.ToInt32(ex.StackTrace.Substring(ex.StackTrace.LastIndexOf(' ')));
-                System.Windows.Forms.MessageBox.Show(lineNum + "에서 발생" + ex.Message);
+                System.Windows.Forms.MessageBox.Show("기타에러" + lineNum + "에서 발생" + ex.Message);
             }
         }
         public void RecvMsg()
