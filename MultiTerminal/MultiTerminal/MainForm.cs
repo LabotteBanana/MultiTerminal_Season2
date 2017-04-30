@@ -32,7 +32,7 @@ namespace MultiTerminal
         static public int Chk_Hexa_Flag = 0;
 
         // 시리얼 부분.
-        public Serial[] serial = new Serial[9];
+        public Serial[] serial = new Serial[99];    // 동적 배열 객체로 바꾸어야 한다... ㅎㅎㅎㅎ;
         public int Sport_Count = 0;
         public int[] Serial_Send_Arr = new int[8];       // 시리얼 선택적 송신 체크 옵션
         public int[] Serial_Receive_Arr = new int[8];    // 시리얼 선택적 수신 체크 옵션
@@ -46,8 +46,7 @@ namespace MultiTerminal
         private DateTime nowTime;
 
         // 다중 연결 리스트 부분
-        private GridView[] gridview = new GridView[20];
-        private int Grid_Count = 0;
+        private GridView[] gridview = new GridView[99];
         private List<string> connetName = new List<string>();
 
         //리스트를 이용한 다중연결 관리
@@ -522,7 +521,6 @@ namespace MultiTerminal
    
                 serial[Sport_Count] = new Serial();
                 serial[Sport_Count].SerialOpen(SerialOpt[0], SerialOpt[1], SerialOpt[2], SerialOpt[3], SerialOpt[4], "500", "500");
-                serial[Sport_Count].MyNum = Sport_Count;    // 시리얼 오픈될 객체에 순번 저장 ^-^
                 serial[Sport_Count].sPort.DataReceived += new SerialDataReceivedEventHandler(UpdateWindowText);
                 
                 
@@ -535,16 +533,16 @@ namespace MultiTerminal
             
             if (serial[Sport_Count].IsOpen())
             {
-                int size = GridList.Count;
+                int size = GridList.Count;  
                 string portname = Serial_Combo_Port.Items[Serial_Combo_Port.SelectedIndex].ToString();  // 연결에 성공한 시리얼 객체의 포트네임 가져옴
-                gridview[GridList.Count] = new GridView(GridList.Count, portname, "SERIAL", Sport_Count);  // 그리드뷰 객체에 적용,   타입형태(시리얼,UDP..), 타입의 순번도 그리드 객체로 슝들어감.
-                //DrawGrid(gridview[Grid_Count].MyNum, gridview[Grid_Count].Portname, gridview[Grid_Count].Time); // 그리드뷰 객체를 UI에 적용
-                
 
-                DrawGrid(GridList.Count, gridview[GridList.Count].Portname, gridview[GridList.Count].Time);
+
+                gridview[GridList.Count] = new GridView(GridList.Count, portname, "SERIAL", Sport_Count);  // 그리드뷰 객체에 적용,   타입형태(시리얼,UDP..), 타입의 순번도 그리드 객체로 슝들어감.    
+                DrawGrid(gridview[GridList.Count].MyNum, gridview[GridList.Count].Portname, gridview[GridList.Count].Time);
 
                 Sport_Count++;
                 GridList.Add(gridview[GridList.Count]);
+                //DrawGrid(gridview[Grid_Count].MyNum, gridview[Grid_Count].Portname, gridview[Grid_Count].Time); // 그리드뷰 객체를 UI에 적용
 
                 //GridList.Add(gridview[Grid_Count]);                
                 //Grid_Count++;
@@ -1299,7 +1297,8 @@ namespace MultiTerminal
                             try
                             {
                                 serial[gridview[Selected_Grid_Num].Typenum].DisConSerial();   // 시리얼 연결 해제 ^-^
-                                MessageBox.Show(gridview[Selected_Grid_Num].Typenum + "번째 " + Selected_Grid_Type + "포트가 연결해제 되었습니다."); // ex: 0번 시리얼이 연결 해제되었습니다.
+                                MessageBox.Show(gridview[Selected_Grid_Num].Portname + "가 연결해제 되었습니다."); // ex: 0번 시리얼이 연결 해제되었습니다.
+
                             }
                             catch (Exception ex)
                             {
@@ -1321,11 +1320,21 @@ namespace MultiTerminal
                         }
                         break;
                 }
-
-                GridList.RemoveAt(Selected_Grid_Num);
-                PortListGrid.Rows.RemoveAt(Selected_Grid_Num);
+                if (GridList.Count > Selected_Grid_Num + 1 )    // 이 부분이 바로 바뀐 순서번호, 고치는 부분~~~!
+                {
+                    for (int i = Selected_Grid_Num + 1; i <= GridList.Count - 1; i++)
+                    {
+                        gridview[i].MyNum = gridview[i].MyNum - 1;
+                        PortListGrid.Rows[i].Cells[0].Value = gridview[i].MyNum.ToString();
+                    }
+                }
+                GridList.RemoveAt(Selected_Grid_Num);           // 자체 그리드 객체에서의 리스트 삭제
+                PortListGrid.Rows.RemoveAt(Selected_Grid_Num);  // UI 그리드에서의 리스트 삭제
                 MessageBox.Show(Selected_Grid_Num.ToString()); //TODO - Button Clicked - Execute Code Here
 
+                PortListGrid.Update();              
+                PortListGrid.Refresh();
+                
 
             }
         }
@@ -1335,6 +1344,7 @@ namespace MultiTerminal
             string[] row = new string[] { num.ToString(), name, time };
             PortListGrid.Rows.Add(row);
         }
+       
 
 
         #endregion
