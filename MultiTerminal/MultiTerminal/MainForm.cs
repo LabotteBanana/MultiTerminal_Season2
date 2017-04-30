@@ -556,6 +556,9 @@ namespace MultiTerminal
             PortListGrid.Rows.Add(row);
         }
 
+
+
+
         #region 리치 텍스트 박스
 
         // 수신 텍스트박스 업데이트 이벤트
@@ -1261,11 +1264,21 @@ namespace MultiTerminal
                 int Selected_Grid_Num = e.RowIndex;
                 string Selected_Grid_Type = gridview[Selected_Grid_Num].Type;
 
+                // 이곳이 바로 취소버튼을 누르면, 타입별로 연결 해제 하는 부분 ^오^
                 switch (Selected_Grid_Type)
                 {
                     case "SERIAL" :
                         {
-                            // 시리얼 연결 해제 ^-^
+                            try
+                            {
+                                serial[gridview[Selected_Grid_Num].Typenum].DisConSerial();   // 시리얼 연결 해제 ^-^
+                                MessageBox.Show( gridview[Selected_Grid_Num].Typenum + "번째 " + Selected_Grid_Type + "포트가 연결해제 되었습니다."); // ex: 0번 시리얼이 연결 해제되었습니다.
+                            }
+                            catch(Exception ex)
+                            {
+                                MessageBox.Show(ex.ToString());
+                            }
+                            
                         }
                         break;
 
@@ -1280,10 +1293,13 @@ namespace MultiTerminal
 
                         }
                         break;
-
                 }
+
+                PortListGrid.Rows.RemoveAt(Selected_Grid_Num);
                 MessageBox.Show(Selected_Grid_Num.ToString()); //TODO - Button Clicked - Execute Code Here
-            }
+            
+
+    }
         }
     }
 

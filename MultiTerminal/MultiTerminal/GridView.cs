@@ -70,12 +70,24 @@ namespace MultiTerminal
             }
         }
 
+        public int Typenum
+        {
+            get
+            {
+                return typenum;
+            }
+
+            set
+            {
+                typenum = value;
+            }
+        }
 
         public GridView(int num , string portname, string type, int typenum)
         {
             this.MyNum = num;
             this.type = type;
-            this.typenum = typenum;
+            this.Typenum = typenum;
             this.portname = portname;
             this.time = System.DateTime.Now.ToString("HH-mm-ss");
             this.txCheckedState = false;
