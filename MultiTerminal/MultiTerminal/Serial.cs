@@ -15,10 +15,11 @@ namespace MultiTerminal
         public SerialPort sPort = null;
         public string receivedata = null;   // 시리얼 데이터 받기위한 임시 전역 변수...
         public int MyNum;
+        public bool RxState;    // 수신 여부 상태... 나중에 그리드뷰에서 체크하면 트루로 바뀜.
 
         public Serial()
         {
-          
+            RxState = false;
         }
 
         public bool IsOpen()
@@ -130,12 +131,12 @@ namespace MultiTerminal
             }
         }
 
-
+        // 데이터를 받는 곳 ^-^
         public void sPort_DataReceivedHandle(object sender, SerialDataReceivedEventArgs e)
         {
+            
             int intRecSize = sPort.BytesToRead; // 들어온 데이터의 크기에 따라 사이즈 초기화
             string strRecData;  // 최종 데이터 저장 변수
-
 
             if (intRecSize != 0)    // 들어온 데이터 사이즈가 0 이상이면...
             {
@@ -148,19 +149,19 @@ namespace MultiTerminal
                     if (MainForm.Chk_Hexa_Flag == 1)    // 16진수인 경우...
                     { strRecData += buff[iTemp].ToString("X2") + ""; }
                 }
-
-                //receivedata += strRecData;
-                if (MainForm.Chk_Hexa_Flag == 1 )
-                { Global.globalVar = strRecData; }
-                else
-                { Global.globalVar = Encoding.UTF8.GetString(buff); }
-                for (int iTemp = 0; iTemp < intRecSize; iTemp++)
+                // 만약 수신 체크박스가 허용되어있을때~! 만 수신한다는거쥐
+                if (RxState == true)    
                 {
-                    Console.Write(Convert.ToString(buff[iTemp], 2));
-                    
+                    //receivedata += strRecData;
+                    if (MainForm.Chk_Hexa_Flag == 1)
+                    { Global.globalVar = strRecData; }
+                    else
+                    { Global.globalVar = Encoding.UTF8.GetString(buff); }
                 }
-            Console.WriteLine();
             }
+            
+       
+            
 
         }
 

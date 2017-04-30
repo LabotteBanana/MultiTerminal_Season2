@@ -31,7 +31,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.metroPanel1 = new MetroFramework.Controls.MetroPanel();
             this.button1 = new System.Windows.Forms.Button();
             this.panel5 = new System.Windows.Forms.Panel();
@@ -698,7 +698,7 @@
             this.panel1.Controls.Add(this.Sport_label2);
             this.panel1.Controls.Add(this.Sport_label1);
             this.panel1.Controls.Add(this.label12);
-            this.panel1.Location = new System.Drawing.Point(376, 126);
+            this.panel1.Location = new System.Drawing.Point(383, 116);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(159, 183);
             this.panel1.TabIndex = 22;
@@ -1285,7 +1285,7 @@
             // 
             // Num
             // 
-            this.Num.HeaderText = "";
+            this.Num.HeaderText = "No";
             this.Num.Name = "Num";
             this.Num.ReadOnly = true;
             this.Num.Width = 50;
@@ -1327,9 +1327,9 @@
             // DisCon
             // 
             this.DisCon.DataPropertyName = "Discon";
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle3.NullValue = "dd";
-            this.DisCon.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle1.NullValue = "dd";
+            this.DisCon.DefaultCellStyle = dataGridViewCellStyle1;
             this.DisCon.HeaderText = "X";
             this.DisCon.Name = "DisCon";
             this.DisCon.Resizable = System.Windows.Forms.DataGridViewTriState.True;
