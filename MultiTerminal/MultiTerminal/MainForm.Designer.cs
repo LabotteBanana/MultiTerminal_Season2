@@ -31,9 +31,9 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.ListViewItem listViewItem10 = new System.Windows.Forms.ListViewItem("");
-            System.Windows.Forms.ListViewItem listViewItem11 = new System.Windows.Forms.ListViewItem("");
-            System.Windows.Forms.ListViewItem listViewItem12 = new System.Windows.Forms.ListViewItem("");
+            System.Windows.Forms.ListViewItem listViewItem13 = new System.Windows.Forms.ListViewItem("");
+            System.Windows.Forms.ListViewItem listViewItem14 = new System.Windows.Forms.ListViewItem("");
+            System.Windows.Forms.ListViewItem listViewItem15 = new System.Windows.Forms.ListViewItem("");
             this.metroPanel1 = new MetroFramework.Controls.MetroPanel();
             this.panel5 = new System.Windows.Forms.Panel();
             this.listView1 = new System.Windows.Forms.ListView();
@@ -191,9 +191,9 @@
             this.columnHeader3});
             this.listView1.GridLines = true;
             this.listView1.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem10,
-            listViewItem11,
-            listViewItem12});
+            listViewItem13,
+            listViewItem14,
+            listViewItem15});
             this.listView1.Location = new System.Drawing.Point(6, 6);
             this.listView1.Name = "listView1";
             this.listView1.Size = new System.Drawing.Size(150, 198);
@@ -352,7 +352,7 @@
             this.SerialPanel.Controls.Add(this.Label_Se_Port);
             this.SerialPanel.Controls.Add(this.Serial_Btn_Con);
             this.SerialPanel.Controls.Add(this.Serial_Btn_DisCon);
-            this.SerialPanel.Location = new System.Drawing.Point(50, 8);
+            this.SerialPanel.Location = new System.Drawing.Point(112, 8);
             this.SerialPanel.Name = "SerialPanel";
             this.SerialPanel.Size = new System.Drawing.Size(150, 276);
             this.SerialPanel.TabIndex = 7;
