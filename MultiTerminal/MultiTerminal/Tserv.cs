@@ -18,6 +18,7 @@ namespace MultiTerminal
         public Socket server =null; //listening socket
         public Socket client = null;
         private string ip;
+        private bool m_isConncted = false;
         private IPEndPoint ipep;
         private Dictionary<int, string> m_ipList = new Dictionary<int, string>();
         private int port;
@@ -54,6 +55,7 @@ namespace MultiTerminal
                     {
                         server.Bind(ipep);
                         server.Listen(10);
+                        m_isConncted = true;
                     }
                     Socket newclient = server.Accept();
                     //wsa blocking call
@@ -118,6 +120,7 @@ namespace MultiTerminal
                     server.Bind(ipep);
                     server.Listen(10);
                 }
+                m_isConncted = true;
                 th = new Thread(new ThreadStart(ServerWait)); //상대 문자열 수신 쓰레드 가동
                 th.Start();
 
@@ -184,7 +187,8 @@ namespace MultiTerminal
                         }
                     }
                 }
-                if(server.IsBound == true)
+                m_isConncted = false;
+                if (server.IsBound == true)
                 {
                     server.Shutdown(SocketShutdown.Both);
                     server.Disconnect(true);
@@ -260,6 +264,7 @@ namespace MultiTerminal
 
                 Thread th = new Thread(new ThreadStart(RecvMsg)); //상대 문자열 수신 쓰레드 가동
                 th.Start();
+                m_isConncted = true;
            //     DisplayNetworkInfo();
                 return true;
             }
@@ -284,6 +289,7 @@ namespace MultiTerminal
             {
                 if (client != null)
                 {
+                    m_isConncted = false;
                     if (client.Connected)
                     {
                         NetworkStream ns = new NetworkStream(client);
@@ -320,7 +326,7 @@ namespace MultiTerminal
             try
             {
                 ///Client의 Send
-
+                m_isConncted = true;
                 if (client != null)
                 {
                     if (client.Connected)
@@ -358,6 +364,7 @@ namespace MultiTerminal
         {
             try
             {
+                m_isConncted = true;
                 ///Client의 Recv
                 if (client != null)
                 {
@@ -365,6 +372,7 @@ namespace MultiTerminal
                     {
                         client.Shutdown(SocketShutdown.Both);
                         client.Disconnect(true);
+                        m_isConncted = false;
                     }
                     while (client.Connected)
                     {
@@ -384,6 +392,7 @@ namespace MultiTerminal
                 }
                 else if(server!=null)
                 {
+                    m_isConncted = true;
                     for (int i = 0; i < m_clientCount; i++)
                     {
                         //클라이언트 종료감지
