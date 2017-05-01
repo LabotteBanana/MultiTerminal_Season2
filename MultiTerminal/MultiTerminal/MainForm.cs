@@ -81,7 +81,7 @@ namespace MultiTerminal
                 }
             }
         }
-        private void WaitAccept(Object source,System.Timers.ElapsedEventArgs e)
+        private void WaitAccept(Object source, System.Timers.ElapsedEventArgs e)
         {
             if (connectType == 5)
             {
@@ -118,7 +118,7 @@ namespace MultiTerminal
                         if (isServ == true)
                         {
 
-                                //udp서버 대기
+                            //udp서버 대기
                         }
                     }
                 }
@@ -139,8 +139,8 @@ namespace MultiTerminal
                     if (Flag_AEAS[0] == 0)
                     {
                     */
-                        serial[0].SerialSend(this.SendBox1.Text);
-                    
+                    serial[0].SerialSend(this.SendBox1.Text);
+
                     /*
                     else if (Flag_AEAS[0] == 1)
                     {
@@ -229,7 +229,7 @@ namespace MultiTerminal
                                 this.Invoke(new Action(() =>
                                 {
                                     ucla.SendMessage(SendBox1.Text);
-                                   
+
                                     ReceiveWindowBox.Text += "송신 : " + GetTimer() + SendBox1.Text + "\n";
                                 }));
                             }));
@@ -297,7 +297,7 @@ namespace MultiTerminal
         {
             OptionSelect(5);
             isServ = false;
-            
+
             this.UART_Tile.Style = MetroFramework.MetroColorStyle.Silver; // 클릭시 박스 색 변경
             this.TCP_Tile.Style = MetroFramework.MetroColorStyle.Pink;
             this.UDP_Tile.Style = MetroFramework.MetroColorStyle.Silver;
@@ -326,29 +326,29 @@ namespace MultiTerminal
                         connectType = 1;
                         this.SerialPanel.Visible = false;
                         if (tserv != null)
-                       tserv.ServerStop();
-                         if (tcla != null)
-                           tcla.DisConnect();
+                            tserv.ServerStop();
+                        if (tcla != null)
+                            tcla.DisConnect();
                         if (userv != null)
-                           userv.DisConnect();
-                           if (ucla != null)
-                         ucla.DisConnect();
-                   
-                          break;
+                            userv.DisConnect();
+                        if (ucla != null)
+                            ucla.DisConnect();
+
+                        break;
                     }
                 case 3:
                     {
                         connectType = 3;
-                         if (tserv != null)
-                       tserv.ServerStop();
-                       if (tcla != null)
+                        if (tserv != null)
+                            tserv.ServerStop();
+                        if (tcla != null)
                             tcla.DisConnect();
-                       if (userv != null)
+                        if (userv != null)
                             userv.DisConnect();
-                       if (ucla != null)
+                        if (ucla != null)
                             ucla.DisConnect();
-                       
-                          break;
+
+                        break;
                     }
                 case 2:
                     {
@@ -430,9 +430,9 @@ namespace MultiTerminal
             this.Serial_Combo_Parity.DropDownStyle = ComboBoxStyle.DropDownList;
             this.Serial_Combo_StopBit.DropDownStyle = ComboBoxStyle.DropDownList;
 
-           
+
             // 이 부분에서 포트 없는 상태에서 불러올때마다 에러생기는 듯. 조건식 필요~!
-            List<string> data = new List<string>();     
+            List<string> data = new List<string>();
             foreach (string s in SerialPort.GetPortNames())
             {
                 data.Add(s);
@@ -585,15 +585,15 @@ namespace MultiTerminal
                         case 8: Sport_label8.Visible = true; Serial_select_CHK8.Visible = true; Serial_select_CHK88.Visible = true; break;
                     }
                 }
-                
-            }   
-            catch(Exception E)
+
+            }
+            catch (Exception E)
             {
                 MessageBox.Show(E.ToString());
-            }     
-            
-            
-                       
+            }
+
+
+
         }
         #endregion
 
@@ -619,29 +619,12 @@ namespace MultiTerminal
         #region TCP UI
         private void button3_Click(object sender, EventArgs e)
         {
-            //comboBox5 -> IP, comboBox6 -> Port
-            if (ServerCheck.Checked == true)
-            {
-                int port = Int32.Parse(PortNumber.Text);
-                tserv = new Tserv(this, port);
-                tserv.ServerStart();
-                //AcceptThread = new Thread(() => tserv.ServerWait());
-                //AcceptThread.Start();
 
-
-            }
-            else
-            {
-                int port = Int32.Parse(PortNumber.Text);
-                string ip = IpNumber.Text;
-                tcla = new Tserv(this, ip, port);
-                tcla.Connect();
-            }
         }
         #region TCP서버여부
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
-            if(isServ==false)
+            if (isServ == false)
             {
                 IpNumber.Enabled = false;
                 isServ = true;
@@ -649,12 +632,12 @@ namespace MultiTerminal
 
 
             }
-            else if(ServerCheck.Checked == false)
+            else if (ServerCheck.Checked == false)
             {
                 IpNumber.Enabled = true;
                 isServ = false;
             }
-            
+
 
         }
         #endregion
@@ -768,7 +751,7 @@ namespace MultiTerminal
                 }
                 if (connectType == 5)
                 {
-                    if (isServ == true && tserv.m_clientCount>0)
+                    if (isServ == true && tserv.m_clientCount > 0)
                     {
                         tserv.SendMsg(SendBox1.Text);
                         ReceiveWindowBox.Text += "송신 : " + GetTimer() + SendBox1.Text + "\n";
@@ -924,20 +907,20 @@ namespace MultiTerminal
 
         //}
 
-        private void Sport_Num_Select_Send(Serial[] Serial,int[] arr, string msg)   // 시리얼포트, 체크박스변수, 보낼메시지
+        private void Sport_Num_Select_Send(Serial[] Serial, int[] arr, string msg)   // 시리얼포트, 체크박스변수, 보낼메시지
         {
             int count = Serial.Length;  // 먼저 현재 시리얼 포트 살아있는 것 갯수부터
-            for(int i = 0; i <= count; i++ )    // 살아있는 시리얼 포트 만큼 순회
+            for (int i = 0; i <= count; i++)    // 살아있는 시리얼 포트 만큼 순회
             {
-                if ( arr[i] == 1)   // 체크박스 송신 체크되있으면 전송하긔
+                if (arr[i] == 1)   // 체크박스 송신 체크되있으면 전송하긔
                 {
                     serial[i].SerialSend(msg);
                 }
             }
-            
+
         }
 
-        private void Sport_Num_Select_Receive(Serial[] Serial,int[] arr, string msg)
+        private void Sport_Num_Select_Receive(Serial[] Serial, int[] arr, string msg)
         {
 
         }
@@ -1067,7 +1050,7 @@ namespace MultiTerminal
         }
         // 체크박스 체크했을 시 변수값 변경...
         void Update_Serial_Opt()
-        {           
+        {
             if (Serial_select_CHK1.Checked) { Serial_Send_Arr[0] = 1; }
             else { Serial_Send_Arr[0] = 0; }
             if (Serial_select_CHK2.Checked) { Serial_Send_Arr[1] = 1; }
@@ -1157,7 +1140,7 @@ namespace MultiTerminal
             if (UServerCheck.Checked == true)
             {
                 int port = Int32.Parse(UPortNumber.Text);
-                userv.Connect(this,port);
+                userv.Connect(this, port);
 
             }
             else
@@ -1169,7 +1152,8 @@ namespace MultiTerminal
 
         }
 
-        private void saveLog_Click(object sender, EventArgs e) {
+        private void saveLog_Click(object sender, EventArgs e)
+        {
             SaveFileDialog saveLog = new SaveFileDialog();
 
             saveLog.InitialDirectory = @"C:\"; //기본 경로 설정
@@ -1178,7 +1162,8 @@ namespace MultiTerminal
             saveLog.DefaultExt = "log";
             saveLog.AddExtension = true;
 
-            if (saveLog.ShowDialog() == DialogResult.OK) {
+            if (saveLog.ShowDialog() == DialogResult.OK)
+            {
                 //saveLog.Filename에서 경로를 가져온다.
                 FileStream filestream = new FileStream(saveLog.FileName, FileMode.Create, FileAccess.Write);
                 StreamWriter streamwriter = new StreamWriter(filestream);
@@ -1192,11 +1177,13 @@ namespace MultiTerminal
                 streamwriter.Close();
             }
         }
-        private void openLog_Click(object sender, EventArgs e) {
+        private void openLog_Click(object sender, EventArgs e)
+        {
             OpenFileDialog openLog = new OpenFileDialog();
             openLog.Title = "로그 열기";
             openLog.Filter = "로그 파일(*.log)|*.log|모든 파일|*.*";
-            if (openLog.ShowDialog() == DialogResult.OK) {
+            if (openLog.ShowDialog() == DialogResult.OK)
+            {
                 //열기 대상 파일 경로
                 string openfileposition = openLog.FileName;
 
@@ -1216,7 +1203,8 @@ namespace MultiTerminal
                 streamreader.Close();
             }
         }
-        private void receiveWindowBoxClear_Click(object sender, EventArgs e) {
+        private void receiveWindowBoxClear_Click(object sender, EventArgs e)
+        {
             ReceiveWindowBox.Text = null;
         }
 
@@ -1246,6 +1234,42 @@ namespace MultiTerminal
             }
             return maxLen;
         }
-    }
 
+        private void Tcp_Btn_DisCon_Click(object sender, EventArgs e)
+        {
+            //comboBox5 -> IP, comboBox6 -> Port
+            if (Tcp_Btn_DisCon.Text == "연결")
+            {
+                if (ServerCheck.Checked == true)
+                {
+                    int port = Int32.Parse(PortNumber.Text);
+                    tserv = new Tserv(this, port);
+                    tserv.ServerStart();
+                    //AcceptThread = new Thread(() => tserv.ServerWait());
+                    //AcceptThread.Start();
+
+
+                }
+                else
+                {
+                    int port = Int32.Parse(PortNumber.Text);
+                    string ip = IpNumber.Text;
+                    tcla = new Tserv(this, ip, port);
+                    tcla.Connect();
+                }
+                Tcp_Btn_DisCon.Text = "연결해제";
+                return;
+            }
+            else if (Tcp_Btn_DisCon.Text == "연결해제")
+            {
+                if (tserv != null && isServ == true)
+                    tserv.ServerStop();
+                else if (tcla != null && isServ == false)
+                    tcla.DisConnect();
+            }
+            Tcp_Btn_DisCon.Text = "연결";
+            return;
+
+        }
+    }
 }

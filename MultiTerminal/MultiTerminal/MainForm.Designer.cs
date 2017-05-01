@@ -31,9 +31,9 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem("");
-            System.Windows.Forms.ListViewItem listViewItem5 = new System.Windows.Forms.ListViewItem("");
-            System.Windows.Forms.ListViewItem listViewItem6 = new System.Windows.Forms.ListViewItem("");
+            System.Windows.Forms.ListViewItem listViewItem10 = new System.Windows.Forms.ListViewItem("");
+            System.Windows.Forms.ListViewItem listViewItem11 = new System.Windows.Forms.ListViewItem("");
+            System.Windows.Forms.ListViewItem listViewItem12 = new System.Windows.Forms.ListViewItem("");
             this.metroPanel1 = new MetroFramework.Controls.MetroPanel();
             this.panel5 = new System.Windows.Forms.Panel();
             this.listView1 = new System.Windows.Forms.ListView();
@@ -41,7 +41,6 @@
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.panel4 = new System.Windows.Forms.Panel();
-            this.SerialPanel = new System.Windows.Forms.Panel();
             this.UdpPanel = new System.Windows.Forms.Panel();
             this.Udp_Btn_DisCon = new System.Windows.Forms.Button();
             this.Udp_Btn_Con = new System.Windows.Forms.Button();
@@ -53,6 +52,8 @@
             this.label11 = new System.Windows.Forms.Label();
             this.button4 = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
+            this.TcpPanel = new System.Windows.Forms.Panel();
+            this.SerialPanel = new System.Windows.Forms.Panel();
             this.Serial_Btn_F5 = new System.Windows.Forms.Button();
             this.Serial_Combo_FlowCon = new System.Windows.Forms.ComboBox();
             this.Serial_Combo_StopBit = new System.Windows.Forms.ComboBox();
@@ -68,7 +69,6 @@
             this.Label_Se_Port = new System.Windows.Forms.Label();
             this.Serial_Btn_Con = new System.Windows.Forms.Button();
             this.Serial_Btn_DisCon = new System.Windows.Forms.Button();
-            this.TcpPanel = new System.Windows.Forms.Panel();
             this.ServerCheck = new System.Windows.Forms.CheckBox();
             this.PortNumber = new System.Windows.Forms.ComboBox();
             this.IpNumber = new System.Windows.Forms.ComboBox();
@@ -142,9 +142,9 @@
             this.metroPanel1.SuspendLayout();
             this.panel5.SuspendLayout();
             this.panel4.SuspendLayout();
-            this.SerialPanel.SuspendLayout();
             this.UdpPanel.SuspendLayout();
             this.TcpPanel.SuspendLayout();
+            this.SerialPanel.SuspendLayout();
             this.panel2.SuspendLayout();
             this.LogPanel.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -191,9 +191,9 @@
             this.columnHeader3});
             this.listView1.GridLines = true;
             this.listView1.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem4,
-            listViewItem5,
-            listViewItem6});
+            listViewItem10,
+            listViewItem11,
+            listViewItem12});
             this.listView1.Location = new System.Drawing.Point(6, 6);
             this.listView1.Name = "listView1";
             this.listView1.Size = new System.Drawing.Size(150, 198);
@@ -202,35 +202,11 @@
             // 
             // panel4
             // 
-            this.panel4.Controls.Add(this.UdpPanel);
             this.panel4.Controls.Add(this.TcpPanel);
             this.panel4.Location = new System.Drawing.Point(5, 101);
             this.panel4.Name = "panel4";
             this.panel4.Size = new System.Drawing.Size(159, 284);
             this.panel4.TabIndex = 17;
-            // 
-            // SerialPanel
-            // 
-            this.SerialPanel.Controls.Add(this.Serial_Btn_F5);
-            this.SerialPanel.Controls.Add(this.Serial_Combo_FlowCon);
-            this.SerialPanel.Controls.Add(this.Serial_Combo_StopBit);
-            this.SerialPanel.Controls.Add(this.Serial_Combo_Parity);
-            this.SerialPanel.Controls.Add(this.Serial_Combo_Data);
-            this.SerialPanel.Controls.Add(this.Serial_Combo_Baud);
-            this.SerialPanel.Controls.Add(this.Serial_Combo_Port);
-            this.SerialPanel.Controls.Add(this.label6);
-            this.SerialPanel.Controls.Add(this.label5);
-            this.SerialPanel.Controls.Add(this.label4);
-            this.SerialPanel.Controls.Add(this.label3);
-            this.SerialPanel.Controls.Add(this.label2);
-            this.SerialPanel.Controls.Add(this.Label_Se_Port);
-            this.SerialPanel.Controls.Add(this.Serial_Btn_Con);
-            this.SerialPanel.Controls.Add(this.Serial_Btn_DisCon);
-            this.SerialPanel.Location = new System.Drawing.Point(0, 0);
-            this.SerialPanel.Name = "SerialPanel";
-            this.SerialPanel.Size = new System.Drawing.Size(150, 276);
-            this.SerialPanel.TabIndex = 7;
-            this.SerialPanel.Visible = false;
             // 
             // UdpPanel
             // 
@@ -244,7 +220,7 @@
             this.UdpPanel.Controls.Add(this.label11);
             this.UdpPanel.Controls.Add(this.button4);
             this.UdpPanel.Controls.Add(this.button5);
-            this.UdpPanel.Location = new System.Drawing.Point(5, 0);
+            this.UdpPanel.Location = new System.Drawing.Point(56, 5);
             this.UdpPanel.Name = "UdpPanel";
             this.UdpPanel.Size = new System.Drawing.Size(150, 276);
             this.UdpPanel.TabIndex = 15;
@@ -340,6 +316,47 @@
             this.button5.TabIndex = 0;
             this.button5.Text = "옵션적용";
             this.button5.UseVisualStyleBackColor = true;
+            // 
+            // TcpPanel
+            // 
+            this.TcpPanel.Controls.Add(this.SerialPanel);
+            this.TcpPanel.Controls.Add(this.ServerCheck);
+            this.TcpPanel.Controls.Add(this.PortNumber);
+            this.TcpPanel.Controls.Add(this.IpNumber);
+            this.TcpPanel.Controls.Add(this.label1);
+            this.TcpPanel.Controls.Add(this.label7);
+            this.TcpPanel.Controls.Add(this.label8);
+            this.TcpPanel.Controls.Add(this.Tcp_Btn_DisCon);
+            this.TcpPanel.Controls.Add(this.Tcp_Btn_Con);
+            this.TcpPanel.Location = new System.Drawing.Point(2, 3);
+            this.TcpPanel.Name = "TcpPanel";
+            this.TcpPanel.Size = new System.Drawing.Size(150, 276);
+            this.TcpPanel.TabIndex = 14;
+            this.TcpPanel.Visible = false;
+            // 
+            // SerialPanel
+            // 
+            this.SerialPanel.Controls.Add(this.UdpPanel);
+            this.SerialPanel.Controls.Add(this.Serial_Btn_F5);
+            this.SerialPanel.Controls.Add(this.Serial_Combo_FlowCon);
+            this.SerialPanel.Controls.Add(this.Serial_Combo_StopBit);
+            this.SerialPanel.Controls.Add(this.Serial_Combo_Parity);
+            this.SerialPanel.Controls.Add(this.Serial_Combo_Data);
+            this.SerialPanel.Controls.Add(this.Serial_Combo_Baud);
+            this.SerialPanel.Controls.Add(this.Serial_Combo_Port);
+            this.SerialPanel.Controls.Add(this.label6);
+            this.SerialPanel.Controls.Add(this.label5);
+            this.SerialPanel.Controls.Add(this.label4);
+            this.SerialPanel.Controls.Add(this.label3);
+            this.SerialPanel.Controls.Add(this.label2);
+            this.SerialPanel.Controls.Add(this.Label_Se_Port);
+            this.SerialPanel.Controls.Add(this.Serial_Btn_Con);
+            this.SerialPanel.Controls.Add(this.Serial_Btn_DisCon);
+            this.SerialPanel.Location = new System.Drawing.Point(50, 8);
+            this.SerialPanel.Name = "SerialPanel";
+            this.SerialPanel.Size = new System.Drawing.Size(150, 276);
+            this.SerialPanel.TabIndex = 7;
+            this.SerialPanel.Visible = false;
             // 
             // Serial_Btn_F5
             // 
@@ -485,23 +502,6 @@
             this.Serial_Btn_DisCon.Text = "연결해제";
             this.Serial_Btn_DisCon.UseVisualStyleBackColor = true;
             // 
-            // TcpPanel
-            // 
-            this.TcpPanel.Controls.Add(this.SerialPanel);
-            this.TcpPanel.Controls.Add(this.ServerCheck);
-            this.TcpPanel.Controls.Add(this.PortNumber);
-            this.TcpPanel.Controls.Add(this.IpNumber);
-            this.TcpPanel.Controls.Add(this.label1);
-            this.TcpPanel.Controls.Add(this.label7);
-            this.TcpPanel.Controls.Add(this.label8);
-            this.TcpPanel.Controls.Add(this.Tcp_Btn_DisCon);
-            this.TcpPanel.Controls.Add(this.Tcp_Btn_Con);
-            this.TcpPanel.Location = new System.Drawing.Point(2, 3);
-            this.TcpPanel.Name = "TcpPanel";
-            this.TcpPanel.Size = new System.Drawing.Size(150, 276);
-            this.TcpPanel.TabIndex = 14;
-            this.TcpPanel.Visible = false;
-            // 
             // ServerCheck
             // 
             this.ServerCheck.AutoSize = true;
@@ -562,8 +562,9 @@
             this.Tcp_Btn_DisCon.Name = "Tcp_Btn_DisCon";
             this.Tcp_Btn_DisCon.Size = new System.Drawing.Size(62, 23);
             this.Tcp_Btn_DisCon.TabIndex = 1;
-            this.Tcp_Btn_DisCon.Text = "연결해제";
+            this.Tcp_Btn_DisCon.Text = "연결";
             this.Tcp_Btn_DisCon.UseVisualStyleBackColor = true;
+            this.Tcp_Btn_DisCon.Click += new System.EventHandler(this.Tcp_Btn_DisCon_Click);
             // 
             // Tcp_Btn_Con
             // 
@@ -1284,12 +1285,12 @@
             this.metroPanel1.ResumeLayout(false);
             this.panel5.ResumeLayout(false);
             this.panel4.ResumeLayout(false);
-            this.SerialPanel.ResumeLayout(false);
-            this.SerialPanel.PerformLayout();
             this.UdpPanel.ResumeLayout(false);
             this.UdpPanel.PerformLayout();
             this.TcpPanel.ResumeLayout(false);
             this.TcpPanel.PerformLayout();
+            this.SerialPanel.ResumeLayout(false);
+            this.SerialPanel.PerformLayout();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
             this.LogPanel.ResumeLayout(false);
