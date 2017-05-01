@@ -89,7 +89,7 @@ namespace MultiTerminal
             this.type = type;
             this.Typenum = typenum;
             this.portname = portname;
-            this.time = System.DateTime.Now.ToString("HH-mm-ss");
+            this.time = System.DateTime.Now.ToString("HH:mm:ss");
             this.txCheckedState = false;
             this.rxCheckedState = false;
         }

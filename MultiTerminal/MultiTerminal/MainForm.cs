@@ -239,8 +239,8 @@ namespace MultiTerminal
 
         private void MainForm_Closed(object sender, FormClosedEventArgs e)  // 메인폼 닫혔을 때 
         {
-
-            //serial.DisConSerial();
+            
+            //gridview
             tserv.ServerStop();
             tcla.DisConnect();
 
@@ -256,7 +256,9 @@ namespace MultiTerminal
             this.UART_Tile.Style = MetroFramework.MetroColorStyle.Pink; // 클릭시 박스 색 변경
             this.TCP_Tile.Style = MetroFramework.MetroColorStyle.Silver;
             this.UDP_Tile.Style = MetroFramework.MetroColorStyle.Silver;
-            this.Serial_Combo_Port.DropDownWidth = GetLargestTextEntent();
+
+            if(Serial_Combo_Port.Items.Count != 0)  // 만약 아무 포트도 없을 경우 그냥 지나치는 예외처리 ^-^
+                this.Serial_Combo_Port.DropDownWidth = GetLargestTextEntent();
         }
         private void TCP_Tile_Click(object sender, EventArgs e)
         {
@@ -382,104 +384,119 @@ namespace MultiTerminal
             this.Serial_Combo_StopBit.DropDownStyle = ComboBoxStyle.DropDownList;
 
            
-            // 이 부분에서 포트 없는 상태에서 불러올때마다 에러생기는 듯. 조건식 필요~!
-            List<string> data = new List<string>();     
-            foreach (string s in SerialPort.GetPortNames())
-            {
-                data.Add(s);
-            }
-            Serial_Combo_Port.Items.AddRange(data.Cast<object>().ToArray());
 
-            using (var searcher = new ManagementObjectSearcher
-               ("SELECT * FROM WIN32_SerialPort"))
+            List<string> data = new List<string>();
+            try
             {
-                string[] portnames = SerialPort.GetPortNames();
-                var ports = searcher.Get().Cast<ManagementBaseObject>().ToList();
-                //상세한 이름 가져오기
-                var tList = (from n in portnames
-                             join p in ports on n equals p["DeviceID"].ToString()
-                             select " - " + p["Caption"]).ToList();
-                //지원하는 포트 이름만 가져오기(비교해서 위에 있는 놈 붙여넣으려고)
-                var cmpList = (from n in portnames
-                               join p in ports on n equals p["DeviceID"].ToString()
-                               select n).ToList();
-                //usb이름 가져오는 녀석
-                foreach (string s in cmpList)
+                foreach (string s in SerialPort.GetPortNames())
                 {
-                    for (int i = 0; i < Serial_Combo_Port.Items.Count; i++)
-                    {
-                        try
-                        {
-                            int a = Serial_Combo_Port.Items.IndexOf(s);
-                            Serial_Combo_Port.Items[a] += tList[i];
-                        }
-                        catch (ArgumentException e)
-                        {
+                    data.Add(s);
+                }
+                // 이 부분 Serial누를 때마다 포트 증식하는 부분....
+                if (Serial_Combo_Port.Items.Count != data.Count)
+                    Serial_Combo_Port.Items.AddRange(data.Cast<object>().ToArray());
 
+                using (var searcher = new ManagementObjectSearcher
+                   ("SELECT * FROM WIN32_SerialPort"))
+                {
+                    string[] portnames = SerialPort.GetPortNames();
+                    var ports = searcher.Get().Cast<ManagementBaseObject>().ToList();
+                    //상세한 이름 가져오기
+                    var tList = (from n in portnames
+                                 join p in ports on n equals p["DeviceID"].ToString()
+                                 select " - " + p["Caption"]).ToList();
+                    //지원하는 포트 이름만 가져오기(비교해서 위에 있는 놈 붙여넣으려고)
+                    var cmpList = (from n in portnames
+                                   join p in ports on n equals p["DeviceID"].ToString()
+                                   select n).ToList();
+                    //usb이름 가져오는 녀석
+                    foreach (string s in cmpList)
+                    {
+                        for (int i = 0; i < Serial_Combo_Port.Items.Count; i++)
+                        {
+                            try
+                            {
+                                int a = Serial_Combo_Port.Items.IndexOf(s);
+                                Serial_Combo_Port.Items[a] += tList[i];
+                            }
+                            catch (ArgumentException e)
+                            {
+
+                            }
                         }
                     }
+                    //comport 이름 가져오는 녀석
+                    foreach (COMPortInfo comPort in COMPortInfo.GetCOMPortsInfo())
+                    {
+                        string[] comportName = comPort.Name.Split('-');
+                        int a = Serial_Combo_Port.Items.IndexOf(comportName[0]);
+                        Serial_Combo_Port.Items[a] += " - " + comPort.Description;
+                    }
                 }
-                //comport 이름 가져오는 녀석
-                foreach (COMPortInfo comPort in COMPortInfo.GetCOMPortsInfo())
+                if (Serial_Combo_Port.Items.Count != 0)
+                    Serial_Combo_Port.SelectedIndex = 0;
+
+                //로그 분석할거양
+                for (int i = 0; i < Serial_Combo_Port.Items.Count; i++)
                 {
-                    string[] comportName = comPort.Name.Split('-');
-                    int a = Serial_Combo_Port.Items.IndexOf(comportName[0]);
-                    Serial_Combo_Port.Items[a] += " - " + comPort.Description;
+                    connetName.Add(Serial_Combo_Port.Items[i].ToString());
                 }
-            }
-            if (Serial_Combo_Port.Items.Count != 0)
-                Serial_Combo_Port.SelectedIndex = 0;
 
-            //로그 분석할거양
-            for (int i = 0; i < Serial_Combo_Port.Items.Count; i++)
-            {
-                connetName.Add(Serial_Combo_Port.Items[i].ToString());
-            }
+                if (Serial_Combo_Baud.Items.Count == 0)
+                {
+                    List<string> data2 = new List<string>();
+                    string[] Baud = { "4800", "9600", "14400", "19200" };
+                    foreach (string s in Baud)
+                    {
+                        data2.Add(s);
+                    }
+                    Serial_Combo_Baud.Items.AddRange(data2.Cast<object>().ToArray());
+                    Serial_Combo_Baud.SelectedIndex = 0;
 
-            List<string> data2 = new List<string>();
-            string[] Baud = { "4800", "9600", "14400", "19200" };
-            foreach (string s in Baud)
-            {
-                data2.Add(s);
-            }
-            Serial_Combo_Baud.Items.AddRange(data2.Cast<object>().ToArray());
-            Serial_Combo_Baud.SelectedIndex = 0;
+                    List<string> data3 = new List<string>();
+                    string[] Data = { "7", "8" };
+                    foreach (string s in Data)
+                    {
+                        data3.Add(s);
+                    }
+                    Serial_Combo_Data.Items.AddRange(data3.Cast<object>().ToArray());
+                    Serial_Combo_Data.SelectedIndex = 1;
 
-            List<string> data3 = new List<string>();
-            string[] Data = { "7", "8" };
-            foreach (string s in Data)
-            {
-                data3.Add(s);
-            }
-            Serial_Combo_Data.Items.AddRange(data3.Cast<object>().ToArray());
-            Serial_Combo_Data.SelectedIndex = 1;
+                    List<string> data4 = new List<string>();
+                    string[] Parity = { "none", "odd", "even", "mark", "space" };
+                    foreach (string s in Parity)
+                    {
+                        data4.Add(s);
+                    }
+                    Serial_Combo_Parity.Items.AddRange(data4.Cast<object>().ToArray());
+                    Serial_Combo_Parity.SelectedIndex = 0;
 
-            List<string> data4 = new List<string>();
-            string[] Parity = { "none", "odd", "even", "mark", "space" };
-            foreach (string s in Parity)
-            {
-                data4.Add(s);
-            }
-            Serial_Combo_Parity.Items.AddRange(data4.Cast<object>().ToArray());
-            Serial_Combo_Parity.SelectedIndex = 0;
+                    List<string> data5 = new List<string>();
+                    string[] Stopbit = { "none", "1 bit", "2 bit", "1.5 bit" };
+                    foreach (string s in Stopbit)
+                    {
+                        data5.Add(s);
+                    }
+                    Serial_Combo_StopBit.Items.AddRange(data5.Cast<object>().ToArray());
+                    Serial_Combo_StopBit.SelectedIndex = 1;
 
-            List<string> data5 = new List<string>();
-            string[] Stopbit = { "none", "1 bit", "2 bit", "1.5 bit" };
-            foreach (string s in Stopbit)
-            {
-                data5.Add(s);
-            }
-            Serial_Combo_StopBit.Items.AddRange(data5.Cast<object>().ToArray());
-            Serial_Combo_StopBit.SelectedIndex = 1;
+                    List<string> data6 = new List<string>();
+                    string[] FlowCon = { "none", "Xon/Xoff", "hardware" };
+                    foreach (string s in FlowCon)
+                    {
+                        data6.Add(s);
+                    }
+                    Serial_Combo_FlowCon.Items.AddRange(data6.Cast<object>().ToArray());
+                    Serial_Combo_FlowCon.SelectedIndex = 0;
+                }
 
-            List<string> data6 = new List<string>();
-            string[] FlowCon = { "none", "Xon/Xoff", "hardware" };
-            foreach (string s in FlowCon)
+                
+            } 
+            catch(Exception E)
             {
-                data6.Add(s);
-            }
-            Serial_Combo_FlowCon.Items.AddRange(data6.Cast<object>().ToArray());
-            Serial_Combo_FlowCon.SelectedIndex = 0;
+                MessageBox.Show(E.ToString());
+            }    
+            
         }
 
         // 선택시 이벤트
@@ -538,7 +555,7 @@ namespace MultiTerminal
 
 
                 gridview[GridList.Count] = new GridView(GridList.Count, portname, "SERIAL", Sport_Count);  // 그리드뷰 객체에 적용,   타입형태(시리얼,UDP..), 타입의 순번도 그리드 객체로 슝들어감.    
-                DrawGrid(gridview[GridList.Count].MyNum, gridview[GridList.Count].Portname, gridview[GridList.Count].Time);
+                DrawGrid(gridview[GridList.Count].MyNum, gridview[GridList.Count].Type, gridview[GridList.Count].Portname, gridview[GridList.Count].Time);
 
                 Sport_Count++;
                 GridList.Add(gridview[GridList.Count]);
@@ -578,23 +595,11 @@ namespace MultiTerminal
         #endregion
 
         #region TCP UI
+       
+        #endregion
         private void button3_Click(object sender, EventArgs e)
         {
-            //comboBox5 -> IP, comboBox6 -> Port
-            if (ServerCheck.Checked == true)
-            {
-                int port = Int32.Parse(PortNumber.Text);
-                tserv = new Tserv(this, port);
-                tserv.ServerStart();
-
-            }
-            else
-            {
-                int port = Int32.Parse(PortNumber.Text);
-                string ip = IpNumber.Text;
-                tcla = new Tserv(this, ip, port);
-                tcla.Connect();
-            }
+            
         }
         #region TCP서버여부
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
@@ -652,7 +657,6 @@ namespace MultiTerminal
         }
         #endregion
 
-        #endregion
 
         private void checkBox3_CheckedChanged(object sender, EventArgs e)
         {
@@ -675,6 +679,7 @@ namespace MultiTerminal
                 mactimer.Enabled = false;
                 mactimer.Elapsed -= OnMacro;
                 mactimer.Enabled = false;
+
                 SendThread.Abort();
                 macroThread.Abort();
             }
@@ -733,7 +738,7 @@ namespace MultiTerminal
 
                 if (connectType == TYPE.TCP)
                 {
-                    if (isServ == true && tserv.client.Connected == true)
+                    if (isServ == true && tserv.m_clientCount > 0 ) // 다중연결일때?
                     {
                         tserv.SendMsg(SendBox1.Text);
                         ReceiveWindowBox.Text += "송신 : " + GetTimer() + SendBox1.Text + "\n";
@@ -895,7 +900,7 @@ namespace MultiTerminal
 
             for(int i = 0; i <= gridcount; i++) //그리드뷰 리스트 처음부터 순회
             {
-                if( gridview[i].Type == "SERIAL" && gridview[i].TxCheckedState == true )    // 그리드뷰리스트의 타입이 시리얼, 그리고 수신 체크박스 상태가 체크되어있다면
+                if( gridview[i].Type == "SERIAL" && gridview[i].TxCheckedState == true )    // 그리드뷰리스트의 타입이 시리얼, 그리고 송신 체크박스 상태가 체크되어있다면
                 {
                     serial[gridview[i].Typenum].SerialSend(msg);    // serial [그리드뷰 객체에 저장된 시리얼 타입 객체의 순번]
                 }
@@ -910,19 +915,13 @@ namespace MultiTerminal
 
             for (int i = 0; i <= gridcount; i++) //그리드뷰 리스트 처음부터 순회
             {
-                if (gridview[i].Type == "SERIAL" && gridview[i].TxCheckedState == true)    // 그리드뷰리스트의 타입이 시리얼, 그리고 수신 체크박스 상태가 체크되어있다면
+                if (gridview[i].Type == "SERIAL" && gridview[i].TxCheckedState == true)    // 그리드뷰리스트의 타입이 시리얼, 그리고 송신 체크박스 상태가 체크되어있다면
                 {                   
                     tserv.SendMsg(SendBox1.Text);
                 }
             }
 
-        }
-        
-
-        private void Sport_Num_Select_Receive(Serial[] Serial,int[] arr, string msg)
-        {
-
-        }
+        }       
 
         //private void Btn_Send4_Click(object sender, EventArgs e)
         //{
@@ -1339,17 +1338,53 @@ namespace MultiTerminal
             }
         }
 
-        private void DrawGrid(int num, string name, string time)    // 그리드에 열 추가 ~~
+        private void DrawGrid(int num, string type, string name, string time)    // 그리드에 열 추가 ~~
         {
-            string[] row = new string[] { num.ToString(), name, time };
+            string[] row = new string[] { num.ToString(),type, name, time };
             PortListGrid.Rows.Add(row);
         }
-       
+
+
 
 
         #endregion
 
-        
+        private void Tcp_Btn_DisCon_Click(object sender, EventArgs e)
+        {
+            //comboBox5 -> IP, comboBox6 -> Port
+            if (Tcp_Btn_DisCon.Text == "연결")
+            {
+                if (ServerCheck.Checked == true)
+                {
+                    int port = Int32.Parse(PortNumber.Text);
+                    tserv = new Tserv(this, port);
+                    tserv.ServerStart();
+                    //AcceptThread = new Thread(() => tserv.ServerWait());
+                    //AcceptThread.Start();
+
+
+                }
+                else
+                {
+                    int port = Int32.Parse(PortNumber.Text);
+                    string ip = IpNumber.Text;
+                    tcla = new Tserv(this, ip, port);
+                    tcla.Connect();
+                }
+                Tcp_Btn_DisCon.Text = "연결해제";
+                return;
+            }
+            else if (Tcp_Btn_DisCon.Text == "연결해제")
+            {
+                if (tserv != null && isServ == true)
+                    tserv.ServerStop();
+                else if (tcla != null && isServ == false)
+                    tcla.DisConnect();
+            }
+            Tcp_Btn_DisCon.Text = "연결";
+            return;
+
+        }
     }
 
 }
