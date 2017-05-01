@@ -76,7 +76,7 @@ namespace MultiTerminal
         public void DisConnect()
         {
             if(server!=null)
-            server.Disconnect(true);
+            server.Close();
         }
         public bool isConnected()
         {
