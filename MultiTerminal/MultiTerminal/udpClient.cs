@@ -29,6 +29,10 @@ namespace MultiTerminal
                 serverEP = new IPEndPoint(IPAddress.Parse(IP), port);
                 Sender = new IPEndPoint(IPAddress.Any, 0);
                 remoteEP = (EndPoint)Sender;
+                client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, 1);
+                client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Broadcast, 1);
+                client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.DontRoute, 1);
+
                 client.Bind(Sender);
                 Recvth = new Thread(new ThreadStart(RecvMessage)); //상대 문자열 수신 쓰레드 가동
                 m_isConnected = true;

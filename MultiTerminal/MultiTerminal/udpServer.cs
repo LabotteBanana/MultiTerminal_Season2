@@ -28,6 +28,9 @@ namespace MultiTerminal
                 EP = new IPEndPoint(IPAddress.Any, Port);
                 server = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
                 Sender = new IPEndPoint(IPAddress.Any, 0);
+                server.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, 1);
+                server.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Broadcast, 1);
+                server.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.DontRoute, 1);
                 remoteEP = (EndPoint)Sender;
                 if (server.IsBound == false)
                 {
