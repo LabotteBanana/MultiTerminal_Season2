@@ -96,10 +96,20 @@ namespace MultiTerminal
                     if (Flag_AEAS[0] == 0)
                     {
                     */
-                    serial[0].SerialSend(this.SendBox1.Text);
-                    ReceiveWindowBox.AppendText("송신 : " + GetTimer() + SendBox1.Text + "\n");
-                    ReceiveWindowBox.SelectionStart = ReceiveWindowBox.Text.Length;
-                    ReceiveWindowBox.ScrollToCaret();
+                    SendThread = new Thread(new ThreadStart(delegate ()
+                    {
+                        this.Invoke(new Action(() =>
+                        {
+                            serial[0].SerialSend(this.SendBox1.Text);
+                            ReceiveWindowBox.AppendText("송신 : " + GetTimer() + SendBox1.Text + "\n");
+                            ReceiveWindowBox.SelectionStart = ReceiveWindowBox.Text.Length;
+                            ReceiveWindowBox.ScrollToCaret();
+
+                        }));
+                    }));
+                    SendThread.Start();
+
+                    //serial[0].SerialSend(this.SendBox1.Text);
                     /*
                 else if (Flag_AEAS[0] == 1)
                 {
@@ -214,7 +224,7 @@ namespace MultiTerminal
         {
 
             string now = null;
-            now = "[ " + nowTime.Hour + "::" + nowTime.Minute + "::" + nowTime.Second + "::" + nowTime.Millisecond + "]";
+            now = "[" + nowTime.Hour + ":" + nowTime.Minute + ":" + nowTime.Second + ":" + nowTime.Millisecond + "]";
             return now;
         }
 
@@ -578,7 +588,7 @@ namespace MultiTerminal
             //{
             //    this.Invoke(new Action(() =>
             //    {
-                    this.ReceiveWindowBox.AppendText("수신["+"Name"+"] : " + GetTimer() + Global.globalVar + "\n");
+                    this.ReceiveWindowBox.AppendText("수신("+"Name"+") : " + GetTimer() + Global.globalVar + "\n");
                     this.ReceiveWindowBox.SelectionStart = ReceiveWindowBox.Text.Length;
                     this.ReceiveWindowBox.ScrollToCaret();
             //    }));
@@ -726,6 +736,7 @@ namespace MultiTerminal
                 {
                     //serial[0].SerialSend(SendBox1.Text);
                     // 우선 버튼 1에만 멀티 전송 구현
+
                     Sport_Num_Select_Send(serial, Serial_Send_Arr, SendBox1.Text);
                     ReceiveWindowBox.AppendText("송신 : " + GetTimer() + SendBox1.Text + "\n");
                     ReceiveWindowBox.SelectionStart = ReceiveWindowBox.Text.Length;
@@ -763,7 +774,7 @@ namespace MultiTerminal
                                   ReceiveWindowBox.ScrollToCaret();
                               }));
                           }));
-                        SendThread.Start();
+                    SendThread.Start();
                     }
                     if (isServ == false)
                     {
@@ -1225,6 +1236,7 @@ namespace MultiTerminal
         //분석 폼 열기
         private void freq_Click(object obj, EventArgs e)
         {
+            this.SendToBack();
             analysisForm aF = new analysisForm(ReceiveWindowBox);
             aF.Show();
         }

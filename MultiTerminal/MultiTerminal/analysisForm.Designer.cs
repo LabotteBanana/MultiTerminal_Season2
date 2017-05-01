@@ -57,6 +57,7 @@
             this.connectedNamecheckedListBox.Size = new System.Drawing.Size(238, 196);
             this.connectedNamecheckedListBox.TabIndex = 4;
             this.connectedNamecheckedListBox.SelectedIndexChanged += new System.EventHandler(this.connectedNamecheckedListBox_SelectedIndexChanged);
+            this.connectedNamecheckedListBox.SelectedValueChanged += new System.EventHandler(this.connectedNamecheckedListBox_SelectedValueChanged);
             // 
             // analyStartButton
             // 
