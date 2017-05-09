@@ -29,6 +29,9 @@ namespace MultiTerminal
                 serverEP = new IPEndPoint(IPAddress.Parse(IP), port);
                 Sender = new IPEndPoint(IPAddress.Any, 0);
                 remoteEP = (EndPoint)Sender;
+                client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, 1);
+                client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Broadcast, 1);
+                client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.DontRoute, 1);
                 client.Bind(Sender);
                 Recvth = new Thread(new ThreadStart(RecvMessage)); //상대 문자열 수신 쓰레드 가동
                 m_isConnected = true;
@@ -50,14 +53,17 @@ namespace MultiTerminal
                 string recvMsg = Encoding.Default.GetString(data);
                 if (main.InvokeRequired)
                 {
-                    main.Invoke(new Action(() => main.ReceiveWindowBox.Text += "수신 :" + main.GetTimer() + recvMsg + "\n"));
-
-
+                    main.Invoke(new Action(() => main.ReceiveWindowBox.AppendText("수신 :" + main.GetTimer() + recvMsg)));
+                    main.Invoke(new Action(() => main.ReceiveWindowBox.AppendText("" + Environment.NewLine)));
+                    main.ReceiveWindowBox.SelectionStart = main.ReceiveWindowBox.Text.Length;
+                    main.ReceiveWindowBox.ScrollToCaret();
                 }
                 else
                 {
-                    main.ReceiveWindowBox.Text += "수신 :" + main.GetTimer() + recvMsg + "\n";
-
+                    main.ReceiveWindowBox.AppendText("수신 : " + main.GetTimer() + recvMsg + Environment.NewLine);
+                    main.ReceiveWindowBox.AppendText("" + Environment.NewLine);
+                    main.ReceiveWindowBox.SelectionStart = main.ReceiveWindowBox.Text.Length;
+                    main.ReceiveWindowBox.ScrollToCaret();
                 }
             }
             catch(Exception ex)
