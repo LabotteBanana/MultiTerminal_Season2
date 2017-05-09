@@ -17,6 +17,7 @@ namespace MultiTerminal
         // 연결 타입 정의 ^0^/
         enum TYPE { SERIAL = 0, TCP, UDP };
 
+
         public bool isServ = false;
         private TYPE connectType;
         public Tserv tserv = null;
