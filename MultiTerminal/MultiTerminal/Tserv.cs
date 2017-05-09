@@ -363,10 +363,12 @@ namespace MultiTerminal
                         string msg = sr.ReadLine();
                         if (main.InvokeRequired)
                         {
-                            main.Invoke(new Action(() => main.ReceiveWindowBox.AppendText("수신 : " + main.GetTimer() + msg + "\n");
-                            main.ReceiveWindowBox.SelectionStart = main.ReceiveWindowBox.Text.Length;
-                            main.ReceiveWindowBox.ScrollToCaret();
-                    ));
+                            main.Invoke(new Action(() =>
+                            {
+                                main.ReceiveWindowBox.AppendText("수신 : " + main.GetTimer() + msg + "\n");
+                                main.ReceiveWindowBox.SelectionStart = main.ReceiveWindowBox.Text.Length;
+                                main.ReceiveWindowBox.ScrollToCaret();
+                            }));
                         }
                         else
                         {
@@ -388,19 +390,21 @@ namespace MultiTerminal
 
                             if (main.InvokeRequired)
                             {
-                                main.Invoke(new Action(() => main.ReceiveWindowBox.AppendText("수신 : " + main.GetTimer() + msg + "\n");
-                                main.ReceiveWindowBox.SelectionStart = main.ReceiveWindowBox.Text.Length;
-                                main.ReceiveWindowBox.ScrollToCaret();));
+                                main.Invoke(new Action(() =>
+                                {
+                                    main.ReceiveWindowBox.AppendText("수신 : " + main.GetTimer() + msg + "\n");
+                                    main.ReceiveWindowBox.SelectionStart = main.ReceiveWindowBox.Text.Length;
+                                    main.ReceiveWindowBox.ScrollToCaret();
+                                }));
                             }
                             else
                             {
-                    main.ReceiveWindowBox.AppendText("수신 : " + main.GetTimer() + msg + "\n");
-                    main.ReceiveWindowBox.SelectionStart = main.ReceiveWindowBox.Text.Length;
-                    main.ReceiveWindowBox.ScrollToCaret();
-                }
+                                main.ReceiveWindowBox.AppendText("수신 : " + main.GetTimer() + msg + "\n");
+                                main.ReceiveWindowBox.SelectionStart = main.ReceiveWindowBox.Text.Length;
+                                main.ReceiveWindowBox.ScrollToCaret();
+                            }
                         }
                     }
-
                 }
             }
             catch (SocketException ex)
