@@ -87,33 +87,6 @@
             this.label13 = new System.Windows.Forms.Label();
             this.Chk_Hexa = new System.Windows.Forms.CheckBox();
             this.LogPanel = new MetroFramework.Controls.MetroPanel();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.Serial_select_CHK88 = new System.Windows.Forms.CheckBox();
-            this.Serial_select_CHK77 = new System.Windows.Forms.CheckBox();
-            this.Serial_select_CHK66 = new System.Windows.Forms.CheckBox();
-            this.Serial_select_CHK55 = new System.Windows.Forms.CheckBox();
-            this.Serial_select_CHK8 = new System.Windows.Forms.CheckBox();
-            this.Serial_select_CHK7 = new System.Windows.Forms.CheckBox();
-            this.Serial_select_CHK6 = new System.Windows.Forms.CheckBox();
-            this.Serial_select_CHK5 = new System.Windows.Forms.CheckBox();
-            this.Sport_label8 = new System.Windows.Forms.Label();
-            this.Sport_label7 = new System.Windows.Forms.Label();
-            this.Sport_label6 = new System.Windows.Forms.Label();
-            this.Sport_label5 = new System.Windows.Forms.Label();
-            this.Serial_select_CHK44 = new System.Windows.Forms.CheckBox();
-            this.Serial_select_CHK33 = new System.Windows.Forms.CheckBox();
-            this.Serial_select_CHK22 = new System.Windows.Forms.CheckBox();
-            this.Serial_select_CHK11 = new System.Windows.Forms.CheckBox();
-            this.Serial_select_CHK4 = new System.Windows.Forms.CheckBox();
-            this.Serial_select_CHK3 = new System.Windows.Forms.CheckBox();
-            this.Serial_select_CHK2 = new System.Windows.Forms.CheckBox();
-            this.Serial_select_CHK1 = new System.Windows.Forms.CheckBox();
-            this.label20 = new System.Windows.Forms.Label();
-            this.Sport_label4 = new System.Windows.Forms.Label();
-            this.Sport_label3 = new System.Windows.Forms.Label();
-            this.Sport_label2 = new System.Windows.Forms.Label();
-            this.Sport_label1 = new System.Windows.Forms.Label();
-            this.label12 = new System.Windows.Forms.Label();
             this.metroLabel7 = new MetroFramework.Controls.MetroLabel();
             this.ReceiveWindowBox = new System.Windows.Forms.RichTextBox();
             this.UDP_Tile = new MetroFramework.Controls.MetroTile();
@@ -142,16 +115,18 @@
             this.로그불러오기ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ddfdfToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.설정ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.빈도분석ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.metroPanel1.SuspendLayout();
             this.panel5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.PortListGrid)).BeginInit();
+            this.panel1.SuspendLayout();
             this.panel4.SuspendLayout();
             this.SerialPanel.SuspendLayout();
             this.TcpPanel.SuspendLayout();
             this.UdpPanel.SuspendLayout();
             this.panel2.SuspendLayout();
             this.LogPanel.SuspendLayout();
-            this.panel1.SuspendLayout();
             this.panel3.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -1294,7 +1269,8 @@
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.asdfasdfToolStripMenuItem,
-            this.ddfdfToolStripMenuItem});
+            this.ddfdfToolStripMenuItem,
+            this.설정ToolStripMenuItem});
             this.menuStrip1.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
             this.menuStrip1.Location = new System.Drawing.Point(0, 60);
             this.menuStrip1.Name = "menuStrip1";
@@ -1316,27 +1292,42 @@
             // 로그저장ToolStripMenuItem
             // 
             this.로그저장ToolStripMenuItem.Name = "로그저장ToolStripMenuItem";
-            this.로그저장ToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
+            this.로그저장ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.로그저장ToolStripMenuItem.Text = "로그 저장";
             this.로그저장ToolStripMenuItem.Click += new System.EventHandler(this.saveLog_Click);
             // 
             // 로그불러오기ToolStripMenuItem
             // 
             this.로그불러오기ToolStripMenuItem.Name = "로그불러오기ToolStripMenuItem";
-            this.로그불러오기ToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
+            this.로그불러오기ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.로그불러오기ToolStripMenuItem.Text = "로그 불러오기";
             this.로그불러오기ToolStripMenuItem.Click += new System.EventHandler(this.openLog_Click);
             // 
             // ddfdfToolStripMenuItem
             // 
+            this.ddfdfToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.빈도분석ToolStripMenuItem});
             this.ddfdfToolStripMenuItem.Name = "ddfdfToolStripMenuItem";
             this.ddfdfToolStripMenuItem.Size = new System.Drawing.Size(43, 19);
-            this.ddfdfToolStripMenuItem.Text = "설정";
+            this.ddfdfToolStripMenuItem.Text = "분석";
             // 
             // contextMenuStrip1
             // 
             this.contextMenuStrip1.Name = "contextMenuStrip1";
             this.contextMenuStrip1.Size = new System.Drawing.Size(61, 4);
+            // 
+            // 설정ToolStripMenuItem
+            // 
+            this.설정ToolStripMenuItem.Name = "설정ToolStripMenuItem";
+            this.설정ToolStripMenuItem.Size = new System.Drawing.Size(43, 19);
+            this.설정ToolStripMenuItem.Text = "설정";
+            // 
+            // 빈도분석ToolStripMenuItem
+            // 
+            this.빈도분석ToolStripMenuItem.Name = "빈도분석ToolStripMenuItem";
+            this.빈도분석ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.빈도분석ToolStripMenuItem.Text = "빈도 분석";
+            this.빈도분석ToolStripMenuItem.Click += new System.EventHandler(this.freq_Click);
             // 
             // MainForm
             // 
@@ -1356,7 +1347,8 @@
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.metroPanel1.ResumeLayout(false);
             this.panel5.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.PortListGrid)).EndInit();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             this.panel4.ResumeLayout(false);
             this.SerialPanel.ResumeLayout(false);
             this.SerialPanel.PerformLayout();
@@ -1368,8 +1360,6 @@
             this.panel2.PerformLayout();
             this.LogPanel.ResumeLayout(false);
             this.LogPanel.PerformLayout();
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
             this.menuStrip1.ResumeLayout(false);
@@ -1490,6 +1480,8 @@
         private System.Windows.Forms.DataGridViewCheckBoxColumn Tx;
         private System.Windows.Forms.DataGridViewCheckBoxColumn Rx;
         private System.Windows.Forms.DataGridViewButtonColumn DisCon;
+        private System.Windows.Forms.ToolStripMenuItem 빈도분석ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 설정ToolStripMenuItem;
     }
 }
 
