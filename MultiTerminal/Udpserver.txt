@@ -1,4 +1,4 @@
-ï»¿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,7 +18,10 @@ namespace MultiTerminal
         private IPEndPoint Sender;
         private EndPoint remoteEP;
         public Socket server;
+        public Dictionary<int, EndPoint> m_ClientEP = new Dictionary<int, EndPoint>();
+        public Dictionary<int, Socket> m_ClientSocket = new Dictionary<int, Socket>();
         private bool m_isConnected = false;
+        public int m_Count;
         private static Thread th = null;
         public void Connect(MainForm form,int Port)
         {
@@ -32,25 +35,26 @@ namespace MultiTerminal
                 server.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Broadcast, 1);
                 server.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.DontRoute, 1);
                 remoteEP = (EndPoint)Sender;
+                m_ClientEP.Add(m_Count++, remoteEP);
                 if (server.IsBound == false)
                 {
                     server.Bind(EP);
                 }
                 //SendMessage("Hello, Client!");
 
-                th = new Thread(new ThreadStart(RecvMessage)); //ìƒëŒ€ ë¬¸ìì—´ ìˆ˜ì‹  ì“°ë ˆë“œ ê°€ë™
+                th = new Thread(new ThreadStart(RecvMessage)); //»ó´ë ¹®ÀÚ¿­ ¼ö½Å ¾²·¹µå °¡µ¿
                 th.Start();
             }
             catch (SocketException ex)
             {
                 int lineNum = Convert.ToInt32(ex.StackTrace.Substring(ex.StackTrace.LastIndexOf(' ')));
-                System.Windows.Forms.MessageBox.Show("ì†Œì¼“ì—ëŸ¬ " + lineNum + "ì—ì„œ ë°œìƒ" + ex.Message);
+                System.Windows.Forms.MessageBox.Show("¼ÒÄÏ¿¡·¯ " + lineNum + "¿¡¼­ ¹ß»ı" + ex.Message);
             }
 
             catch (Exception ex)
             {
                 int lineNum = Convert.ToInt32(ex.StackTrace.Substring(ex.StackTrace.LastIndexOf(' ')));
-                System.Windows.Forms.MessageBox.Show("ê¸°íƒ€ì—ëŸ¬ " + lineNum + "ì—ì„œ ë°œìƒ" + ex.Message);
+                System.Windows.Forms.MessageBox.Show("±âÅ¸¿¡·¯ " + lineNum + "¿¡¼­ ¹ß»ı" + ex.Message);
             }
         }
         public void SendMessage(string sendMsg)
@@ -58,51 +62,57 @@ namespace MultiTerminal
             try
             {
                 byte[] data = new byte[1024];
-                data = Encoding.UTF8.GetBytes(sendMsg);
-                server.SendTo(data, remoteEP);
+                for (int i = 0; i < m_Count; i++)
+                {
+                    data = Encoding.UTF8.GetBytes(sendMsg);
+                    server.SendTo(data, m_ClientEP[i]);
+                }
             }
             catch (SocketException ex)
             {
                 int lineNum = Convert.ToInt32(ex.StackTrace.Substring(ex.StackTrace.LastIndexOf(' ')));
-                System.Windows.Forms.MessageBox.Show("ì†Œì¼“ì—ëŸ¬ " + lineNum + "ì—ì„œ ë°œìƒ" + ex.Message);
+                System.Windows.Forms.MessageBox.Show("¼ÒÄÏ¿¡·¯ " + lineNum + "¿¡¼­ ¹ß»ı" + ex.Message);
             }
 
             catch (Exception ex)
             {
                 int lineNum = Convert.ToInt32(ex.StackTrace.Substring(ex.StackTrace.LastIndexOf(' ')));
-                System.Windows.Forms.MessageBox.Show("ê¸°íƒ€ì—ëŸ¬ " + lineNum + "ì—ì„œ ë°œìƒ" + ex.Message);
+                System.Windows.Forms.MessageBox.Show("±âÅ¸¿¡·¯ " + lineNum + "¿¡¼­ ¹ß»ı" + ex.Message);
             }
-
         }
         public void RecvMessage()
         {
-            try { 
-            byte[] recv = new byte[1024];
-            int recvi = server.ReceiveFrom(recv,ref remoteEP);
-
-            string recvMsg = Encoding.Default.GetString(recv);
-                ///ì´ë¶€ë¶„ ë¬¸ì œ
-                if (main.InvokeRequired)
+            try
+            {
+                byte[] recv = new byte[1024];
+                for (int i = 0; i < m_Count; i++)
                 {
-                    main.Invoke(new Action(() => main.ReceiveWindowBox.Text += "ìˆ˜ì‹  :" + main.GetTimer() +recvMsg + "\n"));
+                    EndPoint ep = m_ClientEP[i];
+                    int recvi = server.ReceiveFrom(recv, ref ep);
+                    string recvMsg = Encoding.Default.GetString(recv);
+                    ///ÀÌºÎºĞ ¹®Á¦
+                    if (main.InvokeRequired)
+                    {
+                        main.Invoke(new Action(() => main.ReceiveWindowBox.Text += "¼ö½Å :" + main.GetTimer() + recvMsg + "\n"));
 
 
-                }
-                else
-                {
-                    main.ReceiveWindowBox.Text += "ìˆ˜ì‹  :" + main.GetTimer() + recvMsg + "\n";
+                    }
+                    else
+                    {
+                        main.ReceiveWindowBox.Text += "¼ö½Å :" + main.GetTimer() + recvMsg + "\n";
+                    }
                 }
             }
             catch (SocketException ex)
             {
                 int lineNum = Convert.ToInt32(ex.StackTrace.Substring(ex.StackTrace.LastIndexOf(' ')));
-                System.Windows.Forms.MessageBox.Show("ì†Œì¼“ì—ëŸ¬ " + lineNum + "ì—ì„œ ë°œìƒ" + ex.Message);
+                System.Windows.Forms.MessageBox.Show("¼ÒÄÏ¿¡·¯ " + lineNum + "¿¡¼­ ¹ß»ı" + ex.Message);
             }
 
             catch (Exception ex)
             {
                 int lineNum = Convert.ToInt32(ex.StackTrace.Substring(ex.StackTrace.LastIndexOf(' ')));
-                System.Windows.Forms.MessageBox.Show("ê¸°íƒ€ì—ëŸ¬ " + lineNum + "ì—ì„œ ë°œìƒ" + ex.Message);
+                System.Windows.Forms.MessageBox.Show("±âÅ¸¿¡·¯ " + lineNum + "¿¡¼­ ¹ß»ı" + ex.Message);
             }
         }
         public void DisConnect()

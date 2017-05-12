@@ -38,11 +38,18 @@ namespace MultiTerminal
                 m_isConnected = true;
                 Recvth.Start();
             }
-            catch(Exception ex)
+            catch (SocketException ex)
             {
-                System.Windows.Forms.MessageBox.Show(ex.ToString());
+                int lineNum = Convert.ToInt32(ex.StackTrace.Substring(ex.StackTrace.LastIndexOf(' ')));
+                System.Windows.Forms.MessageBox.Show("소켓에러 " + lineNum + "에서 발생" + ex.Message);
             }
-                
+
+            catch (Exception ex)
+            {
+                int lineNum = Convert.ToInt32(ex.StackTrace.Substring(ex.StackTrace.LastIndexOf(' ')));
+                System.Windows.Forms.MessageBox.Show("기타에러 " + lineNum + "에서 발생" + ex.Message);
+            }
+
         }
         public void RecvMessage()
         {
@@ -64,17 +71,39 @@ namespace MultiTerminal
 
                 }
             }
-            catch(Exception ex)
+            catch (SocketException ex)
             {
-                System.Windows.Forms.MessageBox.Show(ex.ToString());
+                int lineNum = Convert.ToInt32(ex.StackTrace.Substring(ex.StackTrace.LastIndexOf(' ')));
+                System.Windows.Forms.MessageBox.Show("소켓에러 " + lineNum + "에서 발생" + ex.Message);
+            }
+
+            catch (Exception ex)
+            {
+                int lineNum = Convert.ToInt32(ex.StackTrace.Substring(ex.StackTrace.LastIndexOf(' ')));
+                System.Windows.Forms.MessageBox.Show("기타에러 " + lineNum + "에서 발생" + ex.Message);
             }
         }
         public void SendMessage(string sendMsg)
         {
-            byte[] data = new byte[1024];
+            try
+            {
+                byte[] data = new byte[1024];
 
-            data = Encoding.Default.GetBytes(sendMsg);
-            client.SendTo(data,data.Length,SocketFlags.None,serverEP);
+                data = Encoding.Default.GetBytes(sendMsg);
+                client.SendTo(data, data.Length, SocketFlags.None, serverEP);
+            }
+            catch (SocketException ex)
+            {
+                int lineNum = Convert.ToInt32(ex.StackTrace.Substring(ex.StackTrace.LastIndexOf(' ')));
+                System.Windows.Forms.MessageBox.Show("소켓에러 " + lineNum + "에서 발생" + ex.Message);
+            }
+
+            catch (Exception ex)
+            {
+                int lineNum = Convert.ToInt32(ex.StackTrace.Substring(ex.StackTrace.LastIndexOf(' ')));
+                System.Windows.Forms.MessageBox.Show("기타에러 " + lineNum + "에서 발생" + ex.Message);
+            }
+
         }
         public void DisConnect()
         {
