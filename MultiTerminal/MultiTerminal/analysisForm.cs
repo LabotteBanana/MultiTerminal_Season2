@@ -16,12 +16,11 @@ namespace MultiTerminal
             this.ReceiveWindowBox = ReceiveWindowBox;
             this.BringToFront();
             InitializeComponent();
-            
         }
         private void analysisForm_Load(object sender, EventArgs e)
         {
             fre = new frequency(ReceiveWindowBox);
-            connectedName = fre.getConnection();
+            connectedName = fre.getConnection(); //로그 내에서 모든 포트 이름 가져오기
             int size = connectedName.Count;
             for (int i = 0; i < size; i++)
             {
@@ -30,12 +29,15 @@ namespace MultiTerminal
 
             selectState = new bool[connectedName.Count];
             for (int i = 0; i < connectedName.Count; i++) selectState[i] = false;
+            analyChart.Series.Clear();
         }
+        //checkedlistbox 클릭 이벤트
         private void connectedNamecheckedListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             int index = connectedNamecheckedListBox.SelectedIndex;
             this.indexer = index;
         }
+        //checkedlistbox itemcheck 이벤트
         private void colnnectedNamecheckedListBox_ItemCheck(object sender, ItemCheckEventArgs e)
         {
             if (connectedNamecheckedListBox.GetItemCheckState(indexer) != CheckState.Checked)
@@ -48,6 +50,7 @@ namespace MultiTerminal
             }
         }
 
+        //분석시작 클릭 이벤트
         private void analyStart_Click(object obj, EventArgs e)
         {
             int num = 0;
@@ -64,19 +67,16 @@ namespace MultiTerminal
                 int graphMaxTime = fre.getgraphTime();
                 int analyMax = 0;
                 int analySize = 0;
-                Console.WriteLine("graphTime : " + graphMaxTime);
                 int[,] freTable = new int[connectedName.Count, graphMaxTime+1];
                 freTable = fre.getDivision(connectedName,selectState);
                 for (int i = 0; i < connectedName.Count; i++)
                 {
                     for (int j = 0; j <= graphMaxTime; j++)
                     {
-                        Console.Write(freTable[i, j]);
                         if (freTable[i,j] > analyMax)
                             analyMax = freTable[i, j];
                         analySize++;
                     }
-                    Console.Write("\n-----\n");
                 }
                 //차트 그리는 부분
                 analyChart.Series.Clear();
@@ -88,18 +88,6 @@ namespace MultiTerminal
         private void analysisForm_Closing(object sender, FormClosingEventArgs e)  // 폼 닫혔을 때 
         {
             this.Dispose();
-        }
-
-        private void connectedNamecheckedListBox_SelectedValueChanged(object sender, EventArgs e)
-        {
-            if (connectedNamecheckedListBox.GetItemCheckState(indexer) == CheckState.Checked)
-            {
-                selectState[indexer] = true;
-            }
-            else
-            {
-                selectState[indexer] = false;
-            }
         }
     }
 }
