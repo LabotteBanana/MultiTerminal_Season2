@@ -9,7 +9,7 @@ using System.IO.Ports;
 using System.Threading;
 using System.Management;
 using System.IO;
-
+using System.Text;
 namespace MultiTerminal
 {
     public partial class MainForm : MetroFramework.Forms.MetroForm
@@ -69,9 +69,9 @@ namespace MultiTerminal
             {
                 if (userv != null)
                 {
-                    if (userv.server != null)
-                        if (userv.server.IsBound == true)
-                            userv.RecvMessage();
+                    //if (userv.server != null)
+                    //    if (userv.server.IsBound == true)
+                            //userv.RecvMessage();
                 }
                 if (ucla != null)
                 {
@@ -211,8 +211,11 @@ namespace MultiTerminal
                             {
                                 this.Invoke(new Action(() =>
                                 {
-                                    userv.SendMessage(SendBox1.Text);
+                                    //userv.SendMessage(SendBox1.Text);
+                                    byte[] send = Encoding.UTF8.GetBytes(SendBox1.Text);
 
+                                    //userv.server.BeginSendTo(send, 0, send.Length, System.Net.Sockets.SocketFlags.None, userv.senderEP, new AsyncCallback(userv.SendMessage), null);
+                                    userv.SendMessage(SendBox1.Text);
                                     ReceiveWindowBox.Text += "송신 : " + GetTimer() + SendBox1.Text + "\n";
                                 }));
                             }));
@@ -770,8 +773,9 @@ namespace MultiTerminal
                           {
                               this.Invoke(new Action(() =>
                               {
-                                  userv.SendMessage(SendBox1.Text);
+                                  byte[] send = Encoding.UTF8.GetBytes(SendBox1.Text);
 
+                                  userv.SendMessage(SendBox1.Text);
                                   ReceiveWindowBox.Text += "송신 : " + GetTimer() + SendBox1.Text + "\n";
                               }));
                           }));

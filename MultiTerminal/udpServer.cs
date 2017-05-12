@@ -15,14 +15,11 @@ namespace MultiTerminal
         MainForm main = null;
 
         private IPEndPoint EP;
-        public EndPoint clientEP;
-        private Dictionary<int,EndPoint> m_clinetEPList = new Dictionary<int, EndPoint>();
+        private IPEndPoint Sender;
+        private EndPoint remoteEP;
         public Socket server;
         private bool m_isConnected = false;
-        //private static Thread th = null;
-        private IAsyncResult asyncResult;
-        byte[] recv = new byte[1024];
-        byte[] send = new byte[1024];
+        private static Thread th = null;
         public void Connect(MainForm form,int Port)
         {
             try
@@ -30,19 +27,19 @@ namespace MultiTerminal
                 main = form;
                 EP = new IPEndPoint(IPAddress.Any, Port);
                 server = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-               IPEndPoint client;
-
-                client = new IPEndPoint(IPAddress.Any, 0);
+                Sender = new IPEndPoint(IPAddress.Any, 0);
                 server.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, 1);
                 server.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Broadcast, 1);
                 server.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.DontRoute, 1);
-                clientEP = (EndPoint)client;
+                remoteEP = (EndPoint)Sender;
                 if (server.IsBound == false)
                 {
                     server.Bind(EP);
                 }
-                server.BeginSendTo(send, 0, send.Length, SocketFlags.None, clientEP, new AsyncCallback(SendMessage), clientEP);
-                server.BeginReceiveFrom(recv, 0, recv.Length, SocketFlags.None, ref clientEP, new AsyncCallback(RecvMessage), null);
+                //SendMessage("Hello, Client!");
+
+                th = new Thread(new ThreadStart(RecvMessage)); //상대 문자열 수신 쓰레드 가동
+                th.Start();
             }
             catch (SocketException ex)
             {
@@ -61,9 +58,8 @@ namespace MultiTerminal
             try
             {
                 byte[] data = new byte[1024];
-
-                data = Encoding.Default.GetBytes(sendMsg);
-                server.SendTo(data, data.Length, SocketFlags.None, EP);
+                data = Encoding.UTF8.GetBytes(sendMsg);
+                server.SendTo(data, remoteEP);
             }
             catch (SocketException ex)
             {
@@ -78,32 +74,11 @@ namespace MultiTerminal
             }
 
         }
-
-        public void SendMessage(IAsyncResult asyncResult)
+        public void RecvMessage()
         {
-            try
-            {
-                server.EndSend(asyncResult);
-            }
-            catch (SocketException ex)
-            {
-                int lineNum = Convert.ToInt32(ex.StackTrace.Substring(ex.StackTrace.LastIndexOf(' ')));
-                System.Windows.Forms.MessageBox.Show("소켓에러 " + lineNum + "에서 발생" + ex.Message);
-            }
-
-            catch (Exception ex)
-            {
-                int lineNum = Convert.ToInt32(ex.StackTrace.Substring(ex.StackTrace.LastIndexOf(' ')));
-                System.Windows.Forms.MessageBox.Show("기타에러 " + lineNum + "에서 발생" + ex.Message);
-            }
-
-        }
-        public void RecvMessage(IAsyncResult asyncResult)
-        {
-            try {
-
-                server.EndReceiveFrom(asyncResult,ref clientEP);
-                server.BeginReceiveFrom(recv,0,recv.Length,SocketFlags.None,ref clientEP, new AsyncCallback(RecvMessage),null);
+            try { 
+            byte[] recv = new byte[1024];
+            int recvi = server.ReceiveFrom(recv,ref remoteEP);
 
             string recvMsg = Encoding.Default.GetString(recv);
                 ///이부분 문제
