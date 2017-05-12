@@ -28,10 +28,15 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea4 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend4 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series4 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.connectedNamePanel = new MetroFramework.Controls.MetroPanel();
             this.connectedNamecheckedListBox = new System.Windows.Forms.CheckedListBox();
             this.analyStartButton = new MetroFramework.Controls.MetroButton();
+            this.analyChart = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.connectedNamePanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.analyChart)).BeginInit();
             this.SuspendLayout();
             // 
             // connectedNamePanel
@@ -56,8 +61,8 @@
             this.connectedNamecheckedListBox.Name = "connectedNamecheckedListBox";
             this.connectedNamecheckedListBox.Size = new System.Drawing.Size(238, 196);
             this.connectedNamecheckedListBox.TabIndex = 4;
+            this.connectedNamecheckedListBox.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.colnnectedNamecheckedListBox_ItemCheck);
             this.connectedNamecheckedListBox.SelectedIndexChanged += new System.EventHandler(this.connectedNamecheckedListBox_SelectedIndexChanged);
-            this.connectedNamecheckedListBox.SelectedValueChanged += new System.EventHandler(this.connectedNamecheckedListBox_SelectedValueChanged);
             // 
             // analyStartButton
             // 
@@ -68,17 +73,35 @@
             this.analyStartButton.Text = "분석 시작";
             this.analyStartButton.Click += new System.EventHandler(this.analyStart_Click);
             // 
+            // analyChart
+            // 
+            chartArea4.Name = "ChartArea1";
+            this.analyChart.ChartAreas.Add(chartArea4);
+            legend4.Name = "Legend1";
+            this.analyChart.Legends.Add(legend4);
+            this.analyChart.Location = new System.Drawing.Point(277, 63);
+            this.analyChart.Name = "analyChart";
+            series4.ChartArea = "ChartArea1";
+            series4.Legend = "Legend1";
+            series4.Name = "Series1";
+            this.analyChart.Series.Add(series4);
+            this.analyChart.Size = new System.Drawing.Size(433, 300);
+            this.analyChart.TabIndex = 1;
+            this.analyChart.Text = "analyChart";
+            // 
             // analysisForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(733, 469);
+            this.Controls.Add(this.analyChart);
             this.Controls.Add(this.connectedNamePanel);
             this.Name = "analysisForm";
             this.Text = "빈도 분석";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.analysisForm_Closing);
             this.Load += new System.EventHandler(this.analysisForm_Load);
             this.connectedNamePanel.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.analyChart)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -88,5 +111,6 @@
         private MetroFramework.Controls.MetroPanel connectedNamePanel;
         private System.Windows.Forms.CheckedListBox connectedNamecheckedListBox;
         private MetroFramework.Controls.MetroButton analyStartButton;
+        private System.Windows.Forms.DataVisualization.Charting.Chart analyChart;
     }
 }

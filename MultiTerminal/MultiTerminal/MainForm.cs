@@ -598,7 +598,7 @@ namespace MultiTerminal
             //{
             //    this.Invoke(new Action(() =>
             //    {
-            this.ReceiveWindowBox.AppendText("수신(" + "Name" + ") : " + GetTimer() + Global.globalVar + "\n");
+            this.ReceiveWindowBox.AppendText("수신(" + gridview[0].Portname + ") : " + GetTimer() + Global.globalVar + "\n");
             this.ReceiveWindowBox.SelectionStart = ReceiveWindowBox.Text.Length;
             this.ReceiveWindowBox.ScrollToCaret();
             //    }));

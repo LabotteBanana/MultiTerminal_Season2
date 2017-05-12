@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Windows.Forms.DataVisualization.Charting;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Drawing;
 
 namespace MultiTerminal
 {
@@ -119,6 +121,47 @@ namespace MultiTerminal
             }
 
             return freTable;
+        }
+        public void drawingChart(int[,] freTable, int graphMaxTime, int analyMax, int analySize, List<string> connectedName, Chart analyChart, bool[] selectState)
+        {
+            int freMax = analyMax;
+            int timeMax = graphMaxTime;
+            int stateSize = 0;
+            for (int i = 0; i < selectState.Length; i++)
+            {
+                if (selectState[i] == true)
+                    stateSize++;
+            }
+            //선택한 것만 가져오기 위해서 하는 처리
+            int[] clientSeleted = new int[stateSize];
+            stateSize = 0;
+            for (int i = 0; i < selectState.Length; i++)
+            {
+                if (selectState[i] == true)
+                    clientSeleted[stateSize++] = i;
+            }
+
+            Series[] analyGraph = new Series[clientSeleted.Length];
+            Random r = new Random();
+            for (int i = 0; i < clientSeleted.Length; i++)
+            {
+                analyGraph[i] = analyChart.Series.Add(connectedName[clientSeleted[i]]);
+                analyGraph[i].ChartType = SeriesChartType.Line;
+                analyGraph[i].Color = Color.FromArgb(r.Next(128, 256),r.Next(128,256),r.Next(128,256));
+                for (int j = 0; j <= graphMaxTime; j++)
+                {
+                    analyGraph[i].Points.AddXY(j, freTable[clientSeleted[i], j]);
+                }
+            }
+
+            chartSetting(analyChart, graphMaxTime, analyMax);
+        }
+        private void chartSetting(Chart analyChart, int graphMaxTime, int analyMax)
+        {
+            analyChart.ChartAreas["ChartArea1"].AxisX.Minimum = 0;
+            analyChart.ChartAreas["ChartArea1"].AxisX.Maximum = graphMaxTime;
+            analyChart.ChartAreas["ChartArea1"].AxisY.Minimum = 0;
+            analyChart.ChartAreas["ChartArea1"].AxisY.Maximum = analyMax;
         }
 
         public int getgraphTime() {
