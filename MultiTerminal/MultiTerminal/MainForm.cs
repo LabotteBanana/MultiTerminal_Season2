@@ -548,13 +548,9 @@ namespace MultiTerminal
         {
             try
             {
-
-                serial[Sport_Count] = new Serial();
+                serial[Sport_Count] = new Serial(this, Serial_Combo_Port.Items[Serial_Combo_Port.SelectedIndex].ToString());
                 serial[Sport_Count].SerialOpen(SerialOpt[0], SerialOpt[1], SerialOpt[2], SerialOpt[3], SerialOpt[4], "500", "500");
-                serial[Sport_Count].sPort.DataReceived += new SerialDataReceivedEventHandler(UpdateWindowText);
-
-
-
+                //serial[Sport_Count].sPort.DataReceived += new SerialDataReceivedEventHandler(UpdateWindowText);
             }
             catch (Exception E)
             {
@@ -598,9 +594,9 @@ namespace MultiTerminal
             //{
             //    this.Invoke(new Action(() =>
             //    {
-            this.ReceiveWindowBox.AppendText("수신(" + gridview[0].Portname + ") : " + GetTimer() + Global.globalVar + "\n");
-            this.ReceiveWindowBox.SelectionStart = ReceiveWindowBox.Text.Length;
-            this.ReceiveWindowBox.ScrollToCaret();
+            //this.ReceiveWindowBox.AppendText("수신(" + gridview[0].Portname + ") : " + GetTimer() + Global.globalVar + "\n");
+            //this.ReceiveWindowBox.SelectionStart = ReceiveWindowBox.Text.Length;
+            //this.ReceiveWindowBox.ScrollToCaret();
             //    }));
             //}));
             //thread.Start();
@@ -1114,7 +1110,7 @@ namespace MultiTerminal
         #region 수신 옵션들 묶음
         private void Btn_Clear_Click(object sender, EventArgs e)
         {
-
+            ReceiveWindowBox.Text = null;
         }
 
         private void Chk_Hexa_CheckedChanged(object sender, EventArgs e)
@@ -1225,10 +1221,6 @@ namespace MultiTerminal
                 //Close
                 streamreader.Close();
             }
-        }
-        private void receiveWindowBoxClear_Click(object sender, EventArgs e)
-        {
-            ReceiveWindowBox.Text = null;
         }
 
         //시리얼 포트 콤보박스에서 제일 긴 녀석 넓이 가져오기

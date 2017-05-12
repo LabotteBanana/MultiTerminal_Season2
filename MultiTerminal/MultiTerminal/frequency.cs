@@ -147,6 +147,7 @@ namespace MultiTerminal
             {
                 analyGraph[i] = analyChart.Series.Add(connectedName[clientSeleted[i]]);
                 analyGraph[i].ChartType = SeriesChartType.Line;
+                analyGraph[i].BorderWidth = 2;
                 analyGraph[i].Color = Color.FromArgb(r.Next(128, 256),r.Next(128,256),r.Next(128,256));
                 for (int j = 0; j <= graphMaxTime; j++)
                 {
@@ -162,6 +163,7 @@ namespace MultiTerminal
             analyChart.ChartAreas["ChartArea1"].AxisX.Maximum = graphMaxTime;
             analyChart.ChartAreas["ChartArea1"].AxisY.Minimum = 0;
             analyChart.ChartAreas["ChartArea1"].AxisY.Maximum = analyMax;
+            analyChart.ChartAreas["ChartArea1"].AxisY.Interval = 1;
         }
 
         public int getgraphTime() {
