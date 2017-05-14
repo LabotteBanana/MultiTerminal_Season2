@@ -11,6 +11,7 @@ namespace MultiTerminal
         private bool[] selectState = null;
         private frequency fre = null;
         private int indexer=0;
+        private bool ggomsoo = false;
         public analysisForm(RichTextBox ReceiveWindowBox)
         {
             this.ReceiveWindowBox = ReceiveWindowBox;
@@ -40,13 +41,16 @@ namespace MultiTerminal
         //checkedlistbox itemcheck 이벤트
         private void colnnectedNamecheckedListBox_ItemCheck(object sender, ItemCheckEventArgs e)
         {
-            if (connectedNamecheckedListBox.GetItemCheckState(indexer) != CheckState.Checked)
+            if (ggomsoo == false)
             {
-                selectState[indexer] = true;
-            }
-            else
-            {
-                selectState[indexer] = false;
+                if (connectedNamecheckedListBox.GetItemCheckState(indexer) != CheckState.Checked)
+                {
+                    selectState[indexer] = true;
+                }
+                else
+                {
+                    selectState[indexer] = false;
+                }
             }
         }
 
@@ -86,6 +90,7 @@ namespace MultiTerminal
         }
         private void allSelect_btn_Click(object sender, EventArgs e)
         {
+            ggomsoo = true;
             int itemNum = connectedNamecheckedListBox.Items.Count;
             int allCheck = 0;
             for (int i = 0; i < itemNum; i++)
@@ -103,6 +108,7 @@ namespace MultiTerminal
                     connectedNamecheckedListBox.SetItemChecked(i, true);
                     selectState[i] = true;
                 }
+            ggomsoo = false;
         }
 
         private void analysisForm_Closing(object sender, FormClosingEventArgs e)  // 폼 닫혔을 때 
