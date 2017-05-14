@@ -75,9 +75,9 @@ namespace MultiTerminal
                 }
                 if (ucla != null)
                 {
-                    if (ucla.client != null)
-                        if (ucla.m_isConnected == true)
-                            ucla.RecvMessage();
+                    //if (ucla.client != null)
+                        //if (ucla.m_isConnected == true)
+                            //ucla.RecvMessage();
                 }
             }
         }
@@ -231,7 +231,7 @@ namespace MultiTerminal
                             {
                                 this.Invoke(new Action(() =>
                                 {
-                                    ucla.SendMessage(SendBox1.Text);
+                                    //ucla.SendMessage(SendBox1.Text);
 
                                     ReceiveWindowBox.Text += "송신 : " + GetTimer() + SendBox1.Text + "\n";
                                 }));
@@ -733,7 +733,7 @@ namespace MultiTerminal
             aftertimer.Enabled = true;
             aftertimer.AutoReset = true;
             timer.Elapsed += OnTimeEvent;
-            timer.Elapsed += RecvEvent;
+            //timer.Elapsed += RecvEvent;
             timer.Elapsed += WaitAccept;
         }
         #endregion
@@ -787,7 +787,7 @@ namespace MultiTerminal
                          {
                              this.Invoke(new Action(() =>
                              {
-                                 ucla.SendMessage(SendBox1.Text);
+                                 //ucla.SendMessage(SendBox1.Text);
                                  ReceiveWindowBox.Text += "송신 : " + GetTimer() + SendBox1.Text + "\n";
                              }));
                          }));

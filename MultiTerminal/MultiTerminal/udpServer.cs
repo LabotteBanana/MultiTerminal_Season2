@@ -50,7 +50,7 @@ namespace MultiTerminal
                 //server.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Broadcast, 1);
                 //server.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.DontRoute, 1);
 
-
+                datatStream = new byte[] { 0xdd, 0xf1 };
                 server.BeginReceiveFrom(datatStream, 0, datatStream.Length, SocketFlags.None, ref clientEP, new AsyncCallback(RecvMessage), clientEP);
                 //server.BeginSendTo(send, 0, send.Length, SocketFlags.None, clientEP, new AsyncCallback(SendMessage), clientEP);
                 //server.BeginReceiveFrom(recv, 0, recv.Length, SocketFlags.None, ref clientEP, new AsyncCallback(RecvMessage), null);
@@ -115,6 +115,7 @@ namespace MultiTerminal
             try
             {
                 //byte[] data;
+                server.EndReceiveFrom(asyncResult,endPoint);
 
                 Packet ReceiveData = new Packet(this.datatStream);
                 if (main.InvokeRequired)
@@ -132,7 +133,6 @@ namespace MultiTerminal
 
                 IPEndPoint clients = new IPEndPoint(IPAddress.Any, 0);
                 EndPoint clientEP = (EndPoint)clients;
-                server.EndReceiveFrom(asyncResult, ref clientEP);
                 SendData.ChatName = ReceiveData.ChatName;
 
 
