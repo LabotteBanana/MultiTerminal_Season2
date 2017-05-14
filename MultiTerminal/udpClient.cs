@@ -41,13 +41,13 @@ namespace MultiTerminal
             catch (SocketException ex)
             {
                 int lineNum = Convert.ToInt32(ex.StackTrace.Substring(ex.StackTrace.LastIndexOf(' ')));
-                System.Windows.Forms.MessageBox.Show("소켓에러 " + lineNum + "에서 발생" + ex.Message, "ConnectError");
+                System.Windows.Forms.MessageBox.Show("소켓에러 " + lineNum + "에서 발생" + ex.Message);
             }
 
             catch (Exception ex)
             {
                 int lineNum = Convert.ToInt32(ex.StackTrace.Substring(ex.StackTrace.LastIndexOf(' ')));
-                System.Windows.Forms.MessageBox.Show("기타에러 " + lineNum + "에서 발생" + ex.Message, "ConnectError");
+                System.Windows.Forms.MessageBox.Show("기타에러 " + lineNum + "에서 발생" + ex.Message);
             }
 
         }
@@ -61,29 +61,26 @@ namespace MultiTerminal
                 string recvMsg = Encoding.Default.GetString(data);
                 if (main.InvokeRequired)
                 {
-                    main.Invoke(new Action(() => main.ReceiveWindowBox.AppendText("수신 :" + main.GetTimer() + recvMsg)));
-                    main.Invoke(new Action(() => main.ReceiveWindowBox.AppendText("" + Environment.NewLine)));
-                    main.ReceiveWindowBox.SelectionStart = main.ReceiveWindowBox.Text.Length;
-                    main.ReceiveWindowBox.ScrollToCaret();
+                    main.Invoke(new Action(() => main.ReceiveWindowBox.Text += "수신 :" + main.GetTimer() + recvMsg + "\n"));
+
 
                 }
                 else
                 {
-                    main.ReceiveWindowBox.AppendText("수신 : " + main.GetTimer() + recvMsg + "\n");
-                    main.ReceiveWindowBox.SelectionStart = main.ReceiveWindowBox.Text.Length;
-                    main.ReceiveWindowBox.ScrollToCaret();
+                    main.ReceiveWindowBox.Text += "수신 :" + main.GetTimer() + recvMsg + "\n";
+
                 }
             }
             catch (SocketException ex)
             {
                 int lineNum = Convert.ToInt32(ex.StackTrace.Substring(ex.StackTrace.LastIndexOf(' ')));
-                System.Windows.Forms.MessageBox.Show("소켓에러 " + lineNum + "에서 발생" + ex.Message, "RecvError");
+                System.Windows.Forms.MessageBox.Show("소켓에러 " + lineNum + "에서 발생" + ex.Message);
             }
 
             catch (Exception ex)
             {
                 int lineNum = Convert.ToInt32(ex.StackTrace.Substring(ex.StackTrace.LastIndexOf(' ')));
-                System.Windows.Forms.MessageBox.Show("기타에러 " + lineNum + "에서 발생" + ex.Message, "RecvError");
+                System.Windows.Forms.MessageBox.Show("기타에러 " + lineNum + "에서 발생" + ex.Message);
             }
         }
         public void SendMessage(string sendMsg)
@@ -98,13 +95,13 @@ namespace MultiTerminal
             catch (SocketException ex)
             {
                 int lineNum = Convert.ToInt32(ex.StackTrace.Substring(ex.StackTrace.LastIndexOf(' ')));
-                System.Windows.Forms.MessageBox.Show("소켓에러 " + lineNum + "에서 발생" + ex.Message,"SendError");
+                System.Windows.Forms.MessageBox.Show("소켓에러 " + lineNum + "에서 발생" + ex.Message);
             }
 
             catch (Exception ex)
             {
                 int lineNum = Convert.ToInt32(ex.StackTrace.Substring(ex.StackTrace.LastIndexOf(' ')));
-                System.Windows.Forms.MessageBox.Show("기타에러 " + lineNum + "에서 발생" + ex.Message, "SendError");
+                System.Windows.Forms.MessageBox.Show("기타에러 " + lineNum + "에서 발생" + ex.Message);
             }
 
         }

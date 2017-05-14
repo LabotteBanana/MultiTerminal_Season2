@@ -9,7 +9,7 @@ using System.IO.Ports;
 using System.Threading;
 using System.Management;
 using System.IO;
-
+using System.Text;
 namespace MultiTerminal
 {
     public partial class MainForm : MetroFramework.Forms.MetroForm
@@ -26,6 +26,7 @@ namespace MultiTerminal
         public udpClient ucla = new udpClient();
         public static Thread macroThread;
         public static Thread SendThread;
+        public static Thread AcceptThread;
         public static Thread RecvThread;
         public delegate void TRecvCallBack();
 
@@ -128,7 +129,7 @@ namespace MultiTerminal
                 }
                 catch (Exception ex)
                 {
-                    //MessageBox.Show(ex.Message);
+                    MessageBox.Show(ex.Message);
                 }
             }
             if (connectType == TYPE.TCP)
@@ -614,17 +615,20 @@ namespace MultiTerminal
         #region TCP서버여부
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
-            if (ServerCheck.Checked == true)
+            if (isServ == false)
             {
                 IpNumber.Enabled = false;
                 isServ = true;
+                mactimer.Elapsed += WaitAccept;
+
 
             }
-            else
+            else if (ServerCheck.Checked == false)
             {
                 IpNumber.Enabled = true;
                 isServ = false;
             }
+
 
         }
         #endregion
@@ -771,7 +775,7 @@ namespace MultiTerminal
                           {
                               this.Invoke(new Action(() =>
                               {
-                                  userv.SendMessage(SendBox1.Text);
+                                  byte[] send = Encoding.UTF8.GetBytes(SendBox1.Text);
 
                                   ReceiveWindowBox.AppendText("송신 : " + GetTimer() + SendBox1.Text + "\n");
                                   ReceiveWindowBox.SelectionStart = ReceiveWindowBox.Text.Length;
@@ -799,7 +803,7 @@ namespace MultiTerminal
             }
             catch (Exception ex)
             {
-                //MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message);
             }
         }
 
@@ -1249,6 +1253,41 @@ namespace MultiTerminal
             }
             return maxLen;
         }
+
+        private void Tcp_Btn_DisCon_Click(object sender, EventArgs e)
+        {
+            //comboBox5 -> IP, comboBox6 -> Port
+            if (Tcp_Btn_DisCon.Text == "연결")
+            {
+                if (ServerCheck.Checked == true)
+                {
+                    int port = Int32.Parse(PortNumber.Text);
+                    tserv = new Tserv(this, port);
+                    tserv.ServerStart();
+                    //AcceptThread = new Thread(() => tserv.ServerWait());
+                    //AcceptThread.Start();
+
+
+                }
+                else
+                {
+                    int port = Int32.Parse(PortNumber.Text);
+                    string ip = IpNumber.Text;
+                    tcla = new Tserv(this, ip, port);
+                    tcla.Connect();
+                }
+                Tcp_Btn_DisCon.Text = "연결해제";
+                return;
+            }
+            else if (Tcp_Btn_DisCon.Text == "연결해제")
+            {
+                if (tserv != null && isServ == true)
+                    tserv.ServerStop();
+                else if (tcla != null && isServ == false)
+                    tcla.DisConnect();
+            }
+            Tcp_Btn_DisCon.Text = "연결";
+            return;
 
 
         // gridview 체크박스 관련 ^-^
