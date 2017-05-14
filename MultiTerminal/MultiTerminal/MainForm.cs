@@ -9,7 +9,7 @@ using System.IO.Ports;
 using System.Threading;
 using System.Management;
 using System.IO;
-
+using System.Text;
 namespace MultiTerminal
 {
     public partial class MainForm : MetroFramework.Forms.MetroForm
@@ -26,6 +26,7 @@ namespace MultiTerminal
         public udpClient ucla = new udpClient();
         public static Thread macroThread;
         public static Thread SendThread;
+        public static Thread AcceptThread;
         public static Thread RecvThread;
         public delegate void TRecvCallBack();
 
@@ -89,9 +90,7 @@ namespace MultiTerminal
             {
                 if (userv != null)
                 {
-                    if (userv.server != null)
-                        if (userv.server.IsBound == true)
-                            userv.RecvMessage();
+                    
                 }
                 if (ucla != null)
                 {
@@ -128,7 +127,9 @@ namespace MultiTerminal
                 }
                 catch (Exception ex)
                 {
-                    //MessageBox.Show(ex.Message);
+                    int lineNum = Convert.ToInt32(ex.StackTrace.Substring(ex.StackTrace.LastIndexOf(' ')));
+                    System.Windows.Forms.MessageBox.Show("기타에러 " + lineNum + "에서 발생" + ex.Message);
+
                 }
             }
             if (connectType == TYPE.TCP)
@@ -174,7 +175,9 @@ namespace MultiTerminal
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.ToString());
+                    int lineNum = Convert.ToInt32(ex.StackTrace.Substring(ex.StackTrace.LastIndexOf(' ')));
+                    System.Windows.Forms.MessageBox.Show("기타에러 " + lineNum + "에서 발생" + ex.Message);
+
                 }
             }
             if (connectType == TYPE.UDP)
@@ -221,7 +224,9 @@ namespace MultiTerminal
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.ToString());
+                    int lineNum = Convert.ToInt32(ex.StackTrace.Substring(ex.StackTrace.LastIndexOf(' ')));
+                    System.Windows.Forms.MessageBox.Show("기타에러 " + lineNum + "에서 발생" + ex.Message);
+
                 }
             }
         }
@@ -554,7 +559,8 @@ namespace MultiTerminal
             }
             catch (Exception E)
             {
-                MessageBox.Show(E.ToString());
+                int lineNum = Convert.ToInt32(E.StackTrace.Substring(E.StackTrace.LastIndexOf(' ')));
+                System.Windows.Forms.MessageBox.Show("기타에러 " + lineNum + "에서 발생" + E.Message);
             }
 
             if (serial[Sport_Count].IsOpen())
@@ -614,17 +620,20 @@ namespace MultiTerminal
         #region TCP서버여부
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
-            if (ServerCheck.Checked == true)
+            if (isServ == false)
             {
                 IpNumber.Enabled = false;
                 isServ = true;
+                // mactimer.Elapsed += WaitAccept;
+
 
             }
-            else
+            else if (ServerCheck.Checked == false)
             {
                 IpNumber.Enabled = true;
                 isServ = false;
             }
+
 
         }
         #endregion
@@ -662,7 +671,9 @@ namespace MultiTerminal
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.ToString());
+                int lineNum = Convert.ToInt32(ex.StackTrace.Substring(ex.StackTrace.LastIndexOf(' ')));
+                System.Windows.Forms.MessageBox.Show("기타에러 " + lineNum + "에서 발생" + ex.Message);
+
             }
         }
         #endregion
@@ -690,7 +701,7 @@ namespace MultiTerminal
                 mactimer.Elapsed -= OnMacro;
                 mactimer.Enabled = false;
 
-                SendThread.Abort();
+                //SendThread.Abort();
                 macroThread.Abort();
             }
         }
@@ -771,7 +782,7 @@ namespace MultiTerminal
                           {
                               this.Invoke(new Action(() =>
                               {
-                                  userv.SendMessage(SendBox1.Text);
+                                  byte[] send = Encoding.UTF8.GetBytes(SendBox1.Text);
 
                                   ReceiveWindowBox.AppendText("송신 : " + GetTimer() + SendBox1.Text + "\n");
                                   ReceiveWindowBox.SelectionStart = ReceiveWindowBox.Text.Length;
@@ -799,7 +810,7 @@ namespace MultiTerminal
             }
             catch (Exception ex)
             {
-                //MessageBox.Show(ex.Message);
+
             }
         }
 
@@ -1251,6 +1262,7 @@ namespace MultiTerminal
         }
 
 
+
         // gridview 체크박스 관련 ^-^
         #region
         private void PortListGrid_CellValueChanged(object sender, DataGridViewCellEventArgs e) // 그리드뷰 체크박스 클릭 이벤트
@@ -1323,7 +1335,9 @@ namespace MultiTerminal
                             }
                             catch (Exception ex)
                             {
-                                MessageBox.Show(ex.ToString());
+                                int lineNum = Convert.ToInt32(ex.StackTrace.Substring(ex.StackTrace.LastIndexOf(' ')));
+                                System.Windows.Forms.MessageBox.Show("기타에러 " + lineNum + "에서 발생" + ex.Message);
+
                             }
 
                         }
@@ -1370,7 +1384,6 @@ namespace MultiTerminal
 
 
         #endregion
-
         private void Tcp_Btn_DisCon_Click(object sender, EventArgs e)
         {
             //comboBox5 -> IP, comboBox6 -> Port
@@ -1407,6 +1420,7 @@ namespace MultiTerminal
             return;
 
         }
+
         //분석 폼 열기
         private void freq_Click(object obj, EventArgs e)
         {
