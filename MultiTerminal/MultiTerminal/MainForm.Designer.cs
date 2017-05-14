@@ -31,7 +31,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.metroPanel1 = new MetroFramework.Controls.MetroPanel();
             this.button1 = new System.Windows.Forms.Button();
             this.panel5 = new System.Windows.Forms.Panel();
@@ -44,9 +44,6 @@
             this.Rx = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.DisCon = new System.Windows.Forms.DataGridViewButtonColumn();
             this.panel4 = new System.Windows.Forms.Panel();
-            this.SerialPanel = new System.Windows.Forms.Panel();
-            this.Serial_Btn_F5 = new System.Windows.Forms.Button();
-            this.TcpPanel = new System.Windows.Forms.Panel();
             this.UdpPanel = new System.Windows.Forms.Panel();
             this.Udp_Btn_DisCon = new System.Windows.Forms.Button();
             this.Udp_Btn_Con = new System.Windows.Forms.Button();
@@ -58,6 +55,7 @@
             this.label11 = new System.Windows.Forms.Label();
             this.button4 = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
+            this.TcpPanel = new System.Windows.Forms.Panel();
             this.ServerCheck = new System.Windows.Forms.CheckBox();
             this.PortNumber = new System.Windows.Forms.ComboBox();
             this.IpNumber = new System.Windows.Forms.ComboBox();
@@ -66,6 +64,8 @@
             this.label8 = new System.Windows.Forms.Label();
             this.Tcp_Btn_DisCon = new System.Windows.Forms.Button();
             this.Tcp_Btn_Con = new System.Windows.Forms.Button();
+            this.SerialPanel = new System.Windows.Forms.Panel();
+            this.Serial_Btn_F5 = new System.Windows.Forms.Button();
             this.Serial_Combo_FlowCon = new System.Windows.Forms.ComboBox();
             this.Serial_Combo_StopBit = new System.Windows.Forms.ComboBox();
             this.Serial_Combo_Parity = new System.Windows.Forms.ComboBox();
@@ -141,18 +141,16 @@
             this.로그저장ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.로그불러오기ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ddfdfToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.설정ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.빈도분석ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-
-
+            this.설정ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.metroPanel1.SuspendLayout();
             this.panel5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.PortListGrid)).BeginInit();
             this.panel4.SuspendLayout();
-            this.SerialPanel.SuspendLayout();
-            this.TcpPanel.SuspendLayout();
             this.UdpPanel.SuspendLayout();
+            this.TcpPanel.SuspendLayout();
+            this.SerialPanel.SuspendLayout();
             this.panel2.SuspendLayout();
             this.LogPanel.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -266,9 +264,9 @@
             // DisCon
             // 
             this.DisCon.DataPropertyName = "Discon";
-            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle8.NullValue = "dd";
-            this.DisCon.DefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle2.NullValue = "dd";
+            this.DisCon.DefaultCellStyle = dataGridViewCellStyle2;
             this.DisCon.HeaderText = "X";
             this.DisCon.Name = "DisCon";
             this.DisCon.Resizable = System.Windows.Forms.DataGridViewTriState.True;
@@ -278,61 +276,13 @@
             // 
             // panel4
             // 
+            this.panel4.Controls.Add(this.SerialPanel);
             this.panel4.Controls.Add(this.UdpPanel);
             this.panel4.Controls.Add(this.TcpPanel);
-            this.panel4.Controls.Add(this.SerialPanel);
             this.panel4.Location = new System.Drawing.Point(5, 101);
             this.panel4.Name = "panel4";
             this.panel4.Size = new System.Drawing.Size(159, 284);
             this.panel4.TabIndex = 17;
-            // 
-            // SerialPanel
-            // 
-            this.SerialPanel.Controls.Add(this.Serial_Btn_F5);
-            this.SerialPanel.Controls.Add(this.Serial_Combo_FlowCon);
-            this.SerialPanel.Controls.Add(this.Serial_Combo_StopBit);
-            this.SerialPanel.Controls.Add(this.Serial_Combo_Parity);
-            this.SerialPanel.Controls.Add(this.Serial_Combo_Data);
-            this.SerialPanel.Controls.Add(this.Serial_Combo_Baud);
-            this.SerialPanel.Controls.Add(this.Serial_Combo_Port);
-            this.SerialPanel.Controls.Add(this.label6);
-            this.SerialPanel.Controls.Add(this.label5);
-            this.SerialPanel.Controls.Add(this.label4);
-            this.SerialPanel.Controls.Add(this.label3);
-            this.SerialPanel.Controls.Add(this.label2);
-            this.SerialPanel.Controls.Add(this.Label_Se_Port);
-            this.SerialPanel.Controls.Add(this.Serial_Btn_Con);
-            this.SerialPanel.Controls.Add(this.Serial_Btn_DisCon);
-            this.SerialPanel.Location = new System.Drawing.Point(3, 3);
-            this.SerialPanel.Name = "SerialPanel";
-            this.SerialPanel.Size = new System.Drawing.Size(150, 276);
-            this.SerialPanel.TabIndex = 7;
-            this.SerialPanel.Visible = false;
-            // 
-            // Serial_Btn_F5
-            // 
-            this.Serial_Btn_F5.Location = new System.Drawing.Point(10, 248);
-            this.Serial_Btn_F5.Name = "Serial_Btn_F5";
-            this.Serial_Btn_F5.Size = new System.Drawing.Size(131, 23);
-            this.Serial_Btn_F5.TabIndex = 15;
-            this.Serial_Btn_F5.Text = "새로고침";
-            this.Serial_Btn_F5.UseVisualStyleBackColor = true;
-            // 
-            // TcpPanel
-            // 
-            this.TcpPanel.Controls.Add(this.ServerCheck);
-            this.TcpPanel.Controls.Add(this.PortNumber);
-            this.TcpPanel.Controls.Add(this.IpNumber);
-            this.TcpPanel.Controls.Add(this.label1);
-            this.TcpPanel.Controls.Add(this.label7);
-            this.TcpPanel.Controls.Add(this.label8);
-            this.TcpPanel.Controls.Add(this.Tcp_Btn_DisCon);
-            this.TcpPanel.Controls.Add(this.Tcp_Btn_Con);
-            this.TcpPanel.Location = new System.Drawing.Point(0, 0);
-            this.TcpPanel.Name = "TcpPanel";
-            this.TcpPanel.Size = new System.Drawing.Size(150, 276);
-            this.TcpPanel.TabIndex = 14;
-            this.TcpPanel.Visible = false;
             // 
             // UdpPanel
             // 
@@ -443,6 +393,22 @@
             this.button5.Text = "옵션적용";
             this.button5.UseVisualStyleBackColor = true;
             // 
+            // TcpPanel
+            // 
+            this.TcpPanel.Controls.Add(this.ServerCheck);
+            this.TcpPanel.Controls.Add(this.PortNumber);
+            this.TcpPanel.Controls.Add(this.IpNumber);
+            this.TcpPanel.Controls.Add(this.label1);
+            this.TcpPanel.Controls.Add(this.label7);
+            this.TcpPanel.Controls.Add(this.label8);
+            this.TcpPanel.Controls.Add(this.Tcp_Btn_DisCon);
+            this.TcpPanel.Controls.Add(this.Tcp_Btn_Con);
+            this.TcpPanel.Location = new System.Drawing.Point(0, 0);
+            this.TcpPanel.Name = "TcpPanel";
+            this.TcpPanel.Size = new System.Drawing.Size(150, 276);
+            this.TcpPanel.TabIndex = 14;
+            this.TcpPanel.Visible = false;
+            // 
             // ServerCheck
             // 
             this.ServerCheck.AutoSize = true;
@@ -516,6 +482,39 @@
             this.Tcp_Btn_Con.Text = "옵션적용";
             this.Tcp_Btn_Con.UseVisualStyleBackColor = true;
             this.Tcp_Btn_Con.Click += new System.EventHandler(this.button3_Click);
+            // 
+            // SerialPanel
+            // 
+            this.SerialPanel.Controls.Add(this.Serial_Btn_F5);
+            this.SerialPanel.Controls.Add(this.Serial_Combo_FlowCon);
+            this.SerialPanel.Controls.Add(this.Serial_Combo_StopBit);
+            this.SerialPanel.Controls.Add(this.Serial_Combo_Parity);
+            this.SerialPanel.Controls.Add(this.Serial_Combo_Data);
+            this.SerialPanel.Controls.Add(this.Serial_Combo_Baud);
+            this.SerialPanel.Controls.Add(this.Serial_Combo_Port);
+            this.SerialPanel.Controls.Add(this.label6);
+            this.SerialPanel.Controls.Add(this.label5);
+            this.SerialPanel.Controls.Add(this.label4);
+            this.SerialPanel.Controls.Add(this.label3);
+            this.SerialPanel.Controls.Add(this.label2);
+            this.SerialPanel.Controls.Add(this.Label_Se_Port);
+            this.SerialPanel.Controls.Add(this.Serial_Btn_Con);
+            this.SerialPanel.Controls.Add(this.Serial_Btn_DisCon);
+            this.SerialPanel.Location = new System.Drawing.Point(3, 3);
+            this.SerialPanel.Name = "SerialPanel";
+            this.SerialPanel.Size = new System.Drawing.Size(150, 276);
+            this.SerialPanel.TabIndex = 7;
+            this.SerialPanel.Visible = false;
+            // 
+            // Serial_Btn_F5
+            // 
+            this.Serial_Btn_F5.Location = new System.Drawing.Point(10, 248);
+            this.Serial_Btn_F5.Name = "Serial_Btn_F5";
+            this.Serial_Btn_F5.Size = new System.Drawing.Size(131, 23);
+            this.Serial_Btn_F5.TabIndex = 15;
+            this.Serial_Btn_F5.Text = "새로고침";
+            this.Serial_Btn_F5.UseVisualStyleBackColor = true;
+            this.Serial_Btn_F5.Click += new System.EventHandler(this.serial_Refresh_Click);
             // 
             // Serial_Combo_FlowCon
             // 
@@ -1157,7 +1156,7 @@
             // 
             // Btn_AEAS4
             // 
-            this.Btn_AEAS4.Font = new System.Drawing.Font("굴림", 7F);
+            this.Btn_AEAS4.Font = new System.Drawing.Font("Gulim", 7F);
             this.Btn_AEAS4.Location = new System.Drawing.Point(504, 112);
             this.Btn_AEAS4.Name = "Btn_AEAS4";
             this.Btn_AEAS4.Size = new System.Drawing.Size(31, 47);
@@ -1167,7 +1166,7 @@
             // 
             // Btn_AEAS3
             // 
-            this.Btn_AEAS3.Font = new System.Drawing.Font("굴림", 7F);
+            this.Btn_AEAS3.Font = new System.Drawing.Font("Gulim", 7F);
             this.Btn_AEAS3.Location = new System.Drawing.Point(504, 83);
             this.Btn_AEAS3.Name = "Btn_AEAS3";
             this.Btn_AEAS3.Size = new System.Drawing.Size(31, 25);
@@ -1177,7 +1176,7 @@
             // 
             // Btn_AEAS2
             // 
-            this.Btn_AEAS2.Font = new System.Drawing.Font("굴림", 7F);
+            this.Btn_AEAS2.Font = new System.Drawing.Font("Gulim", 7F);
             this.Btn_AEAS2.Location = new System.Drawing.Point(504, 53);
             this.Btn_AEAS2.Name = "Btn_AEAS2";
             this.Btn_AEAS2.Size = new System.Drawing.Size(31, 25);
@@ -1187,7 +1186,7 @@
             // 
             // Btn_AEAS1
             // 
-            this.Btn_AEAS1.Font = new System.Drawing.Font("굴림", 7F);
+            this.Btn_AEAS1.Font = new System.Drawing.Font("Gulim", 7F);
             this.Btn_AEAS1.Location = new System.Drawing.Point(504, 23);
             this.Btn_AEAS1.Name = "Btn_AEAS1";
             this.Btn_AEAS1.Size = new System.Drawing.Size(31, 25);
@@ -1340,10 +1339,12 @@
             this.ddfdfToolStripMenuItem.Size = new System.Drawing.Size(43, 19);
             this.ddfdfToolStripMenuItem.Text = "분석";
             // 
-            // contextMenuStrip1
+            // 빈도분석ToolStripMenuItem
             // 
-            this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(61, 4);
+            this.빈도분석ToolStripMenuItem.Name = "빈도분석ToolStripMenuItem";
+            this.빈도분석ToolStripMenuItem.Size = new System.Drawing.Size(126, 22);
+            this.빈도분석ToolStripMenuItem.Text = "빈도 분석";
+            this.빈도분석ToolStripMenuItem.Click += new System.EventHandler(this.freq_Click);
             // 
             // 설정ToolStripMenuItem
             // 
@@ -1351,12 +1352,10 @@
             this.설정ToolStripMenuItem.Size = new System.Drawing.Size(43, 19);
             this.설정ToolStripMenuItem.Text = "설정";
             // 
-            // 빈도분석ToolStripMenuItem
+            // contextMenuStrip1
             // 
-            this.빈도분석ToolStripMenuItem.Name = "빈도분석ToolStripMenuItem";
-            this.빈도분석ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.빈도분석ToolStripMenuItem.Text = "빈도 분석";
-            this.빈도분석ToolStripMenuItem.Click += new System.EventHandler(this.freq_Click);
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(61, 4);
             // 
             // MainForm
             // 
@@ -1378,12 +1377,12 @@
             this.panel5.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.PortListGrid)).EndInit();
             this.panel4.ResumeLayout(false);
-            this.SerialPanel.ResumeLayout(false);
-            this.SerialPanel.PerformLayout();
-            this.TcpPanel.ResumeLayout(false);
-            this.TcpPanel.PerformLayout();
             this.UdpPanel.ResumeLayout(false);
             this.UdpPanel.PerformLayout();
+            this.TcpPanel.ResumeLayout(false);
+            this.TcpPanel.PerformLayout();
+            this.SerialPanel.ResumeLayout(false);
+            this.SerialPanel.PerformLayout();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
             this.LogPanel.ResumeLayout(false);
