@@ -383,11 +383,18 @@ namespace MultiTerminal
                         string msg = sr.ReadLine();
                         if (main.InvokeRequired)
                         {
-                            main.Invoke(new Action(() => main.ReceiveWindowBox.Text += "수신 : " + main.GetTimer() + msg + "\n"));
+                            main.Invoke(new Action(() =>
+                            {
+                                main.ReceiveWindowBox.AppendText("수신 : " + main.GetTimer() + msg + "\n");
+                                main.ReceiveWindowBox.SelectionStart = main.ReceiveWindowBox.Text.Length;
+                                main.ReceiveWindowBox.ScrollToCaret();
+                            }));
                         }
                         else
                         {
-                            main.ReceiveWindowBox.Text += "수신 : " + main.GetTimer() + msg + "\n";
+                            main.ReceiveWindowBox.AppendText("수신 : " + main.GetTimer() + msg + "\n");
+                            main.ReceiveWindowBox.SelectionStart = main.ReceiveWindowBox.Text.Length;
+                            main.ReceiveWindowBox.ScrollToCaret();
                         }
                     }
                 }
@@ -416,11 +423,18 @@ namespace MultiTerminal
                             if (main.InvokeRequired)
                             {
                                 ///비정상 종료시 계속 되는이유
-                                main.Invoke(new Action(() => main.ReceiveWindowBox.Text += "수신 : " + main.GetTimer() + msg + "\n"));
+                                main.Invoke(new Action(() =>
+                                {
+                                    main.ReceiveWindowBox.AppendText("수신 : " + main.GetTimer() + msg + "\n");
+                                    main.ReceiveWindowBox.SelectionStart = main.ReceiveWindowBox.Text.Length;
+                                    main.ReceiveWindowBox.ScrollToCaret();
+                                }));
                             }
                             else
                             {
-                                main.ReceiveWindowBox.Text += "수신 : " + main.GetTimer() + msg + "\n";
+                                main.ReceiveWindowBox.AppendText("수신 : " + main.GetTimer() + msg + "\n");
+                                main.ReceiveWindowBox.SelectionStart = main.ReceiveWindowBox.Text.Length;
+                                main.ReceiveWindowBox.ScrollToCaret();
                             }
                         }
                     }
