@@ -28,7 +28,7 @@ namespace MultiTerminal
                 {
                     if (wow[i].Contains("수신"))
                     {
-                        int end = wow[i].IndexOf(')');
+                        int end = wow[i].IndexOf('}');
                         string buf = wow[i].Substring(3,end-3);
                         if (connectedName.Contains(buf) == false)
                         {
@@ -43,6 +43,7 @@ namespace MultiTerminal
                     break;
                 }
             }
+            connectedName.Sort();
             return connectedName;
         }
         //분석할 때 시간 계산할 메소드
@@ -100,7 +101,7 @@ namespace MultiTerminal
                     if (frewow[ii].Contains("수신")) //수신 문장에 한해서
                     {
                         int end = frewow[ii].IndexOf(')');
-                        string buf = frewow[ii].Substring(3, end - 3);
+                        string buf = frewow[ii].Substring(3, end - 2);
                         int row = connectedName.IndexOf(buf);
                         allTime += getAllTime(frewow[ii]);
                         //사용자가 선택한 인덱스가 아니라면 continue를 통해 문장 스킵
@@ -153,7 +154,7 @@ namespace MultiTerminal
                 analyGraph[i] = analyChart.Series.Add(connectedName[clientSelected[i]]); //그래프 이름 추가
                 analyGraph[i].ChartType = SeriesChartType.Line; //그래프 타입은 선
                 analyGraph[i].BorderWidth = 2; //그래프 선의 두께
-                analyGraph[i].Color = Color.FromArgb(r.Next(128, 256),r.Next(128,256),r.Next(128,256)); //랜덤으로 색 할당
+                analyGraph[i].Color = Color.FromArgb(r.Next(0, 255),r.Next(0,255),r.Next(0,255)); //랜덤으로 색 할당
                 //freTable에서 좌표를 가져와 그래프에 뿌려주는 역할
                 for (int j = 0; j <= graphMaxTime; j++)
                 {

@@ -84,6 +84,26 @@ namespace MultiTerminal
                 Controls.Add(analyChart);
             }
         }
+        private void allSelect_btn_Click(object sender, EventArgs e)
+        {
+            int itemNum = connectedNamecheckedListBox.Items.Count;
+            int allCheck = 0;
+            for (int i = 0; i < itemNum; i++)
+                if (connectedNamecheckedListBox.GetItemCheckState(i) == CheckState.Checked)
+                    allCheck++;
+            if (allCheck == itemNum)
+                for (int i = 0; i < itemNum; i++)
+                {
+                    connectedNamecheckedListBox.SetItemChecked(i, false);
+                    selectState[i] = false;
+                }
+            else
+                for (int i = 0; i < itemNum; i++)
+                {
+                    connectedNamecheckedListBox.SetItemChecked(i, true);
+                    selectState[i] = true;
+                }
+        }
 
         private void analysisForm_Closing(object sender, FormClosingEventArgs e)  // 폼 닫혔을 때 
         {

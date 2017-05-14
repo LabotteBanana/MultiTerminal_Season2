@@ -98,7 +98,7 @@ namespace MultiTerminal
                     MessageBox.Show("시리얼 포트 연결에 실패했습니다.");
                 }
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
@@ -162,7 +162,7 @@ namespace MultiTerminal
                     else
                     { Global.globalVar = Encoding.UTF8.GetString(buff); }
 
-                    realForm.ReceiveWindowBox.AppendText("수신(" + portname + ") : " + realForm.GetTimer() + Global.globalVar + "\n");
+                    realForm.ReceiveWindowBox.AppendText("수신{" + portname + "} : " + realForm.GetTimer() + Global.globalVar + "\n");
                     realForm.ReceiveWindowBox.SelectionStart = realForm.ReceiveWindowBox.Text.Length;
                     realForm.ReceiveWindowBox.ScrollToCaret();
                 }
