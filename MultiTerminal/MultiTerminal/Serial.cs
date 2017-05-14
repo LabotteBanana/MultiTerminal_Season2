@@ -16,12 +16,14 @@ namespace MultiTerminal
         public string receivedata = null;   // 시리얼 데이터 받기위한 임시 전역 변수...
         public int MyNum;
         public bool RxState;    // 수신 여부 상태... 나중에 그리드뷰에서 체크하면 트루로 바뀜.
-        public MainForm MyMain;
+        private MainForm realForm = null;
+        private string portname = null;
 
-        public Serial(MainForm main)
+        public Serial(MainForm realForm, string portname)
         {
             RxState = false;
-            MyMain = main;
+            this.realForm = realForm;
+            this.portname = portname;
         }
 
         public bool IsOpen()
@@ -96,7 +98,7 @@ namespace MultiTerminal
                     MessageBox.Show("시리얼 포트 연결에 실패했습니다.");
                 }
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
@@ -160,13 +162,9 @@ namespace MultiTerminal
                     else
                     { Global.globalVar = Encoding.UTF8.GetString(buff); }
 
-
-                    MyMain.ReceiveWindowBox.AppendText("수신(" + "Name" + ") : " + MyMain.GetTimer() + Global.globalVar + "\n");
-                    MyMain.ReceiveWindowBox.SelectionStart = MyMain.ReceiveWindowBox.Text.Length;
-                    MyMain.ReceiveWindowBox.ScrollToCaret();
-
-
-
+                    realForm.ReceiveWindowBox.AppendText("수신{" + portname + "} : " + realForm.GetTimer() + Global.globalVar + "\n");
+                    realForm.ReceiveWindowBox.SelectionStart = realForm.ReceiveWindowBox.Text.Length;
+                    realForm.ReceiveWindowBox.ScrollToCaret();
                 }
             }
             
