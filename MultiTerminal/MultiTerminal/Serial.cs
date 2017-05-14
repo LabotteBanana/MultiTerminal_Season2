@@ -16,10 +16,12 @@ namespace MultiTerminal
         public string receivedata = null;   // 시리얼 데이터 받기위한 임시 전역 변수...
         public int MyNum;
         public bool RxState;    // 수신 여부 상태... 나중에 그리드뷰에서 체크하면 트루로 바뀜.
+        public MainForm MyMain;
 
-        public Serial()
+        public Serial(MainForm main)
         {
             RxState = false;
+            MyMain = main;
         }
 
         public bool IsOpen()
@@ -157,6 +159,14 @@ namespace MultiTerminal
                     { Global.globalVar = strRecData; }
                     else
                     { Global.globalVar = Encoding.UTF8.GetString(buff); }
+
+
+                    MyMain.ReceiveWindowBox.AppendText("수신(" + "Name" + ") : " + MyMain.GetTimer() + Global.globalVar + "\n");
+                    MyMain.ReceiveWindowBox.SelectionStart = MyMain.ReceiveWindowBox.Text.Length;
+                    MyMain.ReceiveWindowBox.ScrollToCaret();
+
+
+
                 }
             }
             

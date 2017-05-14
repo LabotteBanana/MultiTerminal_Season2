@@ -548,7 +548,7 @@ namespace MultiTerminal
             try
             {
 
-                serial[Sport_Count] = new Serial();
+                serial[Sport_Count] = new Serial(this);
                 serial[Sport_Count].SerialOpen(SerialOpt[0], SerialOpt[1], SerialOpt[2], SerialOpt[3], SerialOpt[4], "500", "500");
                 serial[Sport_Count].sPort.DataReceived += new SerialDataReceivedEventHandler(UpdateWindowText);
 
@@ -597,9 +597,6 @@ namespace MultiTerminal
             //{
             //    this.Invoke(new Action(() =>
             //    {
-            this.ReceiveWindowBox.AppendText("수신(" + "Name" + ") : " + GetTimer() + Global.globalVar + "\n");
-            this.ReceiveWindowBox.SelectionStart = ReceiveWindowBox.Text.Length;
-            this.ReceiveWindowBox.ScrollToCaret();
             //    }));
             //}));
             //thread.Start();
