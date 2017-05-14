@@ -49,6 +49,8 @@ namespace MultiTerminal
         {
             try
             {
+                System.Windows.Forms.MessageBox.Show("21`21");
+
                 if (server != null)
                 {
                     if (server.IsBound == false)
@@ -59,20 +61,24 @@ namespace MultiTerminal
                         m_isConncted = true;
                     }
                     Socket newclient = server.Accept();
-                    //wsa blocking call
-                    if(newclient !=null)
-                    {
+                    System.Windows.Forms.MessageBox.Show("1234");
 
+                    //wsa blocking call
+                    if (newclient !=null)
+                    {
+                        System.Windows.Forms.MessageBox.Show("빱");
                         IPEndPoint claIP = (IPEndPoint)newclient.RemoteEndPoint;
                         string client_ip = claIP.Address.ToString();
                         if (newclient.Connected == true)
                         {
+                            System.Windows.Forms.MessageBox.Show("빱바");
                             m_clientCount++;
                             Thread th = new Thread(new ThreadStart(RecvMsg)); //상대 문자열 수신 쓰레드 가동
                             th.Start();
                             m_ClientThread.Add(m_clientCount - 1, th);
                             m_ClientList.Add(m_clientCount-1, newclient);
                             m_ipList.Add(m_clientCount-1, client_ip);
+
                             NetworkStream ns = new NetworkStream(newclient);
                             StreamReader sr = new StreamReader(ns);
                             StreamWriter sw = new StreamWriter(ns);
@@ -191,13 +197,13 @@ namespace MultiTerminal
                 m_isConncted = false;
                 if (server.IsBound == true)
                 {
-                    server.Shutdown(SocketShutdown.Both);
+                   // server.Shutdown(SocketShutdown.Both);
                     server.Disconnect(true);
                     server.Close();
                 }
                 else
                 {
-                    server.Shutdown(SocketShutdown.Both);
+                  //  server.Shutdown(SocketShutdown.Both);
                     server.Disconnect(true);
                     server.Close();
 
@@ -300,7 +306,7 @@ namespace MultiTerminal
                         if (ns != null) ns.Close();
                         if (sw != null) sw.Close();
                         if (sr != null) sr.Close();
-                        client.Shutdown(SocketShutdown.Both);
+                        //client.Shutdown(SocketShutdown.Both);
                         client.Disconnect(true);
                         client.Close();
                     }
