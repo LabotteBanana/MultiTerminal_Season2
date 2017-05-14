@@ -71,7 +71,7 @@ namespace MultiTerminal
                 {
                     //if (userv.server != null)
                     //    if (userv.server.IsBound == true)
-                            //userv.RecvMessage();
+                    //        userv.RecvMessage();
                 }
                 if (ucla != null)
                 {
@@ -215,7 +215,7 @@ namespace MultiTerminal
                                     byte[] send = Encoding.UTF8.GetBytes(SendBox1.Text);
 
                                     //userv.server.BeginSendTo(send, 0, send.Length, System.Net.Sockets.SocketFlags.None, userv.senderEP, new AsyncCallback(userv.SendMessage), null);
-                                    userv.SendMessage(SendBox1.Text);
+                                    //userv.SendMessage(SendBox1.Text);
                                     ReceiveWindowBox.Text += "송신 : " + GetTimer() + SendBox1.Text + "\n";
                                 }));
                             }));
@@ -775,7 +775,7 @@ namespace MultiTerminal
                               {
                                   byte[] send = Encoding.UTF8.GetBytes(SendBox1.Text);
 
-                                  userv.SendMessage(SendBox1.Text);
+                                  //userv.SendMessage(SendBox1.Text);
                                   ReceiveWindowBox.Text += "송신 : " + GetTimer() + SendBox1.Text + "\n";
                               }));
                           }));

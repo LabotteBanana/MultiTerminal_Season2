@@ -1317,7 +1317,7 @@
         public System.Windows.Forms.RichTextBox ReceiveWindowBox;
         private MetroFramework.Controls.MetroTile TCP_Tile;
         private MetroFramework.Controls.MetroTile UDP_Tile;
-        private System.Windows.Forms.RichTextBox SendBox1;
+        public System.Windows.Forms.RichTextBox SendBox1;
         private System.Windows.Forms.Panel SerialPanel;
         private System.Windows.Forms.ComboBox Serial_Combo_FlowCon;
         private System.Windows.Forms.ComboBox Serial_Combo_StopBit;

@@ -54,6 +54,7 @@ namespace MultiTerminal
                     if (server.IsBound == false)
                     {
                         server.Bind(ipep);
+
                         server.Listen(10);
                         m_isConncted = true;
                     }
