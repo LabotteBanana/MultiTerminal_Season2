@@ -31,7 +31,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.metroPanel1 = new MetroFramework.Controls.MetroPanel();
             this.button1 = new System.Windows.Forms.Button();
             this.panel5 = new System.Windows.Forms.Panel();
@@ -44,6 +44,22 @@
             this.Rx = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.DisCon = new System.Windows.Forms.DataGridViewButtonColumn();
             this.panel4 = new System.Windows.Forms.Panel();
+            this.SerialPanel = new System.Windows.Forms.Panel();
+            this.Serial_Btn_F5 = new System.Windows.Forms.Button();
+            this.Serial_Combo_FlowCon = new System.Windows.Forms.ComboBox();
+            this.Serial_Combo_StopBit = new System.Windows.Forms.ComboBox();
+            this.Serial_Combo_Parity = new System.Windows.Forms.ComboBox();
+            this.Serial_Combo_Data = new System.Windows.Forms.ComboBox();
+            this.Serial_Combo_Baud = new System.Windows.Forms.ComboBox();
+            this.Serial_Combo_Port = new System.Windows.Forms.ComboBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.Label_Se_Port = new System.Windows.Forms.Label();
+            this.Serial_Btn_Con = new System.Windows.Forms.Button();
+            this.Serial_Btn_DisCon = new System.Windows.Forms.Button();
             this.UdpPanel = new System.Windows.Forms.Panel();
             this.Udp_Btn_DisCon = new System.Windows.Forms.Button();
             this.Udp_Btn_Con = new System.Windows.Forms.Button();
@@ -64,22 +80,6 @@
             this.label8 = new System.Windows.Forms.Label();
             this.Tcp_Btn_DisCon = new System.Windows.Forms.Button();
             this.Tcp_Btn_Con = new System.Windows.Forms.Button();
-            this.SerialPanel = new System.Windows.Forms.Panel();
-            this.Serial_Btn_F5 = new System.Windows.Forms.Button();
-            this.Serial_Combo_FlowCon = new System.Windows.Forms.ComboBox();
-            this.Serial_Combo_StopBit = new System.Windows.Forms.ComboBox();
-            this.Serial_Combo_Parity = new System.Windows.Forms.ComboBox();
-            this.Serial_Combo_Data = new System.Windows.Forms.ComboBox();
-            this.Serial_Combo_Baud = new System.Windows.Forms.ComboBox();
-            this.Serial_Combo_Port = new System.Windows.Forms.ComboBox();
-            this.label6 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.Label_Se_Port = new System.Windows.Forms.Label();
-            this.Serial_Btn_Con = new System.Windows.Forms.Button();
-            this.Serial_Btn_DisCon = new System.Windows.Forms.Button();
             this.panel2 = new System.Windows.Forms.Panel();
             this.Btn_StopLog = new System.Windows.Forms.Button();
             this.Btn_UseLog = new System.Windows.Forms.Button();
@@ -148,9 +148,9 @@
             this.panel5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.PortListGrid)).BeginInit();
             this.panel4.SuspendLayout();
+            this.SerialPanel.SuspendLayout();
             this.UdpPanel.SuspendLayout();
             this.TcpPanel.SuspendLayout();
-            this.SerialPanel.SuspendLayout();
             this.panel2.SuspendLayout();
             this.LogPanel.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -264,9 +264,9 @@
             // DisCon
             // 
             this.DisCon.DataPropertyName = "Discon";
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle2.NullValue = "dd";
-            this.DisCon.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle1.NullValue = "dd";
+            this.DisCon.DefaultCellStyle = dataGridViewCellStyle1;
             this.DisCon.HeaderText = "X";
             this.DisCon.Name = "DisCon";
             this.DisCon.Resizable = System.Windows.Forms.DataGridViewTriState.True;
@@ -283,6 +283,174 @@
             this.panel4.Name = "panel4";
             this.panel4.Size = new System.Drawing.Size(159, 284);
             this.panel4.TabIndex = 17;
+            // 
+            // SerialPanel
+            // 
+            this.SerialPanel.Controls.Add(this.Serial_Btn_F5);
+            this.SerialPanel.Controls.Add(this.Serial_Combo_FlowCon);
+            this.SerialPanel.Controls.Add(this.Serial_Combo_StopBit);
+            this.SerialPanel.Controls.Add(this.Serial_Combo_Parity);
+            this.SerialPanel.Controls.Add(this.Serial_Combo_Data);
+            this.SerialPanel.Controls.Add(this.Serial_Combo_Baud);
+            this.SerialPanel.Controls.Add(this.Serial_Combo_Port);
+            this.SerialPanel.Controls.Add(this.label6);
+            this.SerialPanel.Controls.Add(this.label5);
+            this.SerialPanel.Controls.Add(this.label4);
+            this.SerialPanel.Controls.Add(this.label3);
+            this.SerialPanel.Controls.Add(this.label2);
+            this.SerialPanel.Controls.Add(this.Label_Se_Port);
+            this.SerialPanel.Controls.Add(this.Serial_Btn_Con);
+            this.SerialPanel.Controls.Add(this.Serial_Btn_DisCon);
+            this.SerialPanel.Location = new System.Drawing.Point(3, 3);
+            this.SerialPanel.Name = "SerialPanel";
+            this.SerialPanel.Size = new System.Drawing.Size(150, 276);
+            this.SerialPanel.TabIndex = 7;
+            this.SerialPanel.Visible = false;
+            // 
+            // Serial_Btn_F5
+            // 
+            this.Serial_Btn_F5.Location = new System.Drawing.Point(10, 248);
+            this.Serial_Btn_F5.Name = "Serial_Btn_F5";
+            this.Serial_Btn_F5.Size = new System.Drawing.Size(131, 23);
+            this.Serial_Btn_F5.TabIndex = 15;
+            this.Serial_Btn_F5.Text = "새로고침";
+            this.Serial_Btn_F5.UseVisualStyleBackColor = true;
+            this.Serial_Btn_F5.Click += new System.EventHandler(this.serial_Refresh_Click);
+            // 
+            // Serial_Combo_FlowCon
+            // 
+            this.Serial_Combo_FlowCon.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.Serial_Combo_FlowCon.FormattingEnabled = true;
+            this.Serial_Combo_FlowCon.Location = new System.Drawing.Point(70, 176);
+            this.Serial_Combo_FlowCon.Name = "Serial_Combo_FlowCon";
+            this.Serial_Combo_FlowCon.Size = new System.Drawing.Size(76, 20);
+            this.Serial_Combo_FlowCon.TabIndex = 13;
+            this.Serial_Combo_FlowCon.SelectedIndexChanged += new System.EventHandler(this.Serial_Combo_FlowCon_SelectedIndexChanged);
+            // 
+            // Serial_Combo_StopBit
+            // 
+            this.Serial_Combo_StopBit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.Serial_Combo_StopBit.FormattingEnabled = true;
+            this.Serial_Combo_StopBit.Location = new System.Drawing.Point(70, 145);
+            this.Serial_Combo_StopBit.Name = "Serial_Combo_StopBit";
+            this.Serial_Combo_StopBit.Size = new System.Drawing.Size(76, 20);
+            this.Serial_Combo_StopBit.TabIndex = 12;
+            this.Serial_Combo_StopBit.SelectedIndexChanged += new System.EventHandler(this.Serial_Combo_StopBit_SelectedIndexChanged);
+            // 
+            // Serial_Combo_Parity
+            // 
+            this.Serial_Combo_Parity.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.Serial_Combo_Parity.FormattingEnabled = true;
+            this.Serial_Combo_Parity.Location = new System.Drawing.Point(70, 116);
+            this.Serial_Combo_Parity.Name = "Serial_Combo_Parity";
+            this.Serial_Combo_Parity.Size = new System.Drawing.Size(76, 20);
+            this.Serial_Combo_Parity.TabIndex = 11;
+            this.Serial_Combo_Parity.SelectedIndexChanged += new System.EventHandler(this.Serial_Combo_Parity_SelectedIndexChanged);
+            // 
+            // Serial_Combo_Data
+            // 
+            this.Serial_Combo_Data.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.Serial_Combo_Data.FormattingEnabled = true;
+            this.Serial_Combo_Data.Location = new System.Drawing.Point(70, 85);
+            this.Serial_Combo_Data.Name = "Serial_Combo_Data";
+            this.Serial_Combo_Data.Size = new System.Drawing.Size(76, 20);
+            this.Serial_Combo_Data.TabIndex = 10;
+            this.Serial_Combo_Data.SelectedIndexChanged += new System.EventHandler(this.Serial_Combo_Data_SelectedIndexChanged);
+            // 
+            // Serial_Combo_Baud
+            // 
+            this.Serial_Combo_Baud.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.Serial_Combo_Baud.FormattingEnabled = true;
+            this.Serial_Combo_Baud.Location = new System.Drawing.Point(70, 54);
+            this.Serial_Combo_Baud.Name = "Serial_Combo_Baud";
+            this.Serial_Combo_Baud.Size = new System.Drawing.Size(76, 20);
+            this.Serial_Combo_Baud.TabIndex = 9;
+            this.Serial_Combo_Baud.SelectedIndexChanged += new System.EventHandler(this.Serial_Combo_Baud_SelectedIndexChanged);
+            // 
+            // Serial_Combo_Port
+            // 
+            this.Serial_Combo_Port.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.Serial_Combo_Port.DropDownWidth = 270;
+            this.Serial_Combo_Port.FormattingEnabled = true;
+            this.Serial_Combo_Port.IntegralHeight = false;
+            this.Serial_Combo_Port.Location = new System.Drawing.Point(70, 22);
+            this.Serial_Combo_Port.Name = "Serial_Combo_Port";
+            this.Serial_Combo_Port.Size = new System.Drawing.Size(76, 20);
+            this.Serial_Combo_Port.TabIndex = 8;
+            this.Serial_Combo_Port.SelectedIndexChanged += new System.EventHandler(this.Serial_Combo_Port_SelectedIndexChanged);
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(8, 179);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(61, 12);
+            this.label6.TabIndex = 7;
+            this.label6.Text = "흐름제어 :";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(8, 148);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(61, 12);
+            this.label5.TabIndex = 6;
+            this.label5.Text = "스탑비트 :";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(20, 119);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(49, 12);
+            this.label4.TabIndex = 5;
+            this.label4.Text = "패리티 :";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(20, 88);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(49, 12);
+            this.label3.TabIndex = 4;
+            this.label3.Text = "데이터 :";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(32, 57);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(37, 12);
+            this.label2.TabIndex = 3;
+            this.label2.Text = "속도 :";
+            // 
+            // Label_Se_Port
+            // 
+            this.Label_Se_Port.AutoSize = true;
+            this.Label_Se_Port.Location = new System.Drawing.Point(32, 27);
+            this.Label_Se_Port.Name = "Label_Se_Port";
+            this.Label_Se_Port.Size = new System.Drawing.Size(37, 12);
+            this.Label_Se_Port.TabIndex = 2;
+            this.Label_Se_Port.Text = "포트 :";
+            // 
+            // Serial_Btn_Con
+            // 
+            this.Serial_Btn_Con.Location = new System.Drawing.Point(79, 219);
+            this.Serial_Btn_Con.Name = "Serial_Btn_Con";
+            this.Serial_Btn_Con.Size = new System.Drawing.Size(62, 23);
+            this.Serial_Btn_Con.TabIndex = 0;
+            this.Serial_Btn_Con.Text = "옵션적용";
+            this.Serial_Btn_Con.UseVisualStyleBackColor = true;
+            this.Serial_Btn_Con.Click += new System.EventHandler(this.Serial_Btn_OK_Click);
+            // 
+            // Serial_Btn_DisCon
+            // 
+            this.Serial_Btn_DisCon.Location = new System.Drawing.Point(10, 219);
+            this.Serial_Btn_DisCon.Name = "Serial_Btn_DisCon";
+            this.Serial_Btn_DisCon.Size = new System.Drawing.Size(62, 23);
+            this.Serial_Btn_DisCon.TabIndex = 14;
+            this.Serial_Btn_DisCon.Text = "연결해제";
+            this.Serial_Btn_DisCon.UseVisualStyleBackColor = true;
             // 
             // UdpPanel
             // 
@@ -482,174 +650,6 @@
             this.Tcp_Btn_Con.Text = "옵션적용";
             this.Tcp_Btn_Con.UseVisualStyleBackColor = true;
             this.Tcp_Btn_Con.Click += new System.EventHandler(this.button3_Click);
-            // 
-            // SerialPanel
-            // 
-            this.SerialPanel.Controls.Add(this.Serial_Btn_F5);
-            this.SerialPanel.Controls.Add(this.Serial_Combo_FlowCon);
-            this.SerialPanel.Controls.Add(this.Serial_Combo_StopBit);
-            this.SerialPanel.Controls.Add(this.Serial_Combo_Parity);
-            this.SerialPanel.Controls.Add(this.Serial_Combo_Data);
-            this.SerialPanel.Controls.Add(this.Serial_Combo_Baud);
-            this.SerialPanel.Controls.Add(this.Serial_Combo_Port);
-            this.SerialPanel.Controls.Add(this.label6);
-            this.SerialPanel.Controls.Add(this.label5);
-            this.SerialPanel.Controls.Add(this.label4);
-            this.SerialPanel.Controls.Add(this.label3);
-            this.SerialPanel.Controls.Add(this.label2);
-            this.SerialPanel.Controls.Add(this.Label_Se_Port);
-            this.SerialPanel.Controls.Add(this.Serial_Btn_Con);
-            this.SerialPanel.Controls.Add(this.Serial_Btn_DisCon);
-            this.SerialPanel.Location = new System.Drawing.Point(3, 3);
-            this.SerialPanel.Name = "SerialPanel";
-            this.SerialPanel.Size = new System.Drawing.Size(150, 276);
-            this.SerialPanel.TabIndex = 7;
-            this.SerialPanel.Visible = false;
-            // 
-            // Serial_Btn_F5
-            // 
-            this.Serial_Btn_F5.Location = new System.Drawing.Point(10, 248);
-            this.Serial_Btn_F5.Name = "Serial_Btn_F5";
-            this.Serial_Btn_F5.Size = new System.Drawing.Size(131, 23);
-            this.Serial_Btn_F5.TabIndex = 15;
-            this.Serial_Btn_F5.Text = "새로고침";
-            this.Serial_Btn_F5.UseVisualStyleBackColor = true;
-            this.Serial_Btn_F5.Click += new System.EventHandler(this.serial_Refresh_Click);
-            // 
-            // Serial_Combo_FlowCon
-            // 
-            this.Serial_Combo_FlowCon.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.Serial_Combo_FlowCon.FormattingEnabled = true;
-            this.Serial_Combo_FlowCon.Location = new System.Drawing.Point(70, 176);
-            this.Serial_Combo_FlowCon.Name = "Serial_Combo_FlowCon";
-            this.Serial_Combo_FlowCon.Size = new System.Drawing.Size(76, 20);
-            this.Serial_Combo_FlowCon.TabIndex = 13;
-            this.Serial_Combo_FlowCon.SelectedIndexChanged += new System.EventHandler(this.Serial_Combo_FlowCon_SelectedIndexChanged);
-            // 
-            // Serial_Combo_StopBit
-            // 
-            this.Serial_Combo_StopBit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.Serial_Combo_StopBit.FormattingEnabled = true;
-            this.Serial_Combo_StopBit.Location = new System.Drawing.Point(70, 145);
-            this.Serial_Combo_StopBit.Name = "Serial_Combo_StopBit";
-            this.Serial_Combo_StopBit.Size = new System.Drawing.Size(76, 20);
-            this.Serial_Combo_StopBit.TabIndex = 12;
-            this.Serial_Combo_StopBit.SelectedIndexChanged += new System.EventHandler(this.Serial_Combo_StopBit_SelectedIndexChanged);
-            // 
-            // Serial_Combo_Parity
-            // 
-            this.Serial_Combo_Parity.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.Serial_Combo_Parity.FormattingEnabled = true;
-            this.Serial_Combo_Parity.Location = new System.Drawing.Point(70, 116);
-            this.Serial_Combo_Parity.Name = "Serial_Combo_Parity";
-            this.Serial_Combo_Parity.Size = new System.Drawing.Size(76, 20);
-            this.Serial_Combo_Parity.TabIndex = 11;
-            this.Serial_Combo_Parity.SelectedIndexChanged += new System.EventHandler(this.Serial_Combo_Parity_SelectedIndexChanged);
-            // 
-            // Serial_Combo_Data
-            // 
-            this.Serial_Combo_Data.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.Serial_Combo_Data.FormattingEnabled = true;
-            this.Serial_Combo_Data.Location = new System.Drawing.Point(70, 85);
-            this.Serial_Combo_Data.Name = "Serial_Combo_Data";
-            this.Serial_Combo_Data.Size = new System.Drawing.Size(76, 20);
-            this.Serial_Combo_Data.TabIndex = 10;
-            this.Serial_Combo_Data.SelectedIndexChanged += new System.EventHandler(this.Serial_Combo_Data_SelectedIndexChanged);
-            // 
-            // Serial_Combo_Baud
-            // 
-            this.Serial_Combo_Baud.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.Serial_Combo_Baud.FormattingEnabled = true;
-            this.Serial_Combo_Baud.Location = new System.Drawing.Point(70, 54);
-            this.Serial_Combo_Baud.Name = "Serial_Combo_Baud";
-            this.Serial_Combo_Baud.Size = new System.Drawing.Size(76, 20);
-            this.Serial_Combo_Baud.TabIndex = 9;
-            this.Serial_Combo_Baud.SelectedIndexChanged += new System.EventHandler(this.Serial_Combo_Baud_SelectedIndexChanged);
-            // 
-            // Serial_Combo_Port
-            // 
-            this.Serial_Combo_Port.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.Serial_Combo_Port.DropDownWidth = 270;
-            this.Serial_Combo_Port.FormattingEnabled = true;
-            this.Serial_Combo_Port.IntegralHeight = false;
-            this.Serial_Combo_Port.Location = new System.Drawing.Point(70, 22);
-            this.Serial_Combo_Port.Name = "Serial_Combo_Port";
-            this.Serial_Combo_Port.Size = new System.Drawing.Size(76, 20);
-            this.Serial_Combo_Port.TabIndex = 8;
-            this.Serial_Combo_Port.SelectedIndexChanged += new System.EventHandler(this.Serial_Combo_Port_SelectedIndexChanged);
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(8, 179);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(61, 12);
-            this.label6.TabIndex = 7;
-            this.label6.Text = "흐름제어 :";
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(8, 148);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(61, 12);
-            this.label5.TabIndex = 6;
-            this.label5.Text = "스탑비트 :";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(20, 119);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(49, 12);
-            this.label4.TabIndex = 5;
-            this.label4.Text = "패리티 :";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(20, 88);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(49, 12);
-            this.label3.TabIndex = 4;
-            this.label3.Text = "데이터 :";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(32, 57);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(37, 12);
-            this.label2.TabIndex = 3;
-            this.label2.Text = "속도 :";
-            // 
-            // Label_Se_Port
-            // 
-            this.Label_Se_Port.AutoSize = true;
-            this.Label_Se_Port.Location = new System.Drawing.Point(32, 27);
-            this.Label_Se_Port.Name = "Label_Se_Port";
-            this.Label_Se_Port.Size = new System.Drawing.Size(37, 12);
-            this.Label_Se_Port.TabIndex = 2;
-            this.Label_Se_Port.Text = "포트 :";
-            // 
-            // Serial_Btn_Con
-            // 
-            this.Serial_Btn_Con.Location = new System.Drawing.Point(79, 219);
-            this.Serial_Btn_Con.Name = "Serial_Btn_Con";
-            this.Serial_Btn_Con.Size = new System.Drawing.Size(62, 23);
-            this.Serial_Btn_Con.TabIndex = 0;
-            this.Serial_Btn_Con.Text = "옵션적용";
-            this.Serial_Btn_Con.UseVisualStyleBackColor = true;
-            this.Serial_Btn_Con.Click += new System.EventHandler(this.Serial_Btn_OK_Click);
-            // 
-            // Serial_Btn_DisCon
-            // 
-            this.Serial_Btn_DisCon.Location = new System.Drawing.Point(10, 219);
-            this.Serial_Btn_DisCon.Name = "Serial_Btn_DisCon";
-            this.Serial_Btn_DisCon.Size = new System.Drawing.Size(62, 23);
-            this.Serial_Btn_DisCon.TabIndex = 14;
-            this.Serial_Btn_DisCon.Text = "연결해제";
-            this.Serial_Btn_DisCon.UseVisualStyleBackColor = true;
             // 
             // panel2
             // 
@@ -1156,7 +1156,7 @@
             // 
             // Btn_AEAS4
             // 
-            this.Btn_AEAS4.Font = new System.Drawing.Font("Gulim", 7F);
+            this.Btn_AEAS4.Font = new System.Drawing.Font("굴림", 7F);
             this.Btn_AEAS4.Location = new System.Drawing.Point(504, 112);
             this.Btn_AEAS4.Name = "Btn_AEAS4";
             this.Btn_AEAS4.Size = new System.Drawing.Size(31, 47);
@@ -1166,7 +1166,7 @@
             // 
             // Btn_AEAS3
             // 
-            this.Btn_AEAS3.Font = new System.Drawing.Font("Gulim", 7F);
+            this.Btn_AEAS3.Font = new System.Drawing.Font("굴림", 7F);
             this.Btn_AEAS3.Location = new System.Drawing.Point(504, 83);
             this.Btn_AEAS3.Name = "Btn_AEAS3";
             this.Btn_AEAS3.Size = new System.Drawing.Size(31, 25);
@@ -1176,7 +1176,7 @@
             // 
             // Btn_AEAS2
             // 
-            this.Btn_AEAS2.Font = new System.Drawing.Font("Gulim", 7F);
+            this.Btn_AEAS2.Font = new System.Drawing.Font("굴림", 7F);
             this.Btn_AEAS2.Location = new System.Drawing.Point(504, 53);
             this.Btn_AEAS2.Name = "Btn_AEAS2";
             this.Btn_AEAS2.Size = new System.Drawing.Size(31, 25);
@@ -1186,7 +1186,7 @@
             // 
             // Btn_AEAS1
             // 
-            this.Btn_AEAS1.Font = new System.Drawing.Font("Gulim", 7F);
+            this.Btn_AEAS1.Font = new System.Drawing.Font("굴림", 7F);
             this.Btn_AEAS1.Location = new System.Drawing.Point(504, 23);
             this.Btn_AEAS1.Name = "Btn_AEAS1";
             this.Btn_AEAS1.Size = new System.Drawing.Size(31, 25);
@@ -1377,12 +1377,12 @@
             this.panel5.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.PortListGrid)).EndInit();
             this.panel4.ResumeLayout(false);
+            this.SerialPanel.ResumeLayout(false);
+            this.SerialPanel.PerformLayout();
             this.UdpPanel.ResumeLayout(false);
             this.UdpPanel.PerformLayout();
             this.TcpPanel.ResumeLayout(false);
             this.TcpPanel.PerformLayout();
-            this.SerialPanel.ResumeLayout(false);
-            this.SerialPanel.PerformLayout();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
             this.LogPanel.ResumeLayout(false);
