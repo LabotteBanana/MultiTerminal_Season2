@@ -1,11 +1,4 @@
-﻿using System.Windows.Forms;
-using System.Windows.Forms.Design;
-using System.Windows.Forms.Layout;
-using System.Windows.Forms.VisualStyles;
-using System.Windows.Forms.PropertyGridInternal;
-using System.Windows.Forms.ComponentModel;
-using System.Windows;
-namespace MultiTerminal
+﻿namespace MultiTerminal
 {
     partial class analysisForm
     {
