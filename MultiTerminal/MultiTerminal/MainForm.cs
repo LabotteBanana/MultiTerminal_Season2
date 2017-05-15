@@ -627,7 +627,7 @@ namespace MultiTerminal
             {
                 IpNumber.Enabled = false;
                 isServ = true;
-                mactimer.Elapsed += WaitAccept;
+                //mactimer.Elapsed += WaitAccept;
 
 
             }
@@ -755,11 +755,17 @@ namespace MultiTerminal
                     {
                         tserv.SendMsg(SendBox1.Text);
                         ReceiveWindowBox.Text += "송신 : " + GetTimer() + SendBox1.Text + "\n";
+                        ReceiveWindowBox.SelectionStart = ReceiveWindowBox.Text.Length;
+                        ReceiveWindowBox.ScrollToCaret();
+
                     }
                     if (isServ == false && tcla.client.Connected == true)
                     {
                         tcla.SendMsg(SendBox1.Text);
                         ReceiveWindowBox.Text += "송신 : " + GetTimer() + SendBox1.Text + "\n";
+                        ReceiveWindowBox.SelectionStart = ReceiveWindowBox.Text.Length;
+                        ReceiveWindowBox.ScrollToCaret();
+
                     }
                 }
                 if (connectType == 6)
@@ -772,6 +778,9 @@ namespace MultiTerminal
                               {
                                   userv.SendMessage(SendBox1.Text);
                                   ReceiveWindowBox.Text += "송신 : " + GetTimer() + SendBox1.Text + "\n";
+                                  ReceiveWindowBox.SelectionStart = ReceiveWindowBox.Text.Length;
+                                  ReceiveWindowBox.ScrollToCaret();
+
                               }));
                           }));
                         SendThread.Start();
@@ -784,6 +793,9 @@ namespace MultiTerminal
                              {
                                  ucla.SendMessage(SendBox1.Text);
                                  ReceiveWindowBox.Text += "송신 : " + GetTimer() + SendBox1.Text + "\n";
+                                 ReceiveWindowBox.SelectionStart = ReceiveWindowBox.Text.Length;
+                                 ReceiveWindowBox.ScrollToCaret();
+
                              }));
                          }));
                         SendThread.Start();
@@ -1105,14 +1117,20 @@ namespace MultiTerminal
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (tserv != null)
-                tserv.ServerStop();
-            if (tcla != null)
-                tcla.DisConnect();
-            if (userv != null)
-                userv.DisConnect();
-            if (ucla != null)
-                ucla.DisConnect();
+            if (isServ == true)
+            {
+                if (tserv != null)
+                    tserv.ServerStop();
+                if (userv != null)
+                    userv.DisConnect();
+            }
+            else
+            {
+                if (tcla != null)
+                    tcla.DisConnect();
+                if (ucla != null)
+                    ucla.DisConnect();
+            }
             Process currentProcess = Process.GetCurrentProcess();
             currentProcess.Kill();
 
@@ -1136,18 +1154,6 @@ namespace MultiTerminal
 
         private void Udp_Connect_Click(object sender, EventArgs e)
         {
-            if (UServerCheck.Checked == true)
-            {
-                int port = Int32.Parse(UPortNumber.Text);
-                userv.Connect(this, port);
-
-            }
-            else
-            {
-                int port = Int32.Parse(UPortNumber.Text);
-                string ip = UIPNumber.Text;
-                ucla.Connect(this, ip, port);
-            }
 
         }
 
@@ -1269,6 +1275,42 @@ namespace MultiTerminal
             Tcp_Btn_DisCon.Text = "연결";
             return;
 
+        }
+
+        private void Udp_Btn_DisCon_Click(object sender, EventArgs e)
+        {
+            if (Udp_Btn_DisCon.Text == "연결")
+            {
+                if (UServerCheck.Checked == true)
+                {
+                    isServ = true;
+                    int port = Int32.Parse(UPortNumber.Text);
+                    userv.Connect(this, port);
+
+                }
+                else
+                {
+                    isServ = false;
+                    int port = Int32.Parse(UPortNumber.Text);
+                    string ip = UIPNumber.Text;
+                    ucla.Connect(this, ip, port);
+                }
+                Udp_Btn_DisCon.Text = "연결해제";
+                return;
+            }
+            else if (Udp_Btn_DisCon.Text == "연결해제")
+            {
+                if(userv != null && isServ == true)
+                {
+                    userv.DisConnect();
+                }
+                else
+                {
+                    ucla.DisConnect();
+                }
+                Udp_Btn_DisCon.Text = "연결";
+                return;
+            }
         }
     }
 }

@@ -31,9 +31,9 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("");
-            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("");
-            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem("");
+            System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem("");
+            System.Windows.Forms.ListViewItem listViewItem5 = new System.Windows.Forms.ListViewItem("");
+            System.Windows.Forms.ListViewItem listViewItem6 = new System.Windows.Forms.ListViewItem("");
             this.metroPanel1 = new MetroFramework.Controls.MetroPanel();
             this.panel5 = new System.Windows.Forms.Panel();
             this.listView1 = new System.Windows.Forms.ListView();
@@ -43,7 +43,7 @@
             this.panel4 = new System.Windows.Forms.Panel();
             this.UdpPanel = new System.Windows.Forms.Panel();
             this.Udp_Btn_DisCon = new System.Windows.Forms.Button();
-            this.Udp_Btn_Con = new System.Windows.Forms.Button();
+            this.Udp_Btn_Opt = new System.Windows.Forms.Button();
             this.UServerCheck = new System.Windows.Forms.CheckBox();
             this.UPortNumber = new System.Windows.Forms.ComboBox();
             this.UIPNumber = new System.Windows.Forms.ComboBox();
@@ -191,9 +191,9 @@
             this.columnHeader3});
             this.listView1.GridLines = true;
             this.listView1.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem1,
-            listViewItem2,
-            listViewItem3});
+            listViewItem4,
+            listViewItem5,
+            listViewItem6});
             this.listView1.Location = new System.Drawing.Point(6, 6);
             this.listView1.Name = "listView1";
             this.listView1.Size = new System.Drawing.Size(150, 198);
@@ -212,7 +212,7 @@
             // UdpPanel
             // 
             this.UdpPanel.Controls.Add(this.Udp_Btn_DisCon);
-            this.UdpPanel.Controls.Add(this.Udp_Btn_Con);
+            this.UdpPanel.Controls.Add(this.Udp_Btn_Opt);
             this.UdpPanel.Controls.Add(this.UServerCheck);
             this.UdpPanel.Controls.Add(this.UPortNumber);
             this.UdpPanel.Controls.Add(this.UIPNumber);
@@ -233,18 +233,19 @@
             this.Udp_Btn_DisCon.Name = "Udp_Btn_DisCon";
             this.Udp_Btn_DisCon.Size = new System.Drawing.Size(62, 23);
             this.Udp_Btn_DisCon.TabIndex = 19;
-            this.Udp_Btn_DisCon.Text = "연결해제";
+            this.Udp_Btn_DisCon.Text = "연결";
             this.Udp_Btn_DisCon.UseVisualStyleBackColor = true;
+            this.Udp_Btn_DisCon.Click += new System.EventHandler(this.Udp_Btn_DisCon_Click);
             // 
-            // Udp_Btn_Con
+            // Udp_Btn_Opt
             // 
-            this.Udp_Btn_Con.Location = new System.Drawing.Point(81, 222);
-            this.Udp_Btn_Con.Name = "Udp_Btn_Con";
-            this.Udp_Btn_Con.Size = new System.Drawing.Size(62, 23);
-            this.Udp_Btn_Con.TabIndex = 18;
-            this.Udp_Btn_Con.Text = "옵션적용";
-            this.Udp_Btn_Con.UseVisualStyleBackColor = true;
-            this.Udp_Btn_Con.Click += new System.EventHandler(this.Udp_Connect_Click);
+            this.Udp_Btn_Opt.Location = new System.Drawing.Point(81, 222);
+            this.Udp_Btn_Opt.Name = "Udp_Btn_Opt";
+            this.Udp_Btn_Opt.Size = new System.Drawing.Size(62, 23);
+            this.Udp_Btn_Opt.TabIndex = 18;
+            this.Udp_Btn_Opt.Text = "옵션적용";
+            this.Udp_Btn_Opt.UseVisualStyleBackColor = true;
+            this.Udp_Btn_Opt.Click += new System.EventHandler(this.Udp_Connect_Click);
             // 
             // UServerCheck
             // 
@@ -1376,7 +1377,7 @@
         private System.Windows.Forms.CheckBox MacroCheck;
         private System.Windows.Forms.ComboBox PortNumber;
         private System.Windows.Forms.Button Udp_Btn_DisCon;
-        private System.Windows.Forms.Button Udp_Btn_Con;
+        private System.Windows.Forms.Button Udp_Btn_Opt;
         private System.Windows.Forms.Button Serial_Btn_F5;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.CheckBox Serial_select_CHK4;

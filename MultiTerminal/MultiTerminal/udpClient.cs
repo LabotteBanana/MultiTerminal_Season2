@@ -59,25 +59,28 @@ namespace MultiTerminal
                 while (true)
                 {
                     byte[] data = new byte[1024];
-                    client.ReceiveFrom(data, data.Length, SocketFlags.None, ref remoteEP);
-                    if (data.Length == 0) return;
-                    string recvMsg = Encoding.Default.GetString(data);
-                    if (main.InvokeRequired)
+                    if (client != null)
                     {
-                        main.Invoke(new Action(() => main.ReceiveWindowBox.Text += "수신 :" + main.GetTimer() + recvMsg + "\n"));
-                        main.Invoke(new Action(() => main.ReceiveWindowBox.Text += "" + Environment.NewLine));
-                        main.ReceiveWindowBox.SelectionStart = main.ReceiveWindowBox.Text.Length;
-                        main.ReceiveWindowBox.ScrollToCaret();
+                        client.ReceiveFrom(data, data.Length, SocketFlags.None, ref remoteEP);
+                        if (data.Length == 0) return;
+                        string recvMsg = Encoding.Default.GetString(data);
+                        if (main.InvokeRequired)
+                        {
+                            main.Invoke(new Action(() => main.ReceiveWindowBox.Text += "수신 :" + main.GetTimer() + recvMsg + "\n"));
+                            main.Invoke(new Action(() => main.ReceiveWindowBox.Text += "" + Environment.NewLine));
+                            main.ReceiveWindowBox.SelectionStart = main.ReceiveWindowBox.Text.Length;
+                            main.ReceiveWindowBox.ScrollToCaret();
 
 
-                    }
-                    else
-                    {
-                        main.ReceiveWindowBox.Text += "수신 :" + main.GetTimer() + recvMsg + "\n";
-                        main.ReceiveWindowBox.Text += "" + Environment.NewLine;
-                        main.ReceiveWindowBox.SelectionStart = main.ReceiveWindowBox.Text.Length;
-                        main.ReceiveWindowBox.ScrollToCaret();
+                        }
+                        else
+                        {
+                            main.ReceiveWindowBox.Text += "수신 :" + main.GetTimer() + recvMsg + "\n";
+                            main.ReceiveWindowBox.Text += "" + Environment.NewLine;
+                            main.ReceiveWindowBox.SelectionStart = main.ReceiveWindowBox.Text.Length;
+                            main.ReceiveWindowBox.ScrollToCaret();
 
+                        }
                     }
                 }
             }
@@ -98,8 +101,9 @@ namespace MultiTerminal
             try
             {
                 byte[] data = new byte[1024];
-
                 data = Encoding.Default.GetBytes(sendMsg);
+
+                if(client!=null)
                 client.SendTo(data, data.Length, SocketFlags.None, serverEP);
             }
             catch (SocketException ex)
@@ -119,7 +123,8 @@ namespace MultiTerminal
         {
             if (client != null)
             {
-                client.Shutdown(SocketShutdown.Both);
+                //client.Shutdown(SocketShutdown.Both);
+
                 client.Close();
             }
                 m_isConnected = false;
