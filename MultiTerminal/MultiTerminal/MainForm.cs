@@ -566,7 +566,7 @@ namespace MultiTerminal
         {
             try
             {
-                serial[Sport_Count] = new Serial();
+                serial[Sport_Count] = new Serial(this,"aaaa");
                 serial[Sport_Count].SerialOpen(SerialOpt[0], SerialOpt[1], SerialOpt[2], SerialOpt[3], SerialOpt[4], "500", "500");
                 serial[Sport_Count].sPort.DataReceived += new SerialDataReceivedEventHandler(UpdateWindowText);
                 if (serial[Sport_Count].IsOpen())
