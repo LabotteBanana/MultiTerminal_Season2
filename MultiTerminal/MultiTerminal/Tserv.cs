@@ -49,36 +49,39 @@ namespace MultiTerminal
         {
             try
             {
-                if (server != null)
+                while (true)
                 {
-                    if (server.IsBound == false)
+                    if (server != null)
                     {
-                        server.Bind(ipep);
-
-                        server.Listen(10);
-                        m_isConncted = true;
-                    }
-                    Socket newclient = server.Accept();
-                    //wsa blocking call
-                    if(newclient !=null)
-                    {
-
-                        IPEndPoint claIP = (IPEndPoint)newclient.RemoteEndPoint;
-                        string client_ip = claIP.Address.ToString();
-                        if (newclient.Connected == true)
+                        if (server.IsBound == false)
                         {
-                            m_clientCount++;
-                            Thread th = new Thread(new ThreadStart(RecvMsg)); //상대 문자열 수신 쓰레드 가동
-                            th.Start();
-                            m_ClientThread.Add(m_clientCount - 1, th);
-                            m_ClientList.Add(m_clientCount-1, newclient);
-                            m_ipList.Add(m_clientCount-1, client_ip);
-                            NetworkStream ns = new NetworkStream(newclient);
-                            StreamReader sr = new StreamReader(ns);
-                            StreamWriter sw = new StreamWriter(ns);
-                            m_ns.Add(m_clientCount-1, ns);
-                            m_sr.Add(m_clientCount-1, sr);
-                            m_sw.Add(m_clientCount-1, sw);
+                            server.Bind(ipep);
+
+                            server.Listen(10);
+                            m_isConncted = true;
+                        }
+                        Socket newclient = server.Accept();
+                        //wsa blocking call
+                        if (newclient != null)
+                        {
+
+                            IPEndPoint claIP = (IPEndPoint)newclient.RemoteEndPoint;
+                            string client_ip = claIP.Address.ToString();
+                            if (newclient.Connected == true)
+                            {
+                                m_clientCount++;
+                                Thread th = new Thread(new ThreadStart(RecvMsg)); //상대 문자열 수신 쓰레드 가동
+                                th.Start();
+                                m_ClientThread.Add(m_clientCount - 1, th);
+                                m_ClientList.Add(m_clientCount - 1, newclient);
+                                m_ipList.Add(m_clientCount - 1, client_ip);
+                                NetworkStream ns = new NetworkStream(newclient);
+                                StreamReader sr = new StreamReader(ns);
+                                StreamWriter sw = new StreamWriter(ns);
+                                m_ns.Add(m_clientCount - 1, ns);
+                                m_sr.Add(m_clientCount - 1, sr);
+                                m_sw.Add(m_clientCount - 1, sw);
+                            }
                         }
                     }
                 }
@@ -407,7 +410,6 @@ namespace MultiTerminal
                             m_ClientList[i].Disconnect(true);
                             m_ClientList.Remove(i);
                             m_clientCount--;
-                            continue;
                         }
                         while (m_ClientList[i].Connected)
                         {

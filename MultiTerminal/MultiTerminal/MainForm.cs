@@ -69,15 +69,15 @@ namespace MultiTerminal
             {
                 if (userv != null)
                 {
-                    //if (userv.server != null)
-                    //    if (userv.server.IsBound == true)
-                    //        userv.RecvMessage();
+                    if (userv.server != null)
+                        if (userv.server.IsBound == true)
+                            userv.RecvMessage();
                 }
                 if (ucla != null)
                 {
-                    //if (ucla.client != null)
-                        //if (ucla.m_isConnected == true)
-                            //ucla.RecvMessage();
+                    if (ucla.client != null)
+                        if (ucla.m_isConnected == true)
+                            ucla.RecvMessage();
                 }
             }
         }
@@ -211,11 +211,7 @@ namespace MultiTerminal
                             {
                                 this.Invoke(new Action(() =>
                                 {
-                                    //userv.SendMessage(SendBox1.Text);
-                                    byte[] send = Encoding.UTF8.GetBytes(SendBox1.Text);
-
-                                    //userv.server.BeginSendTo(send, 0, send.Length, System.Net.Sockets.SocketFlags.None, userv.senderEP, new AsyncCallback(userv.SendMessage), null);
-                                    //userv.SendMessage(SendBox1.Text);
+                                    userv.SendMessage(SendBox1.Text);
                                     ReceiveWindowBox.Text += "송신 : " + GetTimer() + SendBox1.Text + "\n";
                                 }));
                             }));
@@ -231,7 +227,7 @@ namespace MultiTerminal
                             {
                                 this.Invoke(new Action(() =>
                                 {
-                                    //ucla.SendMessage(SendBox1.Text);
+                                    ucla.SendMessage(SendBox1.Text);
 
                                     ReceiveWindowBox.Text += "송신 : " + GetTimer() + SendBox1.Text + "\n";
                                 }));
@@ -735,6 +731,7 @@ namespace MultiTerminal
             timer.Elapsed += OnTimeEvent;
             //timer.Elapsed += RecvEvent;
             timer.Elapsed += WaitAccept;
+            timer.Elapsed += RecvEvent;
         }
         #endregion
         #region 보내기 버튼 묶음
@@ -773,9 +770,7 @@ namespace MultiTerminal
                           {
                               this.Invoke(new Action(() =>
                               {
-                                  byte[] send = Encoding.UTF8.GetBytes(SendBox1.Text);
-
-                                  //userv.SendMessage(SendBox1.Text);
+                                  userv.SendMessage(SendBox1.Text);
                                   ReceiveWindowBox.Text += "송신 : " + GetTimer() + SendBox1.Text + "\n";
                               }));
                           }));
@@ -787,7 +782,7 @@ namespace MultiTerminal
                          {
                              this.Invoke(new Action(() =>
                              {
-                                 //ucla.SendMessage(SendBox1.Text);
+                                 ucla.SendMessage(SendBox1.Text);
                                  ReceiveWindowBox.Text += "송신 : " + GetTimer() + SendBox1.Text + "\n";
                              }));
                          }));
