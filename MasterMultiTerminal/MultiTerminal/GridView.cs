@@ -29,7 +29,7 @@ namespace MultiTerminal
             set { rxCheckedState = value; }
         }
 
-
+   
 
         public string Portname
         {
@@ -83,7 +83,7 @@ namespace MultiTerminal
             }
         }
 
-        public GridView(int num, string portname, string type, int typenum)
+        public GridView(int num , string portname, string type, int typenum)
         {
             this.MyNum = num;
             this.type = type;
@@ -99,7 +99,7 @@ namespace MultiTerminal
 
         }
 
-
+        
     }
 
 

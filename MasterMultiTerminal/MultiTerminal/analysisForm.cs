@@ -10,7 +10,7 @@ namespace MultiTerminal
         private List<string> connectedName = new List<string>();
         private bool[] selectState = null;
         private frequency fre = null;
-        private int indexer = 0;
+        private int indexer=0;
         private bool ggomsoo = false;
         public analysisForm(RichTextBox ReceiveWindowBox)
         {
@@ -58,8 +58,7 @@ namespace MultiTerminal
         private void analyStart_Click(object obj, EventArgs e)
         {
             int num = 0;
-            for (int i = 0; i < connectedName.Count; i++)
-            {
+            for (int i = 0; i < connectedName.Count; i++) {
                 if (selectState != null)
                 {
                     if (selectState[i] == true)
@@ -68,25 +67,24 @@ namespace MultiTerminal
             }
             if (selectState == null || num == 0)
                 MessageBox.Show("분석할 장치를 선택해 주세요.");
-            else
-            {
+            else {
                 int graphMaxTime = fre.getgraphTime();
                 int analyMax = 0;
                 int analySize = 0;
-                int[,] freTable = new int[connectedName.Count, graphMaxTime + 1];
-                freTable = fre.getDivision(connectedName, selectState);
+                int[,] freTable = new int[connectedName.Count, graphMaxTime+1];
+                freTable = fre.getDivision(connectedName,selectState);
                 for (int i = 0; i < connectedName.Count; i++)
                 {
                     for (int j = 0; j <= graphMaxTime; j++)
                     {
-                        if (freTable[i, j] > analyMax)
+                        if (freTable[i,j] > analyMax)
                             analyMax = freTable[i, j];
                         analySize++;
                     }
                 }
                 //차트 그리는 부분
                 analyChart.Series.Clear();
-                fre.drawingChart(freTable, graphMaxTime, analyMax, analySize, connectedName, analyChart, selectState);
+                fre.drawingChart(freTable, graphMaxTime, analyMax, analySize, connectedName, analyChart,selectState);
                 Controls.Add(analyChart);
             }
         }

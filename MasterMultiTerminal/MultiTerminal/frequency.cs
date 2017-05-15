@@ -29,7 +29,7 @@ namespace MultiTerminal
                     if (wow[i].Contains("수신"))
                     {
                         int end = wow[i].IndexOf('}');
-                        string buf = wow[i].Substring(3, end - 3);
+                        string buf = wow[i].Substring(3,end-3);
                         if (connectedName.Contains(buf) == false)
                         {
                             connectedName.Add(buf);
@@ -38,8 +38,7 @@ namespace MultiTerminal
                     }
                     i++;
                 }
-                catch (Exception e)
-                {
+                catch (Exception e) {
                     //MessageBox.Show(e.ToString());
                     break;
                 }
@@ -76,21 +75,19 @@ namespace MultiTerminal
                 preTime = subTime;
                 return alltime;
             }
-            catch (Exception e)
-            {
+            catch (Exception e) {
                 return 0;
             }
         }
 
         //통신 빈도를 2차원 배열을 통해 초기화
-        public int[,] getDivision(List<string> connectedName, bool[] selectState)
+        public int[,] getDivision(List<string> connectedName,bool[] selectState)
         {
             preTime = null;
             int allTime = 0;
-            int[,] freTable = new int[connectedName.Count, graphTime + 1];
+            int[,] freTable = new int[connectedName.Count,graphTime + 1];
             //freTable을 0으로 초기화
-            for (int i = 0; i < connectedName.Count; i++)
-            {
+            for (int i = 0; i < connectedName.Count; i++) {
                 for (int j = 0; j < graphTime + 1; j++)
                     freTable[i, j] = 0;
             }
@@ -128,7 +125,7 @@ namespace MultiTerminal
             return freTable;
         }
         //차트 그리는 부분
-        public void drawingChart(int[,] freTable, int graphMaxTime, int analyMax,
+        public void drawingChart(int[,] freTable, int graphMaxTime, int analyMax, 
             int analySize, List<string> connectedName, Chart analyChart, bool[] selectState)
         {
             int freMax = analyMax;
@@ -157,7 +154,7 @@ namespace MultiTerminal
                 analyGraph[i] = analyChart.Series.Add(connectedName[clientSelected[i]]); //그래프 이름 추가
                 analyGraph[i].ChartType = SeriesChartType.Line; //그래프 타입은 선
                 analyGraph[i].BorderWidth = 2; //그래프 선의 두께
-                analyGraph[i].Color = Color.FromArgb(r.Next(0, 255), r.Next(0, 255), r.Next(0, 255)); //랜덤으로 색 할당
+                analyGraph[i].Color = Color.FromArgb(r.Next(0, 255),r.Next(0,255),r.Next(0,255)); //랜덤으로 색 할당
                 //freTable에서 좌표를 가져와 그래프에 뿌려주는 역할
                 for (int j = 0; j <= graphMaxTime; j++)
                 {
@@ -178,8 +175,7 @@ namespace MultiTerminal
             analyChart.ChartAreas["ChartArea1"].AxisY.Title = "빈도(번)";
         }
 
-        public int getgraphTime()
-        {
+        public int getgraphTime() {
             return this.graphTime;
         }
     }
