@@ -29,6 +29,7 @@ namespace MultiTerminal
         private Dictionary<int, StreamWriter> m_sw = new Dictionary<int, StreamWriter>();
         public Dictionary<int, string> m_NetInfo = new Dictionary<int, string>();
         public Dictionary<int, Socket> m_ClientList = new Dictionary<int, Socket>();
+        public Dictionary<int, Thread> m_ClientThread = new Dictionary<int, Thread>();
         public int m_clientCount = 0;
 
         public Tserv(MainForm Main,int Port) //서버로 만들때
@@ -68,7 +69,10 @@ namespace MultiTerminal
                             string client_ip = claIP.Address.ToString();
                             if (newclient.Connected == true)
                             {
-                                ++m_clientCount;
+                                m_clientCount++;
+                                Thread th = new Thread(new ThreadStart(RecvMsg)); //상대 문자열 수신 쓰레드 가동
+                                th.Start();
+                                m_ClientThread.Add(m_clientCount - 1, th);
                                 m_ClientList.Add(m_clientCount - 1, newclient);
                                 m_ipList.Add(m_clientCount - 1, client_ip);
                                 NetworkStream ns = new NetworkStream(newclient);
@@ -77,10 +81,6 @@ namespace MultiTerminal
                                 m_ns.Add(m_clientCount - 1, ns);
                                 m_sr.Add(m_clientCount - 1, sr);
                                 m_sw.Add(m_clientCount - 1, sw);
-
-                                Thread th = new Thread(new ThreadStart(RecvMsg)); //상대 문자열 수신 쓰레드 가동
-                                th.Start();
-
                             }
                         }
                     }
@@ -180,6 +180,14 @@ namespace MultiTerminal
                             m_ClientList[i].Disconnect(true);
                             m_ClientList[i].Close();
                             m_ClientList.Remove(i);
+                        }
+                        if (m_ClientThread[i] != null)
+                        {
+                            if (m_ClientThread[i].ThreadState == ThreadState.Running)
+                            {
+                                m_ClientThread[i].Abort();
+                            }
+                            m_ClientThread.Remove(i);
                         }
                     }
                 }
@@ -332,7 +340,6 @@ namespace MultiTerminal
                         StreamWriter sw = new StreamWriter(ns);
                         sw.WriteLine(msg);
                         sw.Flush();
-
                     }
                 }
                 else if (server!=null)
@@ -361,7 +368,6 @@ namespace MultiTerminal
         {
             try
             {
-                int Unique = m_clientCount - 1;
                 m_isConncted = true;
                 ///Client의 Recv
                 if (client != null)
@@ -377,60 +383,51 @@ namespace MultiTerminal
                         NetworkStream ns = new NetworkStream(client);
                         StreamReader sr = new StreamReader(ns);
                         StreamWriter sw = new StreamWriter(ns);
-                        string recvMsg = sr.ReadLine();
+                        string msg = sr.ReadLine();
                         if (main.InvokeRequired)
                         {
-                            main.Invoke(new Action(() => main.ReceiveWindowBox.Text += "수신 :" + main.GetTimer() + recvMsg + "\n"));
-                            main.ReceiveWindowBox.SelectionStart = main.ReceiveWindowBox.Text.Length;
-                            main.ReceiveWindowBox.ScrollToCaret();
-
-
+                            main.Invoke(new Action(() => main.ReceiveWindowBox.Text += "수신 : " + main.GetTimer() + msg + "\n"));
                         }
                         else
                         {
-                            main.ReceiveWindowBox.Text += "수신 :" + main.GetTimer() + recvMsg + "\n";
-                            main.ReceiveWindowBox.SelectionStart = main.ReceiveWindowBox.Text.Length;
-                            main.ReceiveWindowBox.ScrollToCaret();
-
+                            main.ReceiveWindowBox.Text += "수신 : " + main.GetTimer() + msg + "\n";
                         }
                     }
                 }
                 else if(server!=null)
                 {
                     m_isConncted = true;
-                    while (m_ClientList[Unique].Connected)
+                    for (int i = 0; i < m_clientCount; i++)
                     {
-                        string recvMsg = m_sr[Unique].ReadLine();
-
-                        if (main.InvokeRequired)
+                        //클라이언트 종료감지
+                        if (m_ClientList[i].Connected==false)
                         {
-                            ///비정상 종료시 계속 되는이유
-                            main.Invoke(new Action(() => main.ReceiveWindowBox.Text += "수신 :" + main.GetTimer() + recvMsg + "\n"));
-                            main.ReceiveWindowBox.SelectionStart = main.ReceiveWindowBox.Text.Length;
-                            main.ReceiveWindowBox.ScrollToCaret();
-
-
+                            m_ns.Remove(i);
+                            m_sr.Remove(i);
+                            m_sw.Remove(i);
+                            m_ipList.Remove(i);
+                            m_ClientList[i].Shutdown(SocketShutdown.Both);
+                            m_ClientList[i].Disconnect(true);
+                            m_ClientList.Remove(i);
+                            m_clientCount--;
                         }
-                        else
+                        while (m_ClientList[i].Connected)
                         {
-                            main.ReceiveWindowBox.Text += "수신 :" + main.GetTimer() + recvMsg + "\n";
-                            main.ReceiveWindowBox.SelectionStart = main.ReceiveWindowBox.Text.Length;
-                            main.ReceiveWindowBox.ScrollToCaret();
-                        }
-                    }
+                            string msg = m_sr[i].ReadLine();
 
-                    //클라이언트 종료감지
-                    if (m_ClientList[Unique].Connected==false)
-                        {
-                            m_ns.Remove(Unique);
-                            m_sr.Remove(Unique);
-                            m_sw.Remove(Unique);
-                            m_ipList.Remove(Unique);
-                            m_ClientList[Unique].Shutdown(SocketShutdown.Both);
-                            m_ClientList[Unique].Disconnect(true);
-                            m_ClientList.Remove(Unique);
+                            if (main.InvokeRequired)
+                            {
+                                ///비정상 종료시 계속 되는이유
+                                main.Invoke(new Action(() => main.ReceiveWindowBox.Text += "수신 : " + main.GetTimer() + msg + "\n"));
+                            }
+                            else
+                            {
+                                main.ReceiveWindowBox.Text += "수신 : " + main.GetTimer() + msg + "\n";
+                            }
                         }
                     }
+
+                }
             }
             catch (SocketException ex)
             {

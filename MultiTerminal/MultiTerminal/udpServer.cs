@@ -56,12 +56,9 @@ namespace MultiTerminal
             {
                 byte[] data = new byte[1024];
                 data = Encoding.UTF8.GetBytes(sendMsg);
-                if (server != null)
+                for (int i = 0; i < m_ClientCount; i++)
                 {
-                    for (int i = 0; i < m_ClientCount; i++)
-                    {
-                        server.SendTo(data, m_ClientEP[i]);
-                    }
+                    server.SendTo(data, m_ClientEP[i]);
                 }
             }
             catch (SocketException ex)
@@ -86,32 +83,29 @@ namespace MultiTerminal
                     byte[] recv = new byte[1024];
                     IPEndPoint Sender = new IPEndPoint(IPAddress.Any, 0);
                     EndPoint remoteEP = Sender;
-                    if (server != null)
+                    int recvi = server.ReceiveFrom(recv, ref remoteEP);
+                    string recvMsg = Encoding.Default.GetString(recv);
+                    bool aaaa = recvMsg.StartsWith("서버로 접속");
+                    if (recvi >0 ) //메시지 도달
                     {
-                        int recvi = server.ReceiveFrom(recv, ref remoteEP);
-                        string recvMsg = Encoding.Default.GetString(recv);
-                        bool aaaa = recvMsg.StartsWith("서버로 접속");
-                        if (recvi > 0) //메시지 도달
-                        {
-                            if (aaaa == true && recvi == 11)
-                                m_ClientEP.Add(m_ClientCount++, remoteEP);
-                        }
-                        ///이부분 문제
-                        if (main.InvokeRequired)
-                        {
-                            main.Invoke(new Action(() => main.ReceiveWindowBox.Text += "수신 :" + main.GetTimer() + recvMsg + "\n"));
-                            main.Invoke(new Action(() => main.ReceiveWindowBox.Text += "" + Environment.NewLine));
-                            main.Invoke(new Action(() => main.ReceiveWindowBox.SelectionStart = main.ReceiveWindowBox.Text.Length));
-                            main.Invoke(new Action(() => main.ReceiveWindowBox.ScrollToCaret()));
+                        if(aaaa== true && recvi == 11)
+                        m_ClientEP.Add(m_ClientCount++, remoteEP);
+                    }
+                    ///이부분 문제
+                    if (main.InvokeRequired)
+                    {
+                        main.Invoke(new Action(() => main.ReceiveWindowBox.Text += "수신 :" + main.GetTimer() + recvMsg + "\n"));
+                        main.Invoke(new Action(() => main.ReceiveWindowBox.Text += "" + Environment.NewLine));
+                        main.Invoke(new Action(() => main.ReceiveWindowBox.SelectionStart = main.ReceiveWindowBox.Text.Length));
+                        main.Invoke(new Action(() => main.ReceiveWindowBox.ScrollToCaret()));
 
-                        }
-                        else
-                        {
-                            main.ReceiveWindowBox.Text += "수신 :" + main.GetTimer() + recvMsg + "\n";
-                            main.ReceiveWindowBox.Text += "" + Environment.NewLine;
-                            main.ReceiveWindowBox.SelectionStart = main.ReceiveWindowBox.Text.Length;
-                            main.ReceiveWindowBox.ScrollToCaret();
-                        }
+                    }
+                    else
+                    {
+                        main.ReceiveWindowBox.Text += "수신 :" + main.GetTimer() + recvMsg + "\n";
+                        main.ReceiveWindowBox.Text += "" + Environment.NewLine;
+                        main.ReceiveWindowBox.SelectionStart = main.ReceiveWindowBox.Text.Length;
+                        main.ReceiveWindowBox.ScrollToCaret();
                     }
                 }
             }
@@ -131,7 +125,7 @@ namespace MultiTerminal
         {
             if (server != null)
             {
-                //server.Shutdown(SocketShutdown.Both);
+                server.Shutdown(SocketShutdown.Both);
                 server.Close();
             }
         }
