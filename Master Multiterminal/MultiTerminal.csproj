@@ -47,6 +47,9 @@
   <PropertyGroup>
     <SignManifests>false</SignManifests>
   </PropertyGroup>
+  <PropertyGroup>
+    <NoWin32Manifest>true</NoWin32Manifest>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="InTheHand.Net.Personal, Version=3.5.605.0, Culture=neutral, PublicKeyToken=ea38caa273134499, processorArchitecture=MSIL">
       <HintPath>..\packages\32feet.NET.3.5.0.0\lib\net\InTheHand.Net.Personal.dll</HintPath>
@@ -67,6 +70,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Management" />
+    <Reference Include="System.Windows.Forms.DataVisualization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -84,7 +88,6 @@
     <Compile Include="analysisForm.Designer.cs">
       <DependentUpon>analysisForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form1.Designer.cs" />
     <Compile Include="frequency.cs" />
     <Compile Include="GridView.cs" />
     <Compile Include="MainForm.cs">
@@ -92,9 +95,6 @@
     </Compile>
     <Compile Include="MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="MainForm.Designer.Designer.cs">
-      <DependentUpon>MainForm.Designer.cs</DependentUpon>
     </Compile>
     <Compile Include="Packet.cs" />
     <Compile Include="processConnection.cs" />
