@@ -34,6 +34,7 @@ namespace MultiTerminal
                 client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.DontRoute, 1);
 
                 client.Bind(Sender);
+                SendMessage("서버로 접속");
                 Recvth = new Thread(new ThreadStart(RecvMessage)); //상대 문자열 수신 쓰레드 가동
                 m_isConnected = true;
                 Recvth.Start();

@@ -84,20 +84,13 @@ namespace MultiTerminal
                     IPEndPoint Sender = new IPEndPoint(IPAddress.Any, 0);
                     EndPoint remoteEP = Sender;
                     int recvi = server.ReceiveFrom(recv, ref remoteEP);
-
-                    for (int i = 0; i < m_ClientEP.Count; i++)
+                    string recvMsg = Encoding.Default.GetString(recv);
+                    bool aaaa = recvMsg.StartsWith("서버로 접속");
+                    if (recvi >0 ) //메시지 도달
                     {
-                        if (m_ClientEP[i].ToString() == remoteEP.ToString())
-                        {
-                            m_ClientEP.Remove(i);
-                            m_ClientCount--;
-                        }
-                    }
-                    if(recvi >0 ) //메시지 도달
-                    {
+                        if(aaaa== true && recvi == 11)
                         m_ClientEP.Add(m_ClientCount++, remoteEP);
                     }
-                    string recvMsg = Encoding.Default.GetString(recv);
                     ///이부분 문제
                     if (main.InvokeRequired)
                     {
