@@ -108,27 +108,12 @@ namespace MultiTerminal
                 ///여기에 시리얼 센드부분
                 try
                 {
-                    /*
-                    if (Flag_AEAS[0] == 0)
-                    {
-                    */
                     serial[0].SerialSend(this.SendBox1.Text);
-
-                    /*
-                    else if (Flag_AEAS[0] == 1)
-                    {
-                        serial.SerialSend(SendBox1.Text.Insert(SendBox1.Text.Length, "\n"));
-                    }
-                    else
-                    {
-                        serial.SerialSend(SendBox1.Text.Insert(SendBox1.Text.Length, " "));
-                    }
-                    */
                 }
                 catch (Exception ex)
                 {
                     int lineNum = Convert.ToInt32(ex.StackTrace.Substring(ex.StackTrace.LastIndexOf(' ')));
-                    System.Windows.Forms.MessageBox.Show("기타에러 " + lineNum + "에서 발생" + ex.Message);
+                    MessageBox.Show("기타에러 " + lineNum + "에서 발생" + ex.Message);
 
                 }
             }
@@ -176,7 +161,7 @@ namespace MultiTerminal
                 catch (Exception ex)
                 {
                     int lineNum = Convert.ToInt32(ex.StackTrace.Substring(ex.StackTrace.LastIndexOf(' ')));
-                    System.Windows.Forms.MessageBox.Show("기타에러 " + lineNum + "에서 발생" + ex.Message);
+                    MessageBox.Show("기타에러 " + lineNum + "에서 발생" + ex.Message);
 
                 }
             }
@@ -225,7 +210,7 @@ namespace MultiTerminal
                 catch (Exception ex)
                 {
                     int lineNum = Convert.ToInt32(ex.StackTrace.Substring(ex.StackTrace.LastIndexOf(' ')));
-                    System.Windows.Forms.MessageBox.Show("기타에러 " + lineNum + "에서 발생" + ex.Message);
+                    MessageBox.Show("기타에러 " + lineNum + "에서 발생" + ex.Message);
 
                 }
             }
@@ -258,16 +243,6 @@ namespace MultiTerminal
         //}
 
         #endregion
-
-        private void MainForm_Closed(object sender, FormClosedEventArgs e)  // 메인폼 닫혔을 때 
-        {
-
-            //serial.DisConSerial();
-            tserv.ServerStop();
-            tcla.DisConnect();
-
-        }
-
 
         #region 버튼부분 입니당 ^-^         
 
@@ -319,6 +294,7 @@ namespace MultiTerminal
                         TcpPanel.Visible = false;
                         UdpPanel.Visible = false;
                         //Serial_Combo_Init();
+                        /*
                         if (tserv != null)
                             tserv.ServerStop();
                         if (tcla != null)
@@ -327,7 +303,7 @@ namespace MultiTerminal
                             userv.DisConnect();
                         if (ucla != null)
                             ucla.DisConnect();
-
+                            */
 
                     }
                     break;
@@ -339,11 +315,12 @@ namespace MultiTerminal
 
                         SerialPanel.Visible = false;
                         UdpPanel.Visible = false;
+                        /*
                         if (userv != null)
                             userv.DisConnect();
                         if (ucla != null)
                             ucla.DisConnect();
-
+                            */
                     }
                     break;
                 case 2:
@@ -1146,7 +1123,6 @@ namespace MultiTerminal
                 ucla.DisConnect();
             Process currentProcess = Process.GetCurrentProcess();
             currentProcess.Kill();
-
         }
 
         private void UServerCheck_CheckedChanged(object sender, EventArgs e)
@@ -1331,24 +1307,28 @@ namespace MultiTerminal
                             {
                                 serial[gridview[Selected_Grid_Num].Typenum].DisConSerial();   // 시리얼 연결 해제 ^-^
                                 MessageBox.Show(gridview[Selected_Grid_Num].Portname + "가 연결해제 되었습니다."); // ex: 0번 시리얼이 연결 해제되었습니다.
-
                             }
                             catch (Exception ex)
                             {
                                 int lineNum = Convert.ToInt32(ex.StackTrace.Substring(ex.StackTrace.LastIndexOf(' ')));
-                                System.Windows.Forms.MessageBox.Show("기타에러 " + lineNum + "에서 발생" + ex.Message);
-
+                                MessageBox.Show("기타에러 " + lineNum + "에서 발생" + ex.Message);
                             }
 
                         }
                         break;
 
-                    case "TCP":
+                    case "TCP Client":
+                        {
+                            tserv.ServerStop(gridview[Selected_Grid_Num].Typenum);
+                            MessageBox.Show(gridview[Selected_Grid_Num].Portname + "가 연결해제 되었습니다."); // ex: 0번 시리얼이 연결 해제되었습니다.
+                        }
+                        break;
+
+                    case "TCP Server":
                         {
 
                         }
                         break;
-
                     case "UDP":
                         {
 
@@ -1369,19 +1349,14 @@ namespace MultiTerminal
 
                 PortListGrid.Update();
                 PortListGrid.Refresh();
-
-
             }
         }
 
-        private void DrawGrid(int num, string type, string name, string time)    // 그리드에 열 추가 ~~
+        public void DrawGrid(int num, string type, string name, string time)    // 그리드에 열 추가 ~~
         {
             string[] row = new string[] { num.ToString(), type, name, time };
             PortListGrid.Rows.Add(row);
         }
-
-
-
 
         #endregion
         private void Tcp_Btn_DisCon_Click(object sender, EventArgs e)
@@ -1392,18 +1367,14 @@ namespace MultiTerminal
                 if (ServerCheck.Checked == true)
                 {
                     int port = Int32.Parse(PortNumber.Text);
-                    tserv = new Tserv(this, port);
+                    tserv = new Tserv(this, port,gridview,GridList);
                     tserv.ServerStart();
-                    //AcceptThread = new Thread(() => tserv.ServerWait());
-                    //AcceptThread.Start();
-
-
                 }
                 else
                 {
                     int port = Int32.Parse(PortNumber.Text);
                     string ip = IpNumber.Text;
-                    tcla = new Tserv(this, ip, port);
+                    tcla = new Tserv(this, ip, port, gridview, GridList);
                     tcla.Connect();
                 }
                 Tcp_Btn_DisCon.Text = "연결해제";

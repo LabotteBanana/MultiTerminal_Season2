@@ -276,9 +276,9 @@
             // 
             // panel4
             // 
+            this.panel4.Controls.Add(this.TcpPanel);
             this.panel4.Controls.Add(this.SerialPanel);
             this.panel4.Controls.Add(this.UdpPanel);
-            this.panel4.Controls.Add(this.TcpPanel);
             this.panel4.Location = new System.Drawing.Point(5, 101);
             this.panel4.Name = "panel4";
             this.panel4.Size = new System.Drawing.Size(159, 284);
@@ -1156,7 +1156,7 @@
             // 
             // Btn_AEAS4
             // 
-            this.Btn_AEAS4.Font = new System.Drawing.Font("굴림", 7F);
+            this.Btn_AEAS4.Font = new System.Drawing.Font("Gulim", 7F);
             this.Btn_AEAS4.Location = new System.Drawing.Point(504, 112);
             this.Btn_AEAS4.Name = "Btn_AEAS4";
             this.Btn_AEAS4.Size = new System.Drawing.Size(31, 47);
@@ -1166,7 +1166,7 @@
             // 
             // Btn_AEAS3
             // 
-            this.Btn_AEAS3.Font = new System.Drawing.Font("굴림", 7F);
+            this.Btn_AEAS3.Font = new System.Drawing.Font("Gulim", 7F);
             this.Btn_AEAS3.Location = new System.Drawing.Point(504, 83);
             this.Btn_AEAS3.Name = "Btn_AEAS3";
             this.Btn_AEAS3.Size = new System.Drawing.Size(31, 25);
@@ -1176,7 +1176,7 @@
             // 
             // Btn_AEAS2
             // 
-            this.Btn_AEAS2.Font = new System.Drawing.Font("굴림", 7F);
+            this.Btn_AEAS2.Font = new System.Drawing.Font("Gulim", 7F);
             this.Btn_AEAS2.Location = new System.Drawing.Point(504, 53);
             this.Btn_AEAS2.Name = "Btn_AEAS2";
             this.Btn_AEAS2.Size = new System.Drawing.Size(31, 25);
@@ -1186,7 +1186,7 @@
             // 
             // Btn_AEAS1
             // 
-            this.Btn_AEAS1.Font = new System.Drawing.Font("굴림", 7F);
+            this.Btn_AEAS1.Font = new System.Drawing.Font("Gulim", 7F);
             this.Btn_AEAS1.Location = new System.Drawing.Point(504, 23);
             this.Btn_AEAS1.Name = "Btn_AEAS1";
             this.Btn_AEAS1.Size = new System.Drawing.Size(31, 25);

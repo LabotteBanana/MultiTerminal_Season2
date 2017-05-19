@@ -17,6 +17,8 @@ namespace MultiTerminal
         MainForm main = null;
         public Socket server =null; //listening socket
         public Socket client = null;
+        public GridView[] gridview = null;
+        public List<GridView> gridlist = null;
         private string ip;
         private bool m_isConncted = false;
         private IPEndPoint ipep;
@@ -29,91 +31,96 @@ namespace MultiTerminal
         private Dictionary<int, StreamWriter> m_sw = new Dictionary<int, StreamWriter>();
         public Dictionary<int, string> m_NetInfo = new Dictionary<int, string>();
         public Dictionary<int, Socket> m_ClientList = new Dictionary<int, Socket>();
-        public Dictionary<int, Thread> m_ClientThread = new Dictionary<int, Thread>();
         public int m_clientCount = 0;
 
-        public Tserv(MainForm Main,int Port) //서버로 만들때
+        public Tserv(MainForm Main,int Port, GridView[] GridView, List<GridView> GridList) //서버로 만들때
         {
             main = Main;
             port = Port;
+            gridview = GridView;
+            gridlist = GridList;
         }
 
-        public Tserv(MainForm Main, string IP, int Port) //클라로 만들때
+        public Tserv(MainForm Main, string IP, int Port, GridView[] GridView, List<GridView> GridList) //클라로 만들때
         {
             main = Main;
             port = Port;
             ip = IP;
+            gridview = GridView;
+            gridlist = GridList;
         }
 
         public void ServerWait()
         {
-            try
+            while (true)
             {
-                System.Windows.Forms.MessageBox.Show("21`21");
-
-                if (server != null)
+                try
                 {
-                    if (server.IsBound == false)
+                    if (server != null)
                     {
-                        server.Bind(ipep);
-
-                        server.Listen(10);
-                        m_isConncted = true;
-                    }
-                    Socket newclient = server.Accept();
-                    System.Windows.Forms.MessageBox.Show("1234");
-
-                    //wsa blocking call
-                    if (newclient !=null)
-                    {
-                        System.Windows.Forms.MessageBox.Show("빱");
-                        IPEndPoint claIP = (IPEndPoint)newclient.RemoteEndPoint;
-                        string client_ip = claIP.Address.ToString();
-                        if (newclient.Connected == true)
+                        if (server.IsBound == false)
                         {
-                            System.Windows.Forms.MessageBox.Show("빱바");
-                            m_clientCount++;
-                            Thread th = new Thread(new ThreadStart(RecvMsg)); //상대 문자열 수신 쓰레드 가동
-                            th.Start();
-                            m_ClientThread.Add(m_clientCount - 1, th);
-                            m_ClientList.Add(m_clientCount-1, newclient);
-                            m_ipList.Add(m_clientCount-1, client_ip);
+                            server.Bind(ipep);
 
-                            NetworkStream ns = new NetworkStream(newclient);
-                            StreamReader sr = new StreamReader(ns);
-                            StreamWriter sw = new StreamWriter(ns);
-                            m_ns.Add(m_clientCount-1, ns);
-                            m_sr.Add(m_clientCount-1, sr);
-                            m_sw.Add(m_clientCount-1, sw);
+                            server.Listen(10);
+                            m_isConncted = true;
+                        }
+                        Socket newclient = server.Accept();
+                        //wsa blocking call
+                        if (newclient != null)
+                        {
+                            IPEndPoint claIP = (IPEndPoint)newclient.RemoteEndPoint;
+                            string client_ip = claIP.Address.ToString();
+                            if (newclient.Connected == true)
+                            {
+                                ++m_clientCount;
+                                m_ClientList.Add(m_clientCount - 1, newclient);
+                                m_ipList.Add(m_clientCount - 1, client_ip);
+                                NetworkStream ns = new NetworkStream(newclient);
+                                StreamReader sr = new StreamReader(ns);
+                                StreamWriter sw = new StreamWriter(ns);
+                                m_ns.Add(m_clientCount - 1, ns);
+                                m_sr.Add(m_clientCount - 1, sr);
+                                m_sw.Add(m_clientCount - 1, sw);
+                                Thread th = new Thread(new ThreadStart(RecvMsg)); //상대 문자열 수신 쓰레드 가동
+                                th.Start();
+                                //그리드뷰에 등록
+                                int size = gridlist.Count;
+                                string client_IP = client_ip;  // client ip 가져오기
+
+                                gridview[gridlist.Count] = new GridView(gridlist.Count, client_IP, "TCP Client", m_clientCount - 1);  // 그리드뷰 객체에 적용,   타입형태(시리얼,UDP..), 타입의 순번도 그리드 객체로 슝들어감.    
+                                main.DrawGrid(gridview[gridlist.Count].MyNum, gridview[gridlist.Count].Type, gridview[gridlist.Count].Portname, gridview[gridlist.Count].Time);
+
+                                gridlist.Add(gridview[gridlist.Count]);
+                            }
                         }
                     }
                 }
-            }
-            catch (SocketException ex)
-            {
-                int lineNum = Convert.ToInt32(ex.StackTrace.Substring(ex.StackTrace.LastIndexOf(' ')));
-
-                if (ex.ErrorCode == 10048)
+                catch (SocketException ex)
                 {
-                    System.Windows.Forms.MessageBox.Show("소켓에러 " + lineNum + "에서 발생 \n 동일한 ip나 port가 사용되고있다.");
-                    return;
+                    int lineNum = Convert.ToInt32(ex.StackTrace.Substring(ex.StackTrace.LastIndexOf(' ')));
+
+                    if (ex.ErrorCode == 10048)
+                    {
+                        System.Windows.Forms.MessageBox.Show("소켓에러 " + lineNum + "에서 발생 \n 동일한 ip나 port가 사용되고있다.");
+                        return;
+                    }
+
+                    if (ex.ErrorCode == 10004)
+                    {
+                        System.Windows.Forms.MessageBox.Show("소켓에러 " + lineNum + "에서 발생 \n Interrupted 펑션 콜");
+                        return;
+                    }
+
+                    System.Windows.Forms.MessageBox.Show("소켓에러 " + lineNum + "에서 발생" + ex.Message);
                 }
 
-                if (ex.ErrorCode == 10004)
+                catch (Exception ex)
                 {
-                    System.Windows.Forms.MessageBox.Show("소켓에러 " + lineNum + "에서 발생 \n Interrupted 펑션 콜");
-                    return;
+                    int lineNum = Convert.ToInt32(ex.StackTrace.Substring(ex.StackTrace.LastIndexOf(' ')));
+                    System.Windows.Forms.MessageBox.Show("기타에러 " + lineNum + "에서 발생" + ex.Message);
                 }
-
-                System.Windows.Forms.MessageBox.Show("소켓에러 " + lineNum + "에서 발생" + ex.Message);
             }
-
-            catch (Exception ex)
-            {
-                int lineNum = Convert.ToInt32(ex.StackTrace.Substring(ex.StackTrace.LastIndexOf(' ')));
-                System.Windows.Forms.MessageBox.Show("기타에러 " + lineNum + "에서 발생" + ex.Message);
-            }
-
         }
         #region Server
         public void ServerStart()
@@ -153,12 +160,71 @@ namespace MultiTerminal
             }
 
         }
+        public void ServerStop(int selectClient)
+        {
+            try
+            {
+                if (m_ClientList[selectClient].Connected == true)
+                {
+                    if (m_ns[selectClient] != null)
+                    {
+                        m_ns[selectClient].Close();
+                        m_ns.Remove(selectClient);
+                    }
+                    if (m_sr[selectClient] != null)
+                    {
+                        m_sr[selectClient].Close();
+                        m_sr.Remove(selectClient);
+                    }
+                    if (m_sw[selectClient] != null)
+                    {
+                        m_sw[selectClient].Close();
+                        m_sw.Remove(selectClient);
+                    }
+                    if (m_ClientList[selectClient] != null)
+                    {
+                        m_ClientList[selectClient].Shutdown(SocketShutdown.Both);
+                        m_ClientList[selectClient].Disconnect(true);
+                        m_ClientList[selectClient].Close();
+                        m_ClientList.Remove(selectClient);
+                    }
+                }
+                m_isConncted = false;
+            }
+            catch (SocketException ex)
+            {
+                int lineNum = Convert.ToInt32(ex.StackTrace.Substring(ex.StackTrace.LastIndexOf(' ')));
+                if (ex.ErrorCode == 10057) //연결이 된 소켓이 없다.
+                {
+                    //클라이언트의 접속종료
+                    if (server == null)
+                    {
+                        System.Windows.Forms.MessageBox.Show("소켓에러 " + lineNum + "에서 발생 \n연결된 소켓이 없다.");
+                        server.Close();
+                        return;
+                    }
+                    if (client == null)
+                    {
+                        System.Windows.Forms.MessageBox.Show("소켓에러 " + lineNum + "에서 발생 \n연결된 소켓이 없다.");
+                        server.Close();
+                        return;
+                    }
+                }
+                System.Windows.Forms.MessageBox.Show("소켓에러 " + lineNum + "에서 발생" + ex.Message);
+            }
+
+            catch (Exception ex)
+            {
+                int lineNum = Convert.ToInt32(ex.StackTrace.Substring(ex.StackTrace.LastIndexOf(' ')));
+                System.Windows.Forms.MessageBox.Show("기타에러 " + lineNum + "에서 발생" + ex.Message);
+            }
+        }
         //채팅 서버 프로그램 중지
         public void ServerStop()
         {
             try
             {
-                
+                //수정 필요(for문에서 사용하는 m_clientCount. 0부터 순차적으로 사용되지 않는 경우가 있을 수 있음.
                 for (int i = 0; i < m_clientCount; i++)
                 {
                     if (m_ClientList[i].Connected == true)
@@ -184,29 +250,20 @@ namespace MultiTerminal
                             m_ClientList[i].Close();
                             m_ClientList.Remove(i);
                         }
-                        if (m_ClientThread[i] != null)
-                        {
-                            if (m_ClientThread[i].ThreadState == ThreadState.Running)
-                            {
-                                m_ClientThread[i].Abort();
-                            }
-                            m_ClientThread.Remove(i);
-                        }
                     }
                 }
                 m_isConncted = false;
                 if (server.IsBound == true)
                 {
-                   // server.Shutdown(SocketShutdown.Both);
+                    server.Shutdown(SocketShutdown.Both);
                     server.Disconnect(true);
                     server.Close();
                 }
                 else
                 {
-                  //  server.Shutdown(SocketShutdown.Both);
+                    server.Shutdown(SocketShutdown.Both);
                     server.Disconnect(true);
                     server.Close();
-
                 }
             }
             catch (SocketException ex)
@@ -223,10 +280,9 @@ namespace MultiTerminal
                     }
                     if (client == null)
                     {
-                            System.Windows.Forms.MessageBox.Show("소켓에러 " + lineNum + "에서 발생 \n연결된 소켓이 없다.");
-                            server.Close();
-                            return;
-
+                        System.Windows.Forms.MessageBox.Show("소켓에러 " + lineNum + "에서 발생 \n연결된 소켓이 없다.");
+                        server.Close();
+                        return;
                     }
                 }
                 System.Windows.Forms.MessageBox.Show("소켓에러 " + lineNum + "에서 발생" + ex.Message);
@@ -238,21 +294,6 @@ namespace MultiTerminal
                 System.Windows.Forms.MessageBox.Show("기타에러 " + lineNum + "에서 발생" + ex.Message);
             }
         }
-
-        public void GetClaInfo()
-        {
-            for(int i = 0; i<m_clientCount;i++)
-            {
-                if(m_ClientList[i].Connected==false)
-                {
-                    m_ns[i].Close();
-                    m_sw[i].Close();
-                    m_sr[i].Close();
-                    m_ClientList.Remove(i);
-                    m_clientCount--;
-                }
-            }
-        }
         #endregion 
 
         #region Client
@@ -261,7 +302,6 @@ namespace MultiTerminal
         {
             try
             {
-
                 IPEndPoint ipep = new IPEndPoint(IPAddress.Parse(ip), port);
                 client = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 client.Connect(ipep);
@@ -272,7 +312,15 @@ namespace MultiTerminal
                 Thread th = new Thread(new ThreadStart(RecvMsg)); //상대 문자열 수신 쓰레드 가동
                 th.Start();
                 m_isConncted = true;
-           //     DisplayNetworkInfo();
+                //     DisplayNetworkInfo();
+                //그리드뷰에 등록
+                int size = gridlist.Count;
+                string server_IP = ip;  // client ip 가져오기
+                ++m_clientCount;
+                gridview[gridlist.Count] = new GridView(gridlist.Count, server_IP, "TCP Server", m_clientCount - 1);  // 그리드뷰 객체에 적용,   타입형태(시리얼,UDP..), 타입의 순번도 그리드 객체로 슝들어감.    
+                main.DrawGrid(gridview[gridlist.Count].MyNum, gridview[gridlist.Count].Type, gridview[gridlist.Count].Portname, gridview[gridlist.Count].Time);
+
+                gridlist.Add(gridview[gridlist.Count]);
                 return true;
             }
             catch (SocketException ex)
@@ -306,7 +354,7 @@ namespace MultiTerminal
                         if (ns != null) ns.Close();
                         if (sw != null) sw.Close();
                         if (sr != null) sr.Close();
-                        //client.Shutdown(SocketShutdown.Both);
+                        client.Shutdown(SocketShutdown.Both);
                         client.Disconnect(true);
                         client.Close();
                     }
@@ -371,6 +419,7 @@ namespace MultiTerminal
         {
             try
             {
+                int uniqueClientNum = m_clientCount-1;
                 m_isConncted = true;
                 ///Client의 Recv
                 if (client != null)
@@ -391,60 +440,55 @@ namespace MultiTerminal
                         {
                             main.Invoke(new Action(() =>
                             {
-                                main.ReceiveWindowBox.AppendText("수신 : " + main.GetTimer() + msg + "\n");
+                                main.ReceiveWindowBox.AppendText("수신{" + ip + "}" + main.GetTimer() + msg + "\n");
                                 main.ReceiveWindowBox.SelectionStart = main.ReceiveWindowBox.Text.Length;
                                 main.ReceiveWindowBox.ScrollToCaret();
                             }));
                         }
                         else
                         {
-                            main.ReceiveWindowBox.AppendText("수신 : " + main.GetTimer() + msg + "\n");
+                            main.ReceiveWindowBox.AppendText("수신{" + ip + "}" + main.GetTimer() + msg + "\n");
                             main.ReceiveWindowBox.SelectionStart = main.ReceiveWindowBox.Text.Length;
                             main.ReceiveWindowBox.ScrollToCaret();
                         }
                     }
                 }
+                //Server의 receive
                 else if(server!=null)
                 {
                     m_isConncted = true;
-                    for (int i = 0; i < m_clientCount; i++)
+                    while (m_ClientList[uniqueClientNum].Connected)
                     {
-                        //클라이언트 종료감지
-                        if (m_ClientList[i].Connected==false)
-                        {
-                            m_ns.Remove(i);
-                            m_sr.Remove(i);
-                            m_sw.Remove(i);
-                            m_ipList.Remove(i);
-                            m_ClientList[i].Shutdown(SocketShutdown.Both);
-                            m_ClientList[i].Disconnect(true);
-                            m_ClientList.Remove(i);
-                            m_clientCount--;
-                            continue;
-                        }
-                        while (m_ClientList[i].Connected)
-                        {
-                            string msg = m_sr[i].ReadLine();
+                        string msg = m_sr[uniqueClientNum].ReadLine();
 
-                            if (main.InvokeRequired)
+                        if (main.InvokeRequired)
+                        {
+                            ///비정상 종료시 계속 되는이유
+                            main.Invoke(new Action(() =>
                             {
-                                ///비정상 종료시 계속 되는이유
-                                main.Invoke(new Action(() =>
-                                {
-                                    main.ReceiveWindowBox.AppendText("수신 : " + main.GetTimer() + msg + "\n");
-                                    main.ReceiveWindowBox.SelectionStart = main.ReceiveWindowBox.Text.Length;
-                                    main.ReceiveWindowBox.ScrollToCaret();
-                                }));
-                            }
-                            else
-                            {
-                                main.ReceiveWindowBox.AppendText("수신 : " + main.GetTimer() + msg + "\n");
+                                main.ReceiveWindowBox.AppendText("수신{" + m_ipList[uniqueClientNum] + "}" + main.GetTimer() + msg + "\n");
                                 main.ReceiveWindowBox.SelectionStart = main.ReceiveWindowBox.Text.Length;
                                 main.ReceiveWindowBox.ScrollToCaret();
-                            }
+                            }));
+                        }
+                        else
+                        {
+                            main.ReceiveWindowBox.AppendText("수신{" + m_ipList[uniqueClientNum] + "}" + main.GetTimer() + msg + "\n");
+                            main.ReceiveWindowBox.SelectionStart = main.ReceiveWindowBox.Text.Length;
+                            main.ReceiveWindowBox.ScrollToCaret();
                         }
                     }
-
+                    //클라이언트 종료감지
+                    if (m_ClientList[uniqueClientNum].Connected == false)
+                    {
+                        m_ns.Remove(uniqueClientNum);
+                        m_sr.Remove(uniqueClientNum);
+                        m_sw.Remove(uniqueClientNum);
+                        m_ipList.Remove(uniqueClientNum);
+                        m_ClientList[uniqueClientNum].Shutdown(SocketShutdown.Both);
+                        m_ClientList[uniqueClientNum].Disconnect(true);
+                        m_ClientList.Remove(uniqueClientNum);
+                    }
                 }
             }
             catch (SocketException ex)
