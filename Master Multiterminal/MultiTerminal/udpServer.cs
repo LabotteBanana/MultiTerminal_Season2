@@ -179,7 +179,7 @@ namespace MultiTerminal
                     m_bRecvList.Remove(m_DisConnectNum);
                     m_bSendList.Remove(m_DisConnectNum);
                     main.GridList.Remove(main.gridview[m_DisConnectNum]);
-
+                    ///
                     m_ClientCount--;
                 }
                 else
