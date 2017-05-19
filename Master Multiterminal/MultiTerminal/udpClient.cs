@@ -20,7 +20,7 @@ namespace MultiTerminal
         public bool m_isConnected = false;
         private static Thread Recvth = null;
         public bool bSend = false;
-        public int bRecv = 0;
+        public bool bRecv = false;
         public void Connect(MainForm form, string IP, int port)
         {
             try
@@ -82,7 +82,7 @@ namespace MultiTerminal
                         byte[] data = new byte[1024];
                         if (client != null)
                         {
-                        if (bRecv == 1)
+                        if (bRecv == true)
                         {
                             if (main.RowIndex >= 0)
                             {

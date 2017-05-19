@@ -23,7 +23,7 @@ namespace MultiTerminal
         public bool m_isConnected = false;
         private static Thread th = null;
         public Dictionary<int, bool> m_bSendList = new Dictionary<int, bool>();
-        public Dictionary<int, bool> m_bRecvList = new Dictionary<int, bool>();
+        public bool m_bRecv = true;
         public void Connect(MainForm form, int Port)
         {
             try
@@ -143,7 +143,7 @@ namespace MultiTerminal
                                     String Port = Info.Substring(Start + 1); //접속해온 곳의 Port번호 확인
 
                                     m_DisConnectNum = j;
-                                    if (m_bRecvList[j] == true && String.Compare(Port, PortStr) == 0)
+                                    if (m_bRecv == true && String.Compare(Port, PortStr) == 0)
                                     {
                                         ///이부분 문제
                                         if (main.InvokeRequired)
@@ -176,7 +176,7 @@ namespace MultiTerminal
                 {
                     System.Windows.Forms.MessageBox.Show(m_DisConnectNum + "번 클라이언트에서 연결을 종료했습니다.");
                     m_ClientEP.Remove(m_DisConnectNum);
-                    m_bRecvList.Remove(m_DisConnectNum);
+
                     m_bSendList.Remove(m_DisConnectNum);
                     main.GridList.Remove(main.gridview[m_DisConnectNum]);
                     ///

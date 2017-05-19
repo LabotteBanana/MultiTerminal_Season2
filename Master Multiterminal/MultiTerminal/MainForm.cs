@@ -1296,12 +1296,12 @@ namespace MultiTerminal
                         if (gridview[e.RowIndex].RxCheckedState == false)
                         {
                             gridview[e.RowIndex].RxCheckedState = true;
-                            ucla.bRecv = 1;
+                            ucla.bRecv = true;
                         }
                         else
                         {
                             gridview[e.RowIndex].RxCheckedState = false;
-                            ucla.bRecv = 0;
+                            ucla.bRecv = false;
                         }
                     }
                 }
@@ -1340,27 +1340,12 @@ namespace MultiTerminal
                         if (gridview[e.RowIndex].RxCheckedState == false)
                         {
                             gridview[e.RowIndex].RxCheckedState = true;
-                            if (userv.m_bRecvList.ContainsKey(e.RowIndex) == false)
-                            {
-                                userv.m_bRecvList.Add(e.RowIndex, true);
-                            }
-                            else
-                            {
-                                userv.m_bRecvList[e.RowIndex] = true;
-
-                            }
+                                userv.m_bRecv= true;
                         }
                         else
                         {
                             gridview[e.RowIndex].RxCheckedState = false;
-                            if (userv.m_bRecvList.ContainsKey(e.RowIndex) == false)
-                            {
-                                userv.m_bRecvList.Add(e.RowIndex, false);
-                            }
-                            else
-                            {
-                                userv.m_bRecvList[e.RowIndex] = false;
-                            }
+                            userv.m_bRecv = false;
                         }
                     }
                 }
