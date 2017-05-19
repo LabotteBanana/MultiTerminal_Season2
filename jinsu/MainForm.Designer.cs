@@ -1,6 +1,6 @@
 ﻿namespace MultiTerminal
-//choi에 분기만들고 커밋해보기
-//1212123123123
+    //choi에 분기만들고 커밋해보기
+    //1212123123123
 {
     partial class MainForm
     {
@@ -31,20 +31,28 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("");
+            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("");
+            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem("");
             this.metroPanel1 = new MetroFramework.Controls.MetroPanel();
-            this.button1 = new System.Windows.Forms.Button();
             this.panel5 = new System.Windows.Forms.Panel();
-            this.PortListGrid = new System.Windows.Forms.DataGridView();
-            this.Num = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Type = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Port = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Time = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Tx = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.Rx = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.DisCon = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.listView1 = new System.Windows.Forms.ListView();
+            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.panel4 = new System.Windows.Forms.Panel();
             this.UdpPanel = new System.Windows.Forms.Panel();
+            this.Udp_Btn_DisCon = new System.Windows.Forms.Button();
+            this.Udp_Btn_Con = new System.Windows.Forms.Button();
+            this.UServerCheck = new System.Windows.Forms.CheckBox();
+            this.UPortNumber = new System.Windows.Forms.ComboBox();
+            this.UIPNumber = new System.Windows.Forms.ComboBox();
+            this.label9 = new System.Windows.Forms.Label();
+            this.label10 = new System.Windows.Forms.Label();
+            this.label11 = new System.Windows.Forms.Label();
+            this.button4 = new System.Windows.Forms.Button();
+            this.button5 = new System.Windows.Forms.Button();
+            this.TcpPanel = new System.Windows.Forms.Panel();
             this.SerialPanel = new System.Windows.Forms.Panel();
             this.Serial_Btn_F5 = new System.Windows.Forms.Button();
             this.Serial_Combo_FlowCon = new System.Windows.Forms.ComboBox();
@@ -61,17 +69,6 @@
             this.Label_Se_Port = new System.Windows.Forms.Label();
             this.Serial_Btn_Con = new System.Windows.Forms.Button();
             this.Serial_Btn_DisCon = new System.Windows.Forms.Button();
-            this.Udp_Btn_DisCon = new System.Windows.Forms.Button();
-            this.Udp_Btn_Con = new System.Windows.Forms.Button();
-            this.UServerCheck = new System.Windows.Forms.CheckBox();
-            this.UPortNumber = new System.Windows.Forms.ComboBox();
-            this.UIPNumber = new System.Windows.Forms.ComboBox();
-            this.label9 = new System.Windows.Forms.Label();
-            this.label10 = new System.Windows.Forms.Label();
-            this.label11 = new System.Windows.Forms.Label();
-            this.button4 = new System.Windows.Forms.Button();
-            this.button5 = new System.Windows.Forms.Button();
-            this.TcpPanel = new System.Windows.Forms.Panel();
             this.ServerCheck = new System.Windows.Forms.CheckBox();
             this.PortNumber = new System.Windows.Forms.ComboBox();
             this.IpNumber = new System.Windows.Forms.ComboBox();
@@ -141,16 +138,13 @@
             this.로그저장ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.로그불러오기ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ddfdfToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.빈도분석ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.설정ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.metroPanel1.SuspendLayout();
             this.panel5.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.PortListGrid)).BeginInit();
             this.panel4.SuspendLayout();
             this.UdpPanel.SuspendLayout();
-            this.SerialPanel.SuspendLayout();
             this.TcpPanel.SuspendLayout();
+            this.SerialPanel.SuspendLayout();
             this.panel2.SuspendLayout();
             this.LogPanel.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -162,7 +156,6 @@
             // 
             this.metroPanel1.AutoSize = true;
             this.metroPanel1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.metroPanel1.Controls.Add(this.button1);
             this.metroPanel1.Controls.Add(this.panel5);
             this.metroPanel1.Controls.Add(this.panel4);
             this.metroPanel1.Controls.Add(this.panel2);
@@ -182,98 +175,30 @@
             this.metroPanel1.VerticalScrollbarHighlightOnWheel = false;
             this.metroPanel1.VerticalScrollbarSize = 10;
             // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(81, 462);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 23;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
             // panel5
             // 
-            this.panel5.Controls.Add(this.PortListGrid);
-            this.panel5.Location = new System.Drawing.Point(5, 498);
+            this.panel5.Controls.Add(this.listView1);
+            this.panel5.Location = new System.Drawing.Point(5, 386);
             this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(707, 114);
+            this.panel5.Size = new System.Drawing.Size(159, 210);
             this.panel5.TabIndex = 22;
             // 
-            // PortListGrid
+            // listView1
             // 
-            this.PortListGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.PortListGrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.Num,
-            this.Type,
-            this.Port,
-            this.Time,
-            this.Tx,
-            this.Rx,
-            this.DisCon});
-            this.PortListGrid.Location = new System.Drawing.Point(3, 3);
-            this.PortListGrid.Name = "PortListGrid";
-            this.PortListGrid.RowTemplate.Height = 23;
-            this.PortListGrid.Size = new System.Drawing.Size(701, 108);
-            this.PortListGrid.TabIndex = 0;
-            this.PortListGrid.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.PortListGrid_CellValue);
-            this.PortListGrid.CellMouseUp += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.PortListGrid_CellMouseUp);
-            this.PortListGrid.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.PortListGrid_CellValueChanged);
-            this.PortListGrid.Click += new System.EventHandler(this.PortListGrid_Click);
-            // 
-            // Num
-            // 
-            this.Num.HeaderText = "No";
-            this.Num.Name = "Num";
-            this.Num.ReadOnly = true;
-            this.Num.Width = 50;
-            // 
-            // Type
-            // 
-            this.Type.HeaderText = "Type";
-            this.Type.Name = "Type";
-            // 
-            // Port
-            // 
-            this.Port.HeaderText = "연결 이름";
-            this.Port.Name = "Port";
-            this.Port.ReadOnly = true;
-            this.Port.Width = 200;
-            // 
-            // Time
-            // 
-            this.Time.HeaderText = "Time";
-            this.Time.Name = "Time";
-            this.Time.ReadOnly = true;
-            // 
-            // Tx
-            // 
-            this.Tx.HeaderText = "Tx";
-            this.Tx.Name = "Tx";
-            this.Tx.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.Tx.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            this.Tx.Width = 50;
-            // 
-            // Rx
-            // 
-            this.Rx.HeaderText = "Rx";
-            this.Rx.Name = "Rx";
-            this.Rx.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.Rx.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            this.Rx.Width = 50;
-            // 
-            // DisCon
-            // 
-            this.DisCon.DataPropertyName = "Discon";
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle2.NullValue = "dd";
-            this.DisCon.DefaultCellStyle = dataGridViewCellStyle2;
-            this.DisCon.HeaderText = "X";
-            this.DisCon.Name = "DisCon";
-            this.DisCon.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.DisCon.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            this.DisCon.Text = "DisCon";
-            this.DisCon.Width = 50;
+            this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader1,
+            this.columnHeader2,
+            this.columnHeader3});
+            this.listView1.GridLines = true;
+            this.listView1.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
+            listViewItem1,
+            listViewItem2,
+            listViewItem3});
+            this.listView1.Location = new System.Drawing.Point(6, 6);
+            this.listView1.Name = "listView1";
+            this.listView1.Size = new System.Drawing.Size(150, 198);
+            this.listView1.TabIndex = 0;
+            this.listView1.UseCompatibleStateImageBehavior = false;
             // 
             // panel4
             // 
@@ -286,7 +211,6 @@
             // 
             // UdpPanel
             // 
-            this.UdpPanel.Controls.Add(this.SerialPanel);
             this.UdpPanel.Controls.Add(this.Udp_Btn_DisCon);
             this.UdpPanel.Controls.Add(this.Udp_Btn_Con);
             this.UdpPanel.Controls.Add(this.UServerCheck);
@@ -297,11 +221,119 @@
             this.UdpPanel.Controls.Add(this.label11);
             this.UdpPanel.Controls.Add(this.button4);
             this.UdpPanel.Controls.Add(this.button5);
-            this.UdpPanel.Location = new System.Drawing.Point(0, 0);
+            this.UdpPanel.Location = new System.Drawing.Point(3, 0);
             this.UdpPanel.Name = "UdpPanel";
             this.UdpPanel.Size = new System.Drawing.Size(150, 276);
             this.UdpPanel.TabIndex = 15;
             this.UdpPanel.Visible = false;
+            // 
+            // Udp_Btn_DisCon
+            // 
+            this.Udp_Btn_DisCon.Location = new System.Drawing.Point(11, 222);
+            this.Udp_Btn_DisCon.Name = "Udp_Btn_DisCon";
+            this.Udp_Btn_DisCon.Size = new System.Drawing.Size(62, 23);
+            this.Udp_Btn_DisCon.TabIndex = 19;
+            this.Udp_Btn_DisCon.Text = "연결해제";
+            this.Udp_Btn_DisCon.UseVisualStyleBackColor = true;
+            // 
+            // Udp_Btn_Con
+            // 
+            this.Udp_Btn_Con.Location = new System.Drawing.Point(81, 222);
+            this.Udp_Btn_Con.Name = "Udp_Btn_Con";
+            this.Udp_Btn_Con.Size = new System.Drawing.Size(62, 23);
+            this.Udp_Btn_Con.TabIndex = 18;
+            this.Udp_Btn_Con.Text = "옵션적용";
+            this.Udp_Btn_Con.UseVisualStyleBackColor = true;
+            this.Udp_Btn_Con.Click += new System.EventHandler(this.Udp_Connect_Click);
+            // 
+            // UServerCheck
+            // 
+            this.UServerCheck.AutoSize = true;
+            this.UServerCheck.Location = new System.Drawing.Point(18, 86);
+            this.UServerCheck.Name = "UServerCheck";
+            this.UServerCheck.Size = new System.Drawing.Size(88, 16);
+            this.UServerCheck.TabIndex = 17;
+            this.UServerCheck.Text = "서버 활성화";
+            this.UServerCheck.UseVisualStyleBackColor = true;
+            this.UServerCheck.CheckedChanged += new System.EventHandler(this.UServerCheck_CheckedChanged);
+            // 
+            // UPortNumber
+            // 
+            this.UPortNumber.FormattingEnabled = true;
+            this.UPortNumber.Location = new System.Drawing.Point(59, 27);
+            this.UPortNumber.Name = "UPortNumber";
+            this.UPortNumber.Size = new System.Drawing.Size(87, 20);
+            this.UPortNumber.TabIndex = 13;
+            // 
+            // UIPNumber
+            // 
+            this.UIPNumber.FormattingEnabled = true;
+            this.UIPNumber.Location = new System.Drawing.Point(50, 59);
+            this.UIPNumber.Name = "UIPNumber";
+            this.UIPNumber.Size = new System.Drawing.Size(96, 20);
+            this.UIPNumber.TabIndex = 12;
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(16, 30);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(37, 12);
+            this.label9.TabIndex = 7;
+            this.label9.Text = "포트 :";
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(18, 61);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(24, 12);
+            this.label10.TabIndex = 6;
+            this.label10.Text = "IP :";
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(17, 8);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(57, 12);
+            this.label11.TabIndex = 5;
+            this.label11.Text = "UDP 설정";
+            // 
+            // button4
+            // 
+            this.button4.Location = new System.Drawing.Point(250, 59);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(75, 23);
+            this.button4.TabIndex = 1;
+            this.button4.Text = "button4";
+            this.button4.UseVisualStyleBackColor = true;
+            // 
+            // button5
+            // 
+            this.button5.Location = new System.Drawing.Point(250, 22);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(75, 23);
+            this.button5.TabIndex = 0;
+            this.button5.Text = "옵션적용";
+            this.button5.UseVisualStyleBackColor = true;
+            // 
+            // TcpPanel
+            // 
+            this.TcpPanel.Controls.Add(this.SerialPanel);
+            this.TcpPanel.Controls.Add(this.ServerCheck);
+            this.TcpPanel.Controls.Add(this.PortNumber);
+            this.TcpPanel.Controls.Add(this.IpNumber);
+            this.TcpPanel.Controls.Add(this.label1);
+            this.TcpPanel.Controls.Add(this.label7);
+            this.TcpPanel.Controls.Add(this.label8);
+            this.TcpPanel.Controls.Add(this.Tcp_Btn_DisCon);
+            this.TcpPanel.Controls.Add(this.Tcp_Btn_Con);
+            this.TcpPanel.Location = new System.Drawing.Point(2, 3);
+            this.TcpPanel.Name = "TcpPanel";
+            this.TcpPanel.Size = new System.Drawing.Size(150, 276);
+            this.TcpPanel.TabIndex = 14;
+            this.TcpPanel.Visible = false;
             // 
             // SerialPanel
             // 
@@ -320,7 +352,7 @@
             this.SerialPanel.Controls.Add(this.Label_Se_Port);
             this.SerialPanel.Controls.Add(this.Serial_Btn_Con);
             this.SerialPanel.Controls.Add(this.Serial_Btn_DisCon);
-            this.SerialPanel.Location = new System.Drawing.Point(141, 3);
+            this.SerialPanel.Location = new System.Drawing.Point(0, 0);
             this.SerialPanel.Name = "SerialPanel";
             this.SerialPanel.Size = new System.Drawing.Size(150, 276);
             this.SerialPanel.TabIndex = 7;
@@ -334,7 +366,6 @@
             this.Serial_Btn_F5.TabIndex = 15;
             this.Serial_Btn_F5.Text = "새로고침";
             this.Serial_Btn_F5.UseVisualStyleBackColor = true;
-            this.Serial_Btn_F5.Click += new System.EventHandler(this.serial_Refresh_Click);
             // 
             // Serial_Combo_FlowCon
             // 
@@ -471,114 +502,6 @@
             this.Serial_Btn_DisCon.Text = "연결해제";
             this.Serial_Btn_DisCon.UseVisualStyleBackColor = true;
             // 
-            // Udp_Btn_DisCon
-            // 
-            this.Udp_Btn_DisCon.Location = new System.Drawing.Point(11, 222);
-            this.Udp_Btn_DisCon.Name = "Udp_Btn_DisCon";
-            this.Udp_Btn_DisCon.Size = new System.Drawing.Size(62, 23);
-            this.Udp_Btn_DisCon.TabIndex = 19;
-            this.Udp_Btn_DisCon.Text = "연결";
-            this.Udp_Btn_DisCon.UseVisualStyleBackColor = true;
-            this.Udp_Btn_DisCon.Click += new System.EventHandler(this.Udp_Btn_DisCon_Click);
-            // 
-            // Udp_Btn_Con
-            // 
-            this.Udp_Btn_Con.Location = new System.Drawing.Point(81, 222);
-            this.Udp_Btn_Con.Name = "Udp_Btn_Con";
-            this.Udp_Btn_Con.Size = new System.Drawing.Size(62, 23);
-            this.Udp_Btn_Con.TabIndex = 18;
-            this.Udp_Btn_Con.Text = "옵션적용";
-            this.Udp_Btn_Con.UseVisualStyleBackColor = true;
-            this.Udp_Btn_Con.Click += new System.EventHandler(this.Udp_Connect_Click);
-            // 
-            // UServerCheck
-            // 
-            this.UServerCheck.AutoSize = true;
-            this.UServerCheck.Location = new System.Drawing.Point(18, 86);
-            this.UServerCheck.Name = "UServerCheck";
-            this.UServerCheck.Size = new System.Drawing.Size(88, 16);
-            this.UServerCheck.TabIndex = 17;
-            this.UServerCheck.Text = "서버 활성화";
-            this.UServerCheck.UseVisualStyleBackColor = true;
-            this.UServerCheck.CheckedChanged += new System.EventHandler(this.UServerCheck_CheckedChanged);
-            // 
-            // UPortNumber
-            // 
-            this.UPortNumber.FormattingEnabled = true;
-            this.UPortNumber.Location = new System.Drawing.Point(59, 27);
-            this.UPortNumber.Name = "UPortNumber";
-            this.UPortNumber.Size = new System.Drawing.Size(87, 20);
-            this.UPortNumber.TabIndex = 13;
-            // 
-            // UIPNumber
-            // 
-            this.UIPNumber.FormattingEnabled = true;
-            this.UIPNumber.Location = new System.Drawing.Point(50, 59);
-            this.UIPNumber.Name = "UIPNumber";
-            this.UIPNumber.Size = new System.Drawing.Size(96, 20);
-            this.UIPNumber.TabIndex = 12;
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(16, 30);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(37, 12);
-            this.label9.TabIndex = 7;
-            this.label9.Text = "포트 :";
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(18, 61);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(24, 12);
-            this.label10.TabIndex = 6;
-            this.label10.Text = "IP :";
-            // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(17, 8);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(57, 12);
-            this.label11.TabIndex = 5;
-            this.label11.Text = "UDP 설정";
-            // 
-            // button4
-            // 
-            this.button4.Location = new System.Drawing.Point(250, 59);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(75, 23);
-            this.button4.TabIndex = 1;
-            this.button4.Text = "button4";
-            this.button4.UseVisualStyleBackColor = true;
-            // 
-            // button5
-            // 
-            this.button5.Location = new System.Drawing.Point(250, 22);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(75, 23);
-            this.button5.TabIndex = 0;
-            this.button5.Text = "옵션적용";
-            this.button5.UseVisualStyleBackColor = true;
-            // 
-            // TcpPanel
-            // 
-            this.TcpPanel.Controls.Add(this.ServerCheck);
-            this.TcpPanel.Controls.Add(this.PortNumber);
-            this.TcpPanel.Controls.Add(this.IpNumber);
-            this.TcpPanel.Controls.Add(this.label1);
-            this.TcpPanel.Controls.Add(this.label7);
-            this.TcpPanel.Controls.Add(this.label8);
-            this.TcpPanel.Controls.Add(this.Tcp_Btn_DisCon);
-            this.TcpPanel.Controls.Add(this.Tcp_Btn_Con);
-            this.TcpPanel.Location = new System.Drawing.Point(0, 0);
-            this.TcpPanel.Name = "TcpPanel";
-            this.TcpPanel.Size = new System.Drawing.Size(150, 276);
-            this.TcpPanel.TabIndex = 14;
-            this.TcpPanel.Visible = false;
-            // 
             // ServerCheck
             // 
             this.ServerCheck.AutoSize = true;
@@ -660,7 +583,7 @@
             this.panel2.Controls.Add(this.Btn_Clear);
             this.panel2.Controls.Add(this.label13);
             this.panel2.Controls.Add(this.Chk_Hexa);
-            this.panel2.Location = new System.Drawing.Point(585, 186);
+            this.panel2.Location = new System.Drawing.Point(585, 287);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(127, 309);
             this.panel2.TabIndex = 19;
@@ -722,7 +645,7 @@
             this.LogPanel.HorizontalScrollbarBarColor = true;
             this.LogPanel.HorizontalScrollbarHighlightOnWheel = false;
             this.LogPanel.HorizontalScrollbarSize = 10;
-            this.LogPanel.Location = new System.Drawing.Point(170, 186);
+            this.LogPanel.Location = new System.Drawing.Point(170, 287);
             this.LogPanel.Name = "LogPanel";
             this.LogPanel.Size = new System.Drawing.Size(409, 309);
             this.LogPanel.TabIndex = 6;
@@ -758,7 +681,7 @@
             this.panel1.Controls.Add(this.Sport_label2);
             this.panel1.Controls.Add(this.Sport_label1);
             this.panel1.Controls.Add(this.label12);
-            this.panel1.Location = new System.Drawing.Point(383, 116);
+            this.panel1.Location = new System.Drawing.Point(376, 126);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(159, 183);
             this.panel1.TabIndex = 22;
@@ -1126,13 +1049,13 @@
             this.panel3.Controls.Add(this.SendBox1);
             this.panel3.Location = new System.Drawing.Point(170, 14);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(542, 169);
+            this.panel3.Size = new System.Drawing.Size(542, 267);
             this.panel3.TabIndex = 21;
             // 
             // label16
             // 
             this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(187, 6);
+            this.label16.Location = new System.Drawing.Point(167, 93);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(51, 12);
             this.label16.TabIndex = 40;
@@ -1140,7 +1063,7 @@
             // 
             // MacroCount
             // 
-            this.MacroCount.Location = new System.Drawing.Point(107, 2);
+            this.MacroCount.Location = new System.Drawing.Point(87, 89);
             this.MacroCount.Name = "MacroCount";
             this.MacroCount.Size = new System.Drawing.Size(74, 21);
             this.MacroCount.TabIndex = 38;
@@ -1148,7 +1071,7 @@
             // MacroCheck
             // 
             this.MacroCheck.AutoSize = true;
-            this.MacroCheck.Location = new System.Drawing.Point(41, 6);
+            this.MacroCheck.Location = new System.Drawing.Point(21, 93);
             this.MacroCheck.Name = "MacroCheck";
             this.MacroCheck.Size = new System.Drawing.Size(60, 16);
             this.MacroCheck.TabIndex = 36;
@@ -1159,7 +1082,7 @@
             // Btn_AEAS4
             // 
             this.Btn_AEAS4.Font = new System.Drawing.Font("굴림", 7F);
-            this.Btn_AEAS4.Location = new System.Drawing.Point(504, 112);
+            this.Btn_AEAS4.Location = new System.Drawing.Point(504, 206);
             this.Btn_AEAS4.Name = "Btn_AEAS4";
             this.Btn_AEAS4.Size = new System.Drawing.Size(31, 47);
             this.Btn_AEAS4.TabIndex = 34;
@@ -1169,7 +1092,7 @@
             // Btn_AEAS3
             // 
             this.Btn_AEAS3.Font = new System.Drawing.Font("굴림", 7F);
-            this.Btn_AEAS3.Location = new System.Drawing.Point(504, 83);
+            this.Btn_AEAS3.Location = new System.Drawing.Point(504, 177);
             this.Btn_AEAS3.Name = "Btn_AEAS3";
             this.Btn_AEAS3.Size = new System.Drawing.Size(31, 25);
             this.Btn_AEAS3.TabIndex = 32;
@@ -1179,7 +1102,7 @@
             // Btn_AEAS2
             // 
             this.Btn_AEAS2.Font = new System.Drawing.Font("굴림", 7F);
-            this.Btn_AEAS2.Location = new System.Drawing.Point(504, 53);
+            this.Btn_AEAS2.Location = new System.Drawing.Point(504, 147);
             this.Btn_AEAS2.Name = "Btn_AEAS2";
             this.Btn_AEAS2.Size = new System.Drawing.Size(31, 25);
             this.Btn_AEAS2.TabIndex = 30;
@@ -1189,7 +1112,7 @@
             // Btn_AEAS1
             // 
             this.Btn_AEAS1.Font = new System.Drawing.Font("굴림", 7F);
-            this.Btn_AEAS1.Location = new System.Drawing.Point(504, 23);
+            this.Btn_AEAS1.Location = new System.Drawing.Point(504, 117);
             this.Btn_AEAS1.Name = "Btn_AEAS1";
             this.Btn_AEAS1.Size = new System.Drawing.Size(31, 25);
             this.Btn_AEAS1.TabIndex = 28;
@@ -1198,7 +1121,7 @@
             // 
             // Btn_Send3
             // 
-            this.Btn_Send3.Location = new System.Drawing.Point(444, 82);
+            this.Btn_Send3.Location = new System.Drawing.Point(444, 176);
             this.Btn_Send3.Name = "Btn_Send3";
             this.Btn_Send3.Size = new System.Drawing.Size(53, 25);
             this.Btn_Send3.TabIndex = 27;
@@ -1212,7 +1135,7 @@
             this.SendBox3.BackColor = System.Drawing.SystemColors.HighlightText;
             this.SendBox3.ForeColor = System.Drawing.SystemColors.MenuHighlight;
             this.SendBox3.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.SendBox3.Location = new System.Drawing.Point(6, 83);
+            this.SendBox3.Location = new System.Drawing.Point(6, 177);
             this.SendBox3.Name = "SendBox3";
             this.SendBox3.Size = new System.Drawing.Size(432, 24);
             this.SendBox3.TabIndex = 26;
@@ -1221,7 +1144,7 @@
             // 
             // Btn_Send4
             // 
-            this.Btn_Send4.Location = new System.Drawing.Point(444, 111);
+            this.Btn_Send4.Location = new System.Drawing.Point(444, 205);
             this.Btn_Send4.Name = "Btn_Send4";
             this.Btn_Send4.Size = new System.Drawing.Size(53, 48);
             this.Btn_Send4.TabIndex = 25;
@@ -1230,7 +1153,7 @@
             // 
             // Btn_Send2
             // 
-            this.Btn_Send2.Location = new System.Drawing.Point(444, 52);
+            this.Btn_Send2.Location = new System.Drawing.Point(444, 146);
             this.Btn_Send2.Name = "Btn_Send2";
             this.Btn_Send2.Size = new System.Drawing.Size(53, 25);
             this.Btn_Send2.TabIndex = 24;
@@ -1244,7 +1167,7 @@
             this.SendBox4.BackColor = System.Drawing.SystemColors.HighlightText;
             this.SendBox4.ForeColor = System.Drawing.SystemColors.MenuHighlight;
             this.SendBox4.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.SendBox4.Location = new System.Drawing.Point(6, 112);
+            this.SendBox4.Location = new System.Drawing.Point(6, 206);
             this.SendBox4.Name = "SendBox4";
             this.SendBox4.Size = new System.Drawing.Size(432, 47);
             this.SendBox4.TabIndex = 23;
@@ -1253,7 +1176,7 @@
             // 
             // Btn_Send1
             // 
-            this.Btn_Send1.Location = new System.Drawing.Point(444, 23);
+            this.Btn_Send1.Location = new System.Drawing.Point(444, 117);
             this.Btn_Send1.Name = "Btn_Send1";
             this.Btn_Send1.Size = new System.Drawing.Size(53, 25);
             this.Btn_Send1.TabIndex = 1;
@@ -1268,7 +1191,7 @@
             this.SendBox2.BackColor = System.Drawing.SystemColors.HighlightText;
             this.SendBox2.ForeColor = System.Drawing.SystemColors.MenuHighlight;
             this.SendBox2.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.SendBox2.Location = new System.Drawing.Point(6, 53);
+            this.SendBox2.Location = new System.Drawing.Point(6, 147);
             this.SendBox2.Name = "SendBox2";
             this.SendBox2.Size = new System.Drawing.Size(432, 24);
             this.SendBox2.TabIndex = 22;
@@ -1288,7 +1211,7 @@
             // 
             this.SendBox1.BackColor = System.Drawing.SystemColors.HighlightText;
             this.SendBox1.ForeColor = System.Drawing.SystemColors.MenuHighlight;
-            this.SendBox1.Location = new System.Drawing.Point(6, 24);
+            this.SendBox1.Location = new System.Drawing.Point(6, 118);
             this.SendBox1.Name = "SendBox1";
             this.SendBox1.Size = new System.Drawing.Size(432, 24);
             this.SendBox1.TabIndex = 2;
@@ -1299,8 +1222,7 @@
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.asdfasdfToolStripMenuItem,
-            this.ddfdfToolStripMenuItem,
-            this.설정ToolStripMenuItem});
+            this.ddfdfToolStripMenuItem});
             this.menuStrip1.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
             this.menuStrip1.Location = new System.Drawing.Point(0, 60);
             this.menuStrip1.Name = "menuStrip1";
@@ -1335,24 +1257,9 @@
             // 
             // ddfdfToolStripMenuItem
             // 
-            this.ddfdfToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.빈도분석ToolStripMenuItem});
             this.ddfdfToolStripMenuItem.Name = "ddfdfToolStripMenuItem";
             this.ddfdfToolStripMenuItem.Size = new System.Drawing.Size(43, 19);
-            this.ddfdfToolStripMenuItem.Text = "분석";
-            // 
-            // 빈도분석ToolStripMenuItem
-            // 
-            this.빈도분석ToolStripMenuItem.Name = "빈도분석ToolStripMenuItem";
-            this.빈도분석ToolStripMenuItem.Size = new System.Drawing.Size(126, 22);
-            this.빈도분석ToolStripMenuItem.Text = "빈도 분석";
-            this.빈도분석ToolStripMenuItem.Click += new System.EventHandler(this.freq_Click);
-            // 
-            // 설정ToolStripMenuItem
-            // 
-            this.설정ToolStripMenuItem.Name = "설정ToolStripMenuItem";
-            this.설정ToolStripMenuItem.Size = new System.Drawing.Size(43, 19);
-            this.설정ToolStripMenuItem.Text = "설정";
+            this.ddfdfToolStripMenuItem.Text = "설정";
             // 
             // contextMenuStrip1
             // 
@@ -1377,14 +1284,13 @@
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.metroPanel1.ResumeLayout(false);
             this.panel5.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.PortListGrid)).EndInit();
             this.panel4.ResumeLayout(false);
             this.UdpPanel.ResumeLayout(false);
             this.UdpPanel.PerformLayout();
-            this.SerialPanel.ResumeLayout(false);
-            this.SerialPanel.PerformLayout();
             this.TcpPanel.ResumeLayout(false);
             this.TcpPanel.PerformLayout();
+            this.SerialPanel.ResumeLayout(false);
+            this.SerialPanel.PerformLayout();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
             this.LogPanel.ResumeLayout(false);
@@ -1500,19 +1406,12 @@
         private System.Windows.Forms.Label Sport_label6;
         private System.Windows.Forms.Label Sport_label5;
         private System.Windows.Forms.Panel panel5;
+        private System.Windows.Forms.ListView listView1;
+        private System.Windows.Forms.ColumnHeader columnHeader1;
+        private System.Windows.Forms.ColumnHeader columnHeader2;
+        private System.Windows.Forms.ColumnHeader columnHeader3;
         private System.Windows.Forms.ToolStripMenuItem 로그저장ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 로그불러오기ToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem 빈도분석ToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem 설정ToolStripMenuItem;
-        public System.Windows.Forms.DataGridView PortListGrid;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Num;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Type;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Port;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Time;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn Tx;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn Rx;
-        private System.Windows.Forms.DataGridViewButtonColumn DisCon;
     }
 }
 

@@ -1,4 +1,4 @@
-Ôªøusing System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,29 +15,29 @@ namespace MultiTerminal
     public class Tserv
     {
         MainForm main = null;
-        public Socket server = null; //listening socket
+        public Socket server =null; //listening socket
         public Socket client = null;
         private string ip;
-        private bool m_isConncted = false;
         private IPEndPoint ipep;
         private Dictionary<int, string> m_ipList = new Dictionary<int, string>();
         private int port;
         private Thread th;
         public NetworkInterface[] adapters = NetworkInterface.GetAllNetworkInterfaces();
-        private Dictionary<int, NetworkStream> m_ns = new Dictionary<int, NetworkStream>();
+        private Dictionary<int,NetworkStream> m_ns = new Dictionary<int, NetworkStream>();
         private Dictionary<int, StreamReader> m_sr = new Dictionary<int, StreamReader>();
         private Dictionary<int, StreamWriter> m_sw = new Dictionary<int, StreamWriter>();
         public Dictionary<int, string> m_NetInfo = new Dictionary<int, string>();
         public Dictionary<int, Socket> m_ClientList = new Dictionary<int, Socket>();
+        public Dictionary<int, Thread> m_ClientThread = new Dictionary<int, Thread>();
         public int m_clientCount = 0;
 
-        public Tserv(MainForm Main, int Port) //ÏÑúÎ≤ÑÎ°ú ÎßåÎì§Îïå
+        public Tserv(MainForm Main,int Port) //º≠πˆ∑Œ ∏∏µÈ∂ß
         {
             main = Main;
             port = Port;
         }
 
-        public Tserv(MainForm Main, string IP, int Port) //ÌÅ¥ÎùºÎ°ú ÎßåÎì§Îïå
+        public Tserv(MainForm Main, string IP, int Port) //≈¨∂Û∑Œ ∏∏µÈ∂ß
         {
             main = Main;
             port = Port;
@@ -48,40 +48,41 @@ namespace MultiTerminal
         {
             try
             {
-                while (true)
+                if (server != null)
                 {
-                    if (server != null)
+                    if (server.IsBound == false)
                     {
-                        if (server.IsBound == false)
+                        server.Bind(ipep);
+                        server.Listen(10);
+                    }
+                    Socket newclient = server.Accept();
+                    if(newclient !=null)
+                    {
+
+                        IPEndPoint claIP = (IPEndPoint)newclient.RemoteEndPoint;
+                        string client_ip = claIP.Address.ToString();
+                        //for(int i = 0;  i<m_clientCount;i++)
+                        //{
+                        //    if (m_ipList[i] == client_ip)
+                        //    {
+                        //        m_clientCount--;
+                        //        return;
+                        //    }
+                        //}
+                        if (newclient.Connected == true)
                         {
-                            server.Bind(ipep);
-
-                            server.Listen(10);
-                            m_isConncted = true;
-                        }
-                        Socket newclient = server.Accept();
-                        //wsa blocking call
-                        if (newclient != null)
-                        {
-
-                            IPEndPoint claIP = (IPEndPoint)newclient.RemoteEndPoint;
-                            string client_ip = claIP.Address.ToString();
-                            if (newclient.Connected == true)
-                            {
-                                ++m_clientCount;
-                                m_ClientList.Add(m_clientCount - 1, newclient);
-                                m_ipList.Add(m_clientCount - 1, client_ip);
-                                NetworkStream ns = new NetworkStream(newclient);
-                                StreamReader sr = new StreamReader(ns);
-                                StreamWriter sw = new StreamWriter(ns);
-                                m_ns.Add(m_clientCount - 1, ns);
-                                m_sr.Add(m_clientCount - 1, sr);
-                                m_sw.Add(m_clientCount - 1, sw);
-
-                                Thread th = new Thread(new ThreadStart(RecvMsg)); //ÏÉÅÎåÄ Î¨∏ÏûêÏó¥ ÏàòÏã† Ïì∞Î†àÎìú Í∞ÄÎèô
-                                th.Start();
-
-                            }
+                            m_clientCount++;
+                            Thread th = new Thread(new ThreadStart(RecvMsg)); //ªÛ¥Î πÆ¿⁄ø≠ ºˆΩ≈ æ≤∑πµÂ ∞°µø
+                            th.Start();
+                            m_ClientThread.Add(m_clientCount - 1, th);
+                            m_ClientList.Add(m_clientCount-1, newclient);
+                            m_ipList.Add(m_clientCount-1, client_ip);
+                            NetworkStream ns = new NetworkStream(newclient);
+                            StreamReader sr = new StreamReader(ns);
+                            StreamWriter sw = new StreamWriter(ns);
+                            m_ns.Add(m_clientCount-1, ns);
+                            m_sr.Add(m_clientCount-1, sr);
+                            m_sw.Add(m_clientCount-1, sw);
                         }
                     }
                 }
@@ -92,23 +93,16 @@ namespace MultiTerminal
 
                 if (ex.ErrorCode == 10048)
                 {
-                    System.Windows.Forms.MessageBox.Show("ÏÜåÏºìÏóêÎü¨ " + lineNum + "ÏóêÏÑú Î∞úÏÉù \n ÎèôÏùºÌïú ipÎÇò portÍ∞Ä ÏÇ¨Ïö©ÎêòÍ≥†ÏûàÎã§.");
+                    System.Windows.Forms.MessageBox.Show("º“ƒœø°∑Ø " + lineNum + "ø°º≠ πﬂª˝ \n µø¿œ«— ip≥™ port∞° ªÁøÎµ«∞Ì¿÷¥Ÿ.");
                     return;
                 }
-
-                if (ex.ErrorCode == 10004)
-                {
-                    System.Windows.Forms.MessageBox.Show("ÏÜåÏºìÏóêÎü¨ " + lineNum + "ÏóêÏÑú Î∞úÏÉù \n Interrupted ÌéëÏÖò ÏΩú");
-                    return;
-                }
-
-                System.Windows.Forms.MessageBox.Show("ÏÜåÏºìÏóêÎü¨ " + lineNum + "ÏóêÏÑú Î∞úÏÉù" + ex.Message);
+                System.Windows.Forms.MessageBox.Show("º“ƒœø°∑Ø " + lineNum + "ø°º≠ πﬂª˝" + ex.Message);
             }
 
             catch (Exception ex)
             {
                 int lineNum = Convert.ToInt32(ex.StackTrace.Substring(ex.StackTrace.LastIndexOf(' ')));
-                System.Windows.Forms.MessageBox.Show("Í∏∞ÌÉÄÏóêÎü¨ " + lineNum + "ÏóêÏÑú Î∞úÏÉù" + ex.Message);
+                System.Windows.Forms.MessageBox.Show("±‚≈∏ø°∑Ø " + lineNum + "ø°º≠ πﬂª˝" + ex.Message);
             }
 
         }
@@ -124,8 +118,7 @@ namespace MultiTerminal
                     server.Bind(ipep);
                     server.Listen(10);
                 }
-                m_isConncted = true;
-                th = new Thread(new ThreadStart(ServerWait)); //ÏÉÅÎåÄ Î¨∏ÏûêÏó¥ ÏàòÏã† Ïì∞Î†àÎìú Í∞ÄÎèô
+                th = new Thread(new ThreadStart(ServerWait)); //ªÛ¥Î πÆ¿⁄ø≠ ºˆΩ≈ æ≤∑πµÂ ∞°µø
                 th.Start();
 
                 //       DisplayNetworkInfo();
@@ -136,26 +129,26 @@ namespace MultiTerminal
 
                 if (ex.ErrorCode == 10048)
                 {
-                    System.Windows.Forms.MessageBox.Show("ÏÜåÏºìÏóêÎü¨ " + lineNum + "ÏóêÏÑú Î∞úÏÉù \n ÎèôÏùºÌïú ipÎÇò portÍ∞Ä ÏÇ¨Ïö©ÎêòÍ≥†ÏûàÎã§.");
+                    System.Windows.Forms.MessageBox.Show("º“ƒœø°∑Ø " + lineNum + "ø°º≠ πﬂª˝ \n µø¿œ«— ip≥™ port∞° ªÁøÎµ«∞Ì¿÷¥Ÿ.");
                     return;
                 }
-                System.Windows.Forms.MessageBox.Show("ÏÜåÏºìÏóêÎü¨ " + lineNum + "ÏóêÏÑú Î∞úÏÉù" + ex.Message);
+                System.Windows.Forms.MessageBox.Show("º“ƒœø°∑Ø " + lineNum + "ø°º≠ πﬂª˝" + ex.Message);
 
             }
 
             catch (Exception ex)
             {
                 int lineNum = Convert.ToInt32(ex.StackTrace.Substring(ex.StackTrace.LastIndexOf(' ')));
-                System.Windows.Forms.MessageBox.Show("Í∏∞ÌÉÄÏóêÎü¨ " + lineNum + "ÏóêÏÑú Î∞úÏÉù" + ex.Message);
+                System.Windows.Forms.MessageBox.Show("±‚≈∏ø°∑Ø " + lineNum + "ø°º≠ πﬂª˝" + ex.Message);
             }
 
         }
-        //Ï±ÑÌåÖ ÏÑúÎ≤Ñ ÌîÑÎ°úÍ∑∏Îû® Ï§ëÏßÄ
+        //√§∆√ º≠πˆ «¡∑Œ±◊∑• ¡ﬂ¡ˆ
         public void ServerStop()
         {
             try
             {
-
+                
                 for (int i = 0; i < m_clientCount; i++)
                 {
                     if (m_ClientList[i].Connected == true)
@@ -181,10 +174,17 @@ namespace MultiTerminal
                             m_ClientList[i].Close();
                             m_ClientList.Remove(i);
                         }
+                        if (m_ClientThread[i] != null)
+                        {
+                            if (m_ClientThread[i].ThreadState == ThreadState.Running)
+                            {
+                                m_ClientThread[i].Abort();
+                            }
+                            m_ClientThread.Remove(i);
+                        }
                     }
                 }
-                m_isConncted = false;
-                if (server.IsBound == true)
+                if(server.IsBound == true)
                 {
                     server.Shutdown(SocketShutdown.Both);
                     server.Disconnect(true);
@@ -201,38 +201,27 @@ namespace MultiTerminal
             catch (SocketException ex)
             {
                 int lineNum = Convert.ToInt32(ex.StackTrace.Substring(ex.StackTrace.LastIndexOf(' ')));
-                if (ex.ErrorCode == 10057) //Ïó∞Í≤∞Ïù¥ Îêú ÏÜåÏºìÏù¥ ÏóÜÎã§.
+                if (ex.ErrorCode == 10057) //ø¨∞·¿Ã µ» º“ƒœ¿Ã æ¯¥Ÿ.
                 {
-                    //ÌÅ¥ÎùºÏù¥Ïñ∏Ìä∏Ïùò Ï†ëÏÜçÏ¢ÖÎ£å
-                    if (server == null)
-                    {
-                        System.Windows.Forms.MessageBox.Show("ÏÜåÏºìÏóêÎü¨ " + lineNum + "ÏóêÏÑú Î∞úÏÉù \nÏó∞Í≤∞Îêú ÏÜåÏºìÏù¥ ÏóÜÎã§.");
-                        server.Close();
-                        return;
-                    }
-                    if (client == null)
-                    {
-                        System.Windows.Forms.MessageBox.Show("ÏÜåÏºìÏóêÎü¨ " + lineNum + "ÏóêÏÑú Î∞úÏÉù \nÏó∞Í≤∞Îêú ÏÜåÏºìÏù¥ ÏóÜÎã§.");
-                        server.Close();
-                        return;
-
-                    }
+                    System.Windows.Forms.MessageBox.Show("º“ƒœø°∑Ø " + lineNum + "ø°º≠ πﬂª˝ \nø¨∞·µ» º“ƒœ¿Ã æ¯¥Ÿ.");
+                    server.Close();
+                    return;
                 }
-                System.Windows.Forms.MessageBox.Show("ÏÜåÏºìÏóêÎü¨ " + lineNum + "ÏóêÏÑú Î∞úÏÉù" + ex.Message);
+                System.Windows.Forms.MessageBox.Show("º“ƒœø°∑Ø " + lineNum + "ø°º≠ πﬂª˝" + ex.Message);
             }
 
             catch (Exception ex)
             {
                 int lineNum = Convert.ToInt32(ex.StackTrace.Substring(ex.StackTrace.LastIndexOf(' ')));
-                System.Windows.Forms.MessageBox.Show("Í∏∞ÌÉÄÏóêÎü¨ " + lineNum + "ÏóêÏÑú Î∞úÏÉù" + ex.Message);
+                System.Windows.Forms.MessageBox.Show("±‚≈∏ø°∑Ø " + lineNum + "ø°º≠ πﬂª˝" + ex.Message);
             }
         }
 
         public void GetClaInfo()
         {
-            for (int i = 0; i < m_clientCount; i++)
+            for(int i = 0; i<m_clientCount;i++)
             {
-                if (m_ClientList[i].Connected == false)
+                if(m_ClientList[i].Connected==false)
                 {
                     m_ns[i].Close();
                     m_sw[i].Close();
@@ -245,7 +234,7 @@ namespace MultiTerminal
         #endregion 
 
         #region Client
-        //Ï±ÑÌåÖ ÏÑúÎ≤ÑÏôÄ Ïó∞Í≤∞ ÏãúÎèÑ
+        //√§∆√ º≠πˆøÕ ø¨∞· Ω√µµ
         public bool Connect()
         {
             try
@@ -258,34 +247,32 @@ namespace MultiTerminal
                 StreamReader sr = new StreamReader(ns);
                 StreamWriter sw = new StreamWriter(ns);
 
-                Thread th = new Thread(new ThreadStart(RecvMsg)); //ÏÉÅÎåÄ Î¨∏ÏûêÏó¥ ÏàòÏã† Ïì∞Î†àÎìú Í∞ÄÎèô
+                Thread th = new Thread(new ThreadStart(RecvMsg)); //ªÛ¥Î πÆ¿⁄ø≠ ºˆΩ≈ æ≤∑πµÂ ∞°µø
                 th.Start();
-                m_isConncted = true;
-                //     DisplayNetworkInfo();
+           //     DisplayNetworkInfo();
                 return true;
             }
             catch (SocketException ex)
             {
                 int lineNum = Convert.ToInt32(ex.StackTrace.Substring(ex.StackTrace.LastIndexOf(' ')));
-                System.Windows.Forms.MessageBox.Show("ÏÜåÏºìÏóêÎü¨ " + lineNum + "ÏóêÏÑú Î∞úÏÉù" + ex.Message);
+                System.Windows.Forms.MessageBox.Show("º“ƒœø°∑Ø " + lineNum + "ø°º≠ πﬂª˝" + ex.Message);
                 return false;
             }
 
             catch (Exception ex)
             {
                 int lineNum = Convert.ToInt32(ex.StackTrace.Substring(ex.StackTrace.LastIndexOf(' ')));
-                System.Windows.Forms.MessageBox.Show("Í∏∞ÌÉÄÏóêÎü¨ " + lineNum + "ÏóêÏÑú Î∞úÏÉù" + ex.Message);
+                System.Windows.Forms.MessageBox.Show("±‚≈∏ø°∑Ø " + lineNum + "ø°º≠ πﬂª˝" + ex.Message);
                 return false;
             }
         }
-        //Ï±ÑÌåÖ ÏÑúÎ≤ÑÏôÄÏùò Ïó∞Í≤∞ Ï¢ÖÎ£å
+        //√§∆√ º≠πˆøÕ¿« ø¨∞· ¡æ∑·
         public void DisConnect()
         {
             try
             {
                 if (client != null)
                 {
-                    m_isConncted = false;
                     if (client.Connected)
                     {
                         NetworkStream ns = new NetworkStream(client);
@@ -304,13 +291,13 @@ namespace MultiTerminal
             catch (SocketException ex)
             {
                 int lineNum = Convert.ToInt32(ex.StackTrace.Substring(ex.StackTrace.LastIndexOf(' ')));
-                System.Windows.Forms.MessageBox.Show("ÏÜåÏºìÏóêÎü¨ " + lineNum + "ÏóêÏÑú Î∞úÏÉù" + ex.Message);
+                System.Windows.Forms.MessageBox.Show("º“ƒœø°∑Ø " + lineNum + "ø°º≠ πﬂª˝" + ex.Message);
             }
 
             catch (Exception ex)
             {
                 int lineNum = Convert.ToInt32(ex.StackTrace.Substring(ex.StackTrace.LastIndexOf(' ')));
-                System.Windows.Forms.MessageBox.Show("Í∏∞ÌÉÄÏóêÎü¨ " + lineNum + "ÏóêÏÑú Î∞úÏÉù" + ex.Message);
+                System.Windows.Forms.MessageBox.Show("±‚≈∏ø°∑Ø " + lineNum + "ø°º≠ πﬂª˝" + ex.Message);
             }
         }
         #endregion
@@ -321,8 +308,8 @@ namespace MultiTerminal
         {
             try
             {
-                ///ClientÏùò Send
-                m_isConncted = true;
+                ///Client¿« Send
+
                 if (client != null)
                 {
                     if (client.Connected)
@@ -332,10 +319,9 @@ namespace MultiTerminal
                         StreamWriter sw = new StreamWriter(ns);
                         sw.WriteLine(msg);
                         sw.Flush();
-
                     }
                 }
-                else if (server != null)
+                else if (server!=null)
                 {
                     for (int i = 0; i < m_clientCount; i++)
                     {
@@ -348,124 +334,95 @@ namespace MultiTerminal
             catch (SocketException ex)
             {
                 int lineNum = Convert.ToInt32(ex.StackTrace.Substring(ex.StackTrace.LastIndexOf(' ')));
-                System.Windows.Forms.MessageBox.Show("ÏÜåÏºìÏóêÎü¨ " + lineNum + "ÏóêÏÑú Î∞úÏÉù" + ex.Message);
+                System.Windows.Forms.MessageBox.Show("º“ƒœø°∑Ø " + lineNum + "ø°º≠ πﬂª˝" + ex.Message);
             }
 
             catch (Exception ex)
             {
                 int lineNum = Convert.ToInt32(ex.StackTrace.Substring(ex.StackTrace.LastIndexOf(' ')));
-                System.Windows.Forms.MessageBox.Show("Í∏∞ÌÉÄÏóêÎü¨ " + lineNum + "ÏóêÏÑú Î∞úÏÉù" + ex.Message);
+                System.Windows.Forms.MessageBox.Show("±‚≈∏ø°∑Ø " + lineNum + "ø°º≠ πﬂª˝" + ex.Message);
             }
         }
         public void RecvMsg()
         {
             try
             {
-                int Unique = m_clientCount - 1;
-                m_isConncted = true;
-                ///ClientÏùò Recv
+                ///Client¿« Recv
                 if (client != null)
                 {
-                    if (client.Connected == false)
+                    if(client.Connected ==false)
                     {
                         client.Shutdown(SocketShutdown.Both);
                         client.Disconnect(true);
-                        m_isConncted = false;
                     }
                     while (client.Connected)
                     {
                         NetworkStream ns = new NetworkStream(client);
                         StreamReader sr = new StreamReader(ns);
                         StreamWriter sw = new StreamWriter(ns);
-                        string recvMsg = sr.ReadLine();
+                        string msg = sr.ReadLine();
                         if (main.InvokeRequired)
                         {
-                            main.Invoke(new Action(() => main.ReceiveWindowBox.Text += "ÏàòÏã† :" + main.GetTimer() + recvMsg + "\n"));
-                            main.Invoke(new Action(() => main.ReceiveWindowBox.SelectionStart = main.ReceiveWindowBox.Text.Length));
-                            main.ReceiveWindowBox.ScrollToCaret();
-
-
+                            main.Invoke(new Action(() => main.ReceiveWindowBox.Text += "ºˆΩ≈ : " + main.GetTimer() + msg + "\n"));
                         }
                         else
                         {
-                            main.ReceiveWindowBox.Text += "ÏàòÏã† :" + main.GetTimer() + recvMsg + "\n";
-                            main.ReceiveWindowBox.SelectionStart = main.ReceiveWindowBox.Text.Length;
-                            main.ReceiveWindowBox.ScrollToCaret();
-
+                            main.ReceiveWindowBox.Text += "ºˆΩ≈ : " + main.GetTimer() + msg + "\n";
                         }
                     }
                 }
-                else if (server != null)
+                else if(server!=null)
                 {
-                    m_isConncted = true;
-                    while (m_ClientList[Unique].Connected)
+                    for (int i = 0; i < m_clientCount; i++)
                     {
-                        string recvMsg = m_sr[Unique].ReadLine();
-
-                        if (main.InvokeRequired)
+                      
+                        while (m_ClientList[i].Connected)
                         {
-                            ///ÎπÑÏ†ïÏÉÅ Ï¢ÖÎ£åÏãú Í≥ÑÏÜç ÎêòÎäîÏù¥Ïú†
-                            main.Invoke(new Action(() => main.ReceiveWindowBox.Text += "ÏàòÏã† :" + main.GetTimer() + recvMsg + "\n"));
-                            main.Invoke(new Action(() => main.ReceiveWindowBox.SelectionStart = main.ReceiveWindowBox.Text.Length));
-                            main.ReceiveWindowBox.ScrollToCaret();
+                            string msg = m_sr[i].ReadLine();
 
-
-                        }
-                        else
-                        {
-                            main.ReceiveWindowBox.Text += "ÏàòÏã† :" + main.GetTimer() + recvMsg + "\n";
-                            main.ReceiveWindowBox.SelectionStart = main.ReceiveWindowBox.Text.Length;
-                            main.ReceiveWindowBox.ScrollToCaret();
+                            if (main.InvokeRequired)
+                            {
+                                main.Invoke(new Action(() => main.ReceiveWindowBox.Text += "ºˆΩ≈ : " + main.GetTimer() + msg + "\n"));
+                            }
+                            else
+                            {
+                                main.ReceiveWindowBox.Text += "ºˆΩ≈ : " + main.GetTimer() + msg + "\n";
+                            }
                         }
                     }
 
-                    //ÌÅ¥ÎùºÏù¥Ïñ∏Ìä∏ Ï¢ÖÎ£åÍ∞êÏßÄ
-                    if (m_ClientList[Unique].Connected == false)
-                    {
-                        m_ns.Remove(Unique);
-                        m_sr.Remove(Unique);
-                        m_sw.Remove(Unique);
-                        m_ipList.Remove(Unique);
-                        m_ClientList[Unique].Shutdown(SocketShutdown.Both);
-                        m_ClientList[Unique].Disconnect(true);
-                        m_ClientList.Remove(Unique);
-                    }
                 }
             }
             catch (SocketException ex)
             {
                 int lineNum = Convert.ToInt32(ex.StackTrace.Substring(ex.StackTrace.LastIndexOf(' ')));
-                System.Windows.Forms.MessageBox.Show("ÏÜåÏºìÏóêÎü¨ " + lineNum + "ÏóêÏÑú Î∞úÏÉù" + ex.Message);
+                System.Windows.Forms.MessageBox.Show("º“ƒœø°∑Ø " + lineNum + "ø°º≠ πﬂª˝" + ex.Message);
             }
 
             catch (Exception ex)
             {
-                if (server != null)
+                if (ex.TargetSite.DeclaringType.Name == "NetworkStream")
                 {
-                    //ÌÅ¥ÎùºÏù¥Ïñ∏Ìä∏ Ï¢ÖÎ£åÍ∞êÏßÄ
-                    if (ex.TargetSite.DeclaringType.Name == "NetworkStream")
+                    for (int i = 0; i < m_clientCount; i++)
                     {
-                        for (int i = 0; i < m_clientCount; i++)
-                        {
 
-                            if (m_ClientList[i].Connected == false)
-                            {
-                                m_ns.Remove(i);
-                                m_sr.Remove(i);
-                                m_sw.Remove(i);
-                                m_ipList.Remove(i);
-                                m_ClientList[i].Shutdown(SocketShutdown.Both);
-                                m_ClientList[i].Disconnect(true);
-                                m_ClientList.Remove(i);
-                                m_clientCount--;
-                            }
+                        if (m_ClientList[i].Connected == false)
+                        {
+                            m_ns.Remove(i);
+                            m_sr.Remove(i);
+                            m_sw.Remove(i);
+                            m_ipList.Remove(i);
+                            m_ClientList[i].Shutdown(SocketShutdown.Both);
+                            m_ClientList[i].Disconnect(true);
+                            m_ClientList.Remove(i);
+                            m_clientCount--;
                         }
                     }
                 }
                 else
                 {
                     int lineNum = Convert.ToInt32(ex.StackTrace.Substring(ex.StackTrace.LastIndexOf(' ')));
-                    System.Windows.Forms.MessageBox.Show("Í∏∞ÌÉÄÏóêÎü¨ " + lineNum + "ÏóêÏÑú Î∞úÏÉù" + ex.Message);
+                    System.Windows.Forms.MessageBox.Show("±‚≈∏ø°∑Ø " + lineNum + "ø°º≠ πﬂª˝" + ex.Message);
                 }
             }
         }
@@ -503,30 +460,30 @@ namespace MultiTerminal
                 IPAddressCollection dnsServers = adapterProperties.DnsAddresses;
 
 
-                netInfo += "ÎÑ§Ìä∏ÏõåÌÅ¨ Ïπ¥Îìú : " + adapter.Description + "\n";   //ÌïòÎìúÏõ®Ïñ¥ ÌÉÄÏûÖ
-                netInfo += "Physical Address : " + adapter.GetPhysicalAddress() + "\n"; //ÌîºÏßÄÏª¨ Ï£ºÏÜå
-                netInfo += "IP Address : " + Get_MyIP() + "\n"; // ÎÇ¥ IPÏ£ºÏÜå
-
+                netInfo += "≥◊∆Æøˆ≈© ƒ´µÂ : "+adapter.Description+"\n";   //«œµÂø˛æÓ ≈∏¿‘
+                netInfo += "Physical Address : " + adapter.GetPhysicalAddress() + "\n"; //««¡ˆƒ√ ¡÷º“
+                netInfo += "IP Address : " + Get_MyIP() + "\n"; // ≥ª IP¡÷º“
+              
 
                 if (Gatewayaddress.Count > 0)
                 {
                     foreach (GatewayIPAddressInformation address in Gatewayaddress)
                     {
-                        netInfo += "GateWay Address :" + address.Address.ToString() + "\n"; //Í≤åÏù¥Ìä∏Ïõ®Ïù¥ Ï£ºÏÜå
+                        netInfo += "GateWay Address :" + address.Address.ToString() + "\n"; //∞‘¿Ã∆Æø˛¿Ã ¡÷º“
                     }
                 }
                 if (dhcpServers.Count > 0)
                 {
                     foreach (IPAddress dhcp in dhcpServers)
                     {
-                        netInfo += "DHCP Servers : " + dhcp.ToString() + "\n"; //DHCP Ï£ºÏÜå
+                        netInfo += "DHCP Servers : " + dhcp.ToString() + "\n"; //DHCP ¡÷º“
                     }
                 }
                 if (dnsServers.Count > 0)
                 {
                     foreach (IPAddress dns in dnsServers)
                     {
-                        netInfo += "DNS Servers : " + dns.ToString() + "\n"; //DNS Ï£ºÏÜå
+                        netInfo += "DNS Servers : " + dns.ToString() + "\n"; //DNS ¡÷º“
                     }
                 }
                 m_NetInfo.Add(i, netInfo);

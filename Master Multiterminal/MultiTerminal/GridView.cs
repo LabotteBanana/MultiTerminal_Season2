@@ -7,7 +7,7 @@ using System.Windows.Forms;
 
 namespace MultiTerminal
 {
-    class GridView
+   public class GridView
     {
         public int MyNum;   // 그리드 자신의 순번
         private string type;    // 들어온 타입의 형태, 스트링 유디피~
