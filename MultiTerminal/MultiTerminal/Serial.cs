@@ -167,12 +167,6 @@ namespace MultiTerminal
                     realForm.ReceiveWindowBox.ScrollToCaret();
                 }
             }
-            
-       
-            
-
         }
-
-
     }
 }
