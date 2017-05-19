@@ -436,6 +436,19 @@ namespace MultiTerminal
                         StreamReader sr = new StreamReader(ns);
                         StreamWriter sw = new StreamWriter(ns);
                         string msg = sr.ReadLine();
+                        //임시조치.. 서버에서 disconnect하면 client로 null값이 계속 도는데 그거 처리하는 부분
+                        if (msg == null) {
+                            int count = 0;
+                            while (msg==null) {
+                                msg = sr.ReadLine();
+                                count++;
+                                if (count == 100)
+                                {
+                                    DisConnect();
+                                    break;
+                                }
+                            }
+                        }
                         if (main.InvokeRequired)
                         {
                             main.Invoke(new Action(() =>
@@ -461,6 +474,21 @@ namespace MultiTerminal
                     {
                         string msg = m_sr[uniqueClientNum].ReadLine();
 
+                        //임시조치..
+                        if (msg == null)
+                        {
+                            int count = 0;
+                            while (msg==null)
+                            {
+                                msg = m_sr[uniqueClientNum].ReadLine();
+                                count++;
+                                if (count == 100)
+                                {
+                                    main.RemoveGrid(m_ipList[uniqueClientNum]);
+                                    break;
+                                }
+                            }
+                        }
                         if (main.InvokeRequired)
                         {
                             ///비정상 종료시 계속 되는이유

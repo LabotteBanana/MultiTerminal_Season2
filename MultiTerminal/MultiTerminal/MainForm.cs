@@ -1326,6 +1326,8 @@ namespace MultiTerminal
 
                     case "TCP Server":
                         {
+                            tcla.DisConnect();
+                            MessageBox.Show(gridview[Selected_Grid_Num].Portname + "가 연결해제 되었습니다."); // ex: 0번 시리얼이 연결 해제되었습니다.
 
                         }
                         break;
@@ -1351,11 +1353,28 @@ namespace MultiTerminal
                 PortListGrid.Refresh();
             }
         }
+        public void fixGridListSequence() {
+
+        }
 
         public void DrawGrid(int num, string type, string name, string time)    // 그리드에 열 추가 ~~
         {
             string[] row = new string[] { num.ToString(), type, name, time };
             PortListGrid.Rows.Add(row);
+        }
+        public void RemoveGrid(string ip) {
+            int rowIndex = -1;
+            foreach (DataGridViewRow row in PortListGrid.Rows)
+            {
+                if (row.Cells[2].Value.ToString().Equals(ip))
+                {
+                    rowIndex = row.Index;
+                    break;
+                }
+            }
+            tserv.ServerStop(gridview[rowIndex].Typenum);
+            MessageBox.Show(gridview[rowIndex].Portname + "가 연결해제 되었습니다."); // ex: 0번 시리얼이 연결 해제되었습니다.
+            PortListGrid.Rows.RemoveAt(rowIndex);
         }
 
         #endregion
