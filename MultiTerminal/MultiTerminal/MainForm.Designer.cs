@@ -44,6 +44,15 @@
             this.Rx = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.DisCon = new System.Windows.Forms.DataGridViewButtonColumn();
             this.panel4 = new System.Windows.Forms.Panel();
+            this.TcpPanel = new System.Windows.Forms.Panel();
+            this.ServerCheck = new System.Windows.Forms.CheckBox();
+            this.PortNumber = new System.Windows.Forms.ComboBox();
+            this.IpNumber = new System.Windows.Forms.ComboBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
+            this.Tcp_Btn_DisCon = new System.Windows.Forms.Button();
+            this.Tcp_Btn_Con = new System.Windows.Forms.Button();
             this.SerialPanel = new System.Windows.Forms.Panel();
             this.Serial_Btn_F5 = new System.Windows.Forms.Button();
             this.Serial_Combo_FlowCon = new System.Windows.Forms.ComboBox();
@@ -71,15 +80,6 @@
             this.label11 = new System.Windows.Forms.Label();
             this.button4 = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
-            this.TcpPanel = new System.Windows.Forms.Panel();
-            this.ServerCheck = new System.Windows.Forms.CheckBox();
-            this.PortNumber = new System.Windows.Forms.ComboBox();
-            this.IpNumber = new System.Windows.Forms.ComboBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
-            this.Tcp_Btn_DisCon = new System.Windows.Forms.Button();
-            this.Tcp_Btn_Con = new System.Windows.Forms.Button();
             this.panel2 = new System.Windows.Forms.Panel();
             this.Btn_StopLog = new System.Windows.Forms.Button();
             this.Btn_UseLog = new System.Windows.Forms.Button();
@@ -148,9 +148,9 @@
             this.panel5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.PortListGrid)).BeginInit();
             this.panel4.SuspendLayout();
+            this.TcpPanel.SuspendLayout();
             this.SerialPanel.SuspendLayout();
             this.UdpPanel.SuspendLayout();
-            this.TcpPanel.SuspendLayout();
             this.panel2.SuspendLayout();
             this.LogPanel.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -202,6 +202,7 @@
             // 
             // PortListGrid
             // 
+            this.PortListGrid.AllowUserToAddRows = false;
             this.PortListGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.PortListGrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Num,
@@ -283,6 +284,96 @@
             this.panel4.Name = "panel4";
             this.panel4.Size = new System.Drawing.Size(159, 284);
             this.panel4.TabIndex = 17;
+            // 
+            // TcpPanel
+            // 
+            this.TcpPanel.Controls.Add(this.ServerCheck);
+            this.TcpPanel.Controls.Add(this.PortNumber);
+            this.TcpPanel.Controls.Add(this.IpNumber);
+            this.TcpPanel.Controls.Add(this.label1);
+            this.TcpPanel.Controls.Add(this.label7);
+            this.TcpPanel.Controls.Add(this.label8);
+            this.TcpPanel.Controls.Add(this.Tcp_Btn_DisCon);
+            this.TcpPanel.Controls.Add(this.Tcp_Btn_Con);
+            this.TcpPanel.Location = new System.Drawing.Point(0, 0);
+            this.TcpPanel.Name = "TcpPanel";
+            this.TcpPanel.Size = new System.Drawing.Size(150, 276);
+            this.TcpPanel.TabIndex = 14;
+            this.TcpPanel.Visible = false;
+            // 
+            // ServerCheck
+            // 
+            this.ServerCheck.AutoSize = true;
+            this.ServerCheck.Location = new System.Drawing.Point(47, 85);
+            this.ServerCheck.Name = "ServerCheck";
+            this.ServerCheck.Size = new System.Drawing.Size(88, 16);
+            this.ServerCheck.TabIndex = 16;
+            this.ServerCheck.Text = "서버 활성화";
+            this.ServerCheck.UseVisualStyleBackColor = true;
+            this.ServerCheck.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
+            // 
+            // PortNumber
+            // 
+            this.PortNumber.FormattingEnabled = true;
+            this.PortNumber.Location = new System.Drawing.Point(59, 27);
+            this.PortNumber.Name = "PortNumber";
+            this.PortNumber.Size = new System.Drawing.Size(87, 20);
+            this.PortNumber.TabIndex = 13;
+            // 
+            // IpNumber
+            // 
+            this.IpNumber.FormattingEnabled = true;
+            this.IpNumber.Location = new System.Drawing.Point(50, 59);
+            this.IpNumber.Name = "IpNumber";
+            this.IpNumber.Size = new System.Drawing.Size(96, 20);
+            this.IpNumber.TabIndex = 12;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(16, 30);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(37, 12);
+            this.label1.TabIndex = 7;
+            this.label1.Text = "포트 :";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(18, 61);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(24, 12);
+            this.label7.TabIndex = 6;
+            this.label7.Text = "IP :";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(16, 8);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(58, 12);
+            this.label8.TabIndex = 5;
+            this.label8.Text = "TCP 설정";
+            // 
+            // Tcp_Btn_DisCon
+            // 
+            this.Tcp_Btn_DisCon.Location = new System.Drawing.Point(9, 219);
+            this.Tcp_Btn_DisCon.Name = "Tcp_Btn_DisCon";
+            this.Tcp_Btn_DisCon.Size = new System.Drawing.Size(62, 23);
+            this.Tcp_Btn_DisCon.TabIndex = 1;
+            this.Tcp_Btn_DisCon.Text = "연결";
+            this.Tcp_Btn_DisCon.UseVisualStyleBackColor = true;
+            this.Tcp_Btn_DisCon.Click += new System.EventHandler(this.Tcp_Btn_DisCon_Click);
+            // 
+            // Tcp_Btn_Con
+            // 
+            this.Tcp_Btn_Con.Location = new System.Drawing.Point(79, 219);
+            this.Tcp_Btn_Con.Name = "Tcp_Btn_Con";
+            this.Tcp_Btn_Con.Size = new System.Drawing.Size(62, 23);
+            this.Tcp_Btn_Con.TabIndex = 0;
+            this.Tcp_Btn_Con.Text = "옵션적용";
+            this.Tcp_Btn_Con.UseVisualStyleBackColor = true;
+            this.Tcp_Btn_Con.Click += new System.EventHandler(this.button3_Click);
             // 
             // SerialPanel
             // 
@@ -560,96 +651,6 @@
             this.button5.TabIndex = 0;
             this.button5.Text = "옵션적용";
             this.button5.UseVisualStyleBackColor = true;
-            // 
-            // TcpPanel
-            // 
-            this.TcpPanel.Controls.Add(this.ServerCheck);
-            this.TcpPanel.Controls.Add(this.PortNumber);
-            this.TcpPanel.Controls.Add(this.IpNumber);
-            this.TcpPanel.Controls.Add(this.label1);
-            this.TcpPanel.Controls.Add(this.label7);
-            this.TcpPanel.Controls.Add(this.label8);
-            this.TcpPanel.Controls.Add(this.Tcp_Btn_DisCon);
-            this.TcpPanel.Controls.Add(this.Tcp_Btn_Con);
-            this.TcpPanel.Location = new System.Drawing.Point(0, 0);
-            this.TcpPanel.Name = "TcpPanel";
-            this.TcpPanel.Size = new System.Drawing.Size(150, 276);
-            this.TcpPanel.TabIndex = 14;
-            this.TcpPanel.Visible = false;
-            // 
-            // ServerCheck
-            // 
-            this.ServerCheck.AutoSize = true;
-            this.ServerCheck.Location = new System.Drawing.Point(47, 85);
-            this.ServerCheck.Name = "ServerCheck";
-            this.ServerCheck.Size = new System.Drawing.Size(88, 16);
-            this.ServerCheck.TabIndex = 16;
-            this.ServerCheck.Text = "서버 활성화";
-            this.ServerCheck.UseVisualStyleBackColor = true;
-            this.ServerCheck.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
-            // 
-            // PortNumber
-            // 
-            this.PortNumber.FormattingEnabled = true;
-            this.PortNumber.Location = new System.Drawing.Point(59, 27);
-            this.PortNumber.Name = "PortNumber";
-            this.PortNumber.Size = new System.Drawing.Size(87, 20);
-            this.PortNumber.TabIndex = 13;
-            // 
-            // IpNumber
-            // 
-            this.IpNumber.FormattingEnabled = true;
-            this.IpNumber.Location = new System.Drawing.Point(50, 59);
-            this.IpNumber.Name = "IpNumber";
-            this.IpNumber.Size = new System.Drawing.Size(96, 20);
-            this.IpNumber.TabIndex = 12;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(16, 30);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(37, 12);
-            this.label1.TabIndex = 7;
-            this.label1.Text = "포트 :";
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(18, 61);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(24, 12);
-            this.label7.TabIndex = 6;
-            this.label7.Text = "IP :";
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(16, 8);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(58, 12);
-            this.label8.TabIndex = 5;
-            this.label8.Text = "TCP 설정";
-            // 
-            // Tcp_Btn_DisCon
-            // 
-            this.Tcp_Btn_DisCon.Location = new System.Drawing.Point(9, 219);
-            this.Tcp_Btn_DisCon.Name = "Tcp_Btn_DisCon";
-            this.Tcp_Btn_DisCon.Size = new System.Drawing.Size(62, 23);
-            this.Tcp_Btn_DisCon.TabIndex = 1;
-            this.Tcp_Btn_DisCon.Text = "연결";
-            this.Tcp_Btn_DisCon.UseVisualStyleBackColor = true;
-            this.Tcp_Btn_DisCon.Click += new System.EventHandler(this.Tcp_Btn_DisCon_Click);
-            // 
-            // Tcp_Btn_Con
-            // 
-            this.Tcp_Btn_Con.Location = new System.Drawing.Point(79, 219);
-            this.Tcp_Btn_Con.Name = "Tcp_Btn_Con";
-            this.Tcp_Btn_Con.Size = new System.Drawing.Size(62, 23);
-            this.Tcp_Btn_Con.TabIndex = 0;
-            this.Tcp_Btn_Con.Text = "옵션적용";
-            this.Tcp_Btn_Con.UseVisualStyleBackColor = true;
-            this.Tcp_Btn_Con.Click += new System.EventHandler(this.button3_Click);
             // 
             // panel2
             // 
@@ -1377,12 +1378,12 @@
             this.panel5.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.PortListGrid)).EndInit();
             this.panel4.ResumeLayout(false);
+            this.TcpPanel.ResumeLayout(false);
+            this.TcpPanel.PerformLayout();
             this.SerialPanel.ResumeLayout(false);
             this.SerialPanel.PerformLayout();
             this.UdpPanel.ResumeLayout(false);
             this.UdpPanel.PerformLayout();
-            this.TcpPanel.ResumeLayout(false);
-            this.TcpPanel.PerformLayout();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
             this.LogPanel.ResumeLayout(false);

@@ -48,14 +48,14 @@ namespace MultiTerminal
         private DateTime nowTime;
 
         // 다중 연결 리스트 부분
-        private GridView[] gridview = new GridView[99];
+        private GridView gridview = null;
         private List<string> connetName = new List<string>();
 
         //리스트를 이용한 다중연결 관리
         private List<Serial> SerialList = new List<Serial>();
         private List<GridView> GridList = new List<GridView>();
 
-
+        public string prePortName = null;
 
         public MainForm()
         {
@@ -537,36 +537,28 @@ namespace MultiTerminal
             catch (Exception E)
             {
                 int lineNum = Convert.ToInt32(E.StackTrace.Substring(E.StackTrace.LastIndexOf(' ')));
-                System.Windows.Forms.MessageBox.Show("기타에러 " + lineNum + "에서 발생" + E.Message);
+                MessageBox.Show("기타에러 " + lineNum + "에서 발생" + E.Message);
             }
 
             if (serial[Sport_Count].IsOpen())
             {
                 int size = GridList.Count;
                 string portname = Serial_Combo_Port.Items[Serial_Combo_Port.SelectedIndex].ToString();  // 연결에 성공한 시리얼 객체의 포트네임 가져옴
-
-
-                gridview[GridList.Count] = new GridView(GridList.Count, portname, "SERIAL", Sport_Count);  // 그리드뷰 객체에 적용,   타입형태(시리얼,UDP..), 타입의 순번도 그리드 객체로 슝들어감.    
-                DrawGrid(gridview[GridList.Count].MyNum, gridview[GridList.Count].Type, gridview[GridList.Count].Portname, gridview[GridList.Count].Time);
+                
+                gridview = new GridView(GridList.Count, portname, "SERIAL", Sport_Count);  // 그리드뷰 객체에 적용,   타입형태(시리얼,UDP..), 타입의 순번도 그리드 객체로 슝들어감.    
+                DrawGrid(gridview.MyNum, gridview.Type, gridview.Portname, gridview.Time);
 
                 Sport_Count++;
-                GridList.Add(gridview[GridList.Count]);
+                GridList.Add(gridview);
                 //DrawGrid(gridview[Grid_Count].MyNum, gridview[Grid_Count].Portname, gridview[Grid_Count].Time); // 그리드뷰 객체를 UI에 적용
 
                 //GridList.Add(gridview[Grid_Count]);                
                 //Grid_Count++;
                 // 최대 그리드뷰는 귀찮;; 걍 만들다 넘치면 알아서 프로그램 뻗겠지 ^오^
-                //if (Grid_Count < 14) { Grid_Count++; } else { MessageBox.Show("최대 그리드 초과, 연결을 삭제해주세요."); }             
-
+                //if (Grid_Count < 14) { Grid_Count++; } else { MessageBox.Show("최대 그리드 초과, 연결을 삭제해주세요."); }
             }
-
-
         }
         #endregion
-
-
-
-
 
         #region 리치 텍스트 박스
 
@@ -736,7 +728,7 @@ namespace MultiTerminal
 
                 if (connectType == TYPE.TCP)
                 {
-                    if (isServ == true && tserv.m_clientCount > 0) // 다중연결일때?
+                    if (isServ == true && tserv.m_ClientList.Count > 0) // 다중연결일때?
                     {
                         tserv.SendMsg(SendBox1.Text);
                         ReceiveWindowBox.AppendText("송신 : " + GetTimer() + SendBox1.Text + "\n");
@@ -906,12 +898,12 @@ namespace MultiTerminal
 
             for (int i = 0; i <= gridcount; i++) //그리드뷰 리스트 처음부터 순회
             {
-                if (gridview[i].Type == "SERIAL" && gridview[i].TxCheckedState == true)    // 그리드뷰리스트의 타입이 시리얼, 그리고 송신 체크박스 상태가 체크되어있다면
+                if (GridList[i].Type == "SERIAL" && GridList[i].TxCheckedState == true)    // 그리드뷰리스트의 타입이 시리얼, 그리고 송신 체크박스 상태가 체크되어있다면
                 {
                     ReceiveWindowBox.AppendText("송신 : " + GetTimer() + msg + "\n");
                     this.ReceiveWindowBox.SelectionStart = ReceiveWindowBox.Text.Length;
                     this.ReceiveWindowBox.ScrollToCaret();
-                    serial[gridview[i].Typenum].SerialSend(msg);    // serial [그리드뷰 객체에 저장된 시리얼 타입 객체의 순번]
+                    serial[GridList[i].Typenum].SerialSend(msg);    // serial [그리드뷰 객체에 저장된 시리얼 타입 객체의 순번]
                 }
             }
 
@@ -924,7 +916,7 @@ namespace MultiTerminal
 
             for (int i = 0; i <= gridcount; i++) //그리드뷰 리스트 처음부터 순회
             {
-                if (gridview[i].Type == "SERIAL" && gridview[i].TxCheckedState == true)    // 그리드뷰리스트의 타입이 시리얼, 그리고 송신 체크박스 상태가 체크되어있다면
+                if (GridList[i].Type == "SERIAL" && GridList[i].TxCheckedState == true)    // 그리드뷰리스트의 타입이 시리얼, 그리고 송신 체크박스 상태가 체크되어있다면
                 {
                     tserv.SendMsg(SendBox1.Text);
                 }
@@ -1245,23 +1237,23 @@ namespace MultiTerminal
         {
             if (e.ColumnIndex == 4 && e.RowIndex != -1) // Tx부분 체크박스 속성,  열이 3번째이고, 행이 1개 이상 있을때 조건 발생!
             {
-                if (gridview[e.RowIndex].TxCheckedState == false)  // 그리드뷰의 현재 클릭 행, 번째의 그리드뷰 클래스안에 체크박스 속성 건드려버리기~
-                { gridview[e.RowIndex].TxCheckedState = true; }
+                if (GridList[e.RowIndex].TxCheckedState == false)  // 그리드뷰의 현재 클릭 행, 번째의 그리드뷰 클래스안에 체크박스 속성 건드려버리기~
+                { GridList[e.RowIndex].TxCheckedState = true; }
                 else
-                { gridview[e.RowIndex].TxCheckedState = false; }
+                { GridList[e.RowIndex].TxCheckedState = false; }
             }
 
             if (e.ColumnIndex == 5 && e.RowIndex != -1) // Rx부분 체크박스 속성,   열이 4번째이고, 행이 1개 이상 있을때 조건 발생!
             {
-                if (gridview[e.RowIndex].RxCheckedState == false)
+                if (GridList[e.RowIndex].RxCheckedState == false)
                 {
-                    gridview[e.RowIndex].RxCheckedState = true;
-                    serial[gridview[e.RowIndex].Typenum].RxState = true;
+                    GridList[e.RowIndex].RxCheckedState = true;
+                    serial[GridList[e.RowIndex].Typenum].RxState = true;
                 }
                 else
                 {
-                    gridview[e.RowIndex].RxCheckedState = false;
-                    serial[gridview[e.RowIndex].Typenum].RxState = false;
+                    GridList[e.RowIndex].RxCheckedState = false;
+                    serial[GridList[e.RowIndex].Typenum].RxState = false;
                 }
             }
 
@@ -1270,8 +1262,8 @@ namespace MultiTerminal
 
         private void button1_Click(object sender, EventArgs e)
         {
-            bool fuck1 = gridview[0].TxCheckedState;
-            bool fuck2 = gridview[0].RxCheckedState;
+            bool fuck1 = GridList[0].TxCheckedState;
+            bool fuck2 = GridList[0].RxCheckedState;
             MessageBox.Show(fuck1.ToString() + " " + fuck2.ToString());
         }
 
@@ -1290,13 +1282,17 @@ namespace MultiTerminal
         // 그리드뷰 연결 취소 버튼 클릭 이벤트 ^0^
         private void PortListGrid_CellValue(object sender, DataGridViewCellEventArgs e)
         {
+            if (tcla != null)
+                tcla.setExitClickedState(true);
+            if (tserv != null)
+                tserv.setExitClickedState(true);
             var senderGrid = (DataGridView)sender;
-
+            
             if (senderGrid.Columns[e.ColumnIndex] is DataGridViewButtonColumn &&
                 e.RowIndex >= 0)
             {
                 int Selected_Grid_Num = e.RowIndex;
-                string Selected_Grid_Type = gridview[Selected_Grid_Num].Type;
+                string Selected_Grid_Type = GridList[Selected_Grid_Num].Type;
 
                 // 이곳이 바로 취소버튼을 누르면, 타입별로 연결 해제 하는 부분 ^오^
                 switch (Selected_Grid_Type)
@@ -1305,30 +1301,26 @@ namespace MultiTerminal
                         {
                             try
                             {
-                                serial[gridview[Selected_Grid_Num].Typenum].DisConSerial();   // 시리얼 연결 해제 ^-^
-                                MessageBox.Show(gridview[Selected_Grid_Num].Portname + "가 연결해제 되었습니다."); // ex: 0번 시리얼이 연결 해제되었습니다.
+                                serial[GridList[Selected_Grid_Num].Typenum].DisConSerial();   // 시리얼 연결 해제 ^-^
                             }
                             catch (Exception ex)
                             {
                                 int lineNum = Convert.ToInt32(ex.StackTrace.Substring(ex.StackTrace.LastIndexOf(' ')));
                                 MessageBox.Show("기타에러 " + lineNum + "에서 발생" + ex.Message);
                             }
-
                         }
                         break;
 
                     case "TCP Client":
                         {
-                            tserv.ServerStop(gridview[Selected_Grid_Num].Typenum);
-                            MessageBox.Show(gridview[Selected_Grid_Num].Portname + "가 연결해제 되었습니다."); // ex: 0번 시리얼이 연결 해제되었습니다.
-                        }
+                            tserv.ServerStop(GridList[Selected_Grid_Num].Typenum);
+                        }   
                         break;
 
                     case "TCP Server":
                         {
                             tcla.DisConnect();
-                            MessageBox.Show(gridview[Selected_Grid_Num].Portname + "가 연결해제 되었습니다."); // ex: 0번 시리얼이 연결 해제되었습니다.
-
+                            Tcp_Btn_DisCon.Text = "연결";
                         }
                         break;
                     case "UDP":
@@ -1337,24 +1329,27 @@ namespace MultiTerminal
                         }
                         break;
                 }
-                if (GridList.Count > Selected_Grid_Num + 1)    // 이 부분이 바로 바뀐 순서번호, 고치는 부분~~~!
-                {
-                    for (int i = Selected_Grid_Num + 1; i <= GridList.Count - 1; i++)
-                    {
-                        gridview[i].MyNum = gridview[i].MyNum - 1;
-                        PortListGrid.Rows[i].Cells[0].Value = gridview[i].MyNum.ToString(); // 다이렉트로 순번을 수정함!
-                    }
-                }
-                GridList.RemoveAt(Selected_Grid_Num);           // 자체 그리드 객체에서의 리스트 삭제
-                PortListGrid.Rows.RemoveAt(Selected_Grid_Num);  // UI 그리드에서의 리스트 삭제
-                MessageBox.Show(Selected_Grid_Num.ToString()); //TODO - Button Clicked - Execute Code Here
-
-                PortListGrid.Update();
-                PortListGrid.Refresh();
+                fixGridListSequence(Selected_Grid_Num);
+                MessageBox.Show(prePortName + "가 연결해제 되었습니다."); // ex: 0번 시리얼이 연결 해제되었습니다.
             }
         }
-        public void fixGridListSequence() {
 
+        public void fixGridListSequence(int Selected_Grid_Num)
+        {
+            if (GridList.Count > Selected_Grid_Num + 1)    // 이 부분이 바로 바뀐 순서번호, 고치는 부분~~~!
+            {
+                for (int i = Selected_Grid_Num + 1; i <= GridList.Count - 1; i++)
+                {
+                    GridList[i].MyNum--;
+                    PortListGrid.Rows[i].Cells[0].Value = GridList[i].MyNum.ToString(); // 다이렉트로 순번을 수정함!
+                }
+            }
+            prePortName = GridList[Selected_Grid_Num].Portname;
+            GridList.RemoveAt(Selected_Grid_Num);           // 자체 그리드 객체에서의 리스트 삭제
+            PortListGrid.Rows.RemoveAt(Selected_Grid_Num);  // UI 그리드에서의 리스트 삭제
+
+            PortListGrid.Update();
+            PortListGrid.Refresh();
         }
 
         public void DrawGrid(int num, string type, string name, string time)    // 그리드에 열 추가 ~~
@@ -1362,8 +1357,8 @@ namespace MultiTerminal
             string[] row = new string[] { num.ToString(), type, name, time };
             PortListGrid.Rows.Add(row);
         }
-        public void RemoveGrid(string ip) {
-            int rowIndex = -1;
+        public void RemoveGridforIP(string ip) {
+            int rowIndex = 0;
             foreach (DataGridViewRow row in PortListGrid.Rows)
             {
                 if (row.Cells[2].Value.ToString().Equals(ip))
@@ -1372,9 +1367,15 @@ namespace MultiTerminal
                     break;
                 }
             }
-            tserv.ServerStop(gridview[rowIndex].Typenum);
-            MessageBox.Show(gridview[rowIndex].Portname + "가 연결해제 되었습니다."); // ex: 0번 시리얼이 연결 해제되었습니다.
-            PortListGrid.Rows.RemoveAt(rowIndex);
+            if(tserv!=null)
+                tserv.ServerStop(GridList[rowIndex].Typenum);
+            if (tcla != null)
+                tcla.DisConnect();
+            Invoke(new Action(() =>
+            {
+                fixGridListSequence(rowIndex);
+            }));
+            MessageBox.Show(prePortName + "가 연결해제 되었습니다."); // ex: 0번 시리얼이 연결 해제되었습니다.
         }
 
         #endregion
@@ -1386,7 +1387,7 @@ namespace MultiTerminal
                 if (ServerCheck.Checked == true)
                 {
                     int port = Int32.Parse(PortNumber.Text);
-                    tserv = new Tserv(this, port,gridview,GridList);
+                    tserv = new Tserv(this, port, gridview, GridList);
                     tserv.ServerStart();
                 }
                 else
