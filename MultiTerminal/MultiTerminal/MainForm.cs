@@ -78,34 +78,8 @@ namespace MultiTerminal
             thread.Start();
         }
 
-        #region Timer(타임스탬프)
+        #region 매크로 기능
 
-        private void checkBox3_CheckedChanged(object sender, EventArgs e)   // 매크로 사용여부 체크 버튼
-        {
-            int count = Int32.Parse(MacroCount.Text);
-
-            if (MacroCheck.CheckState == CheckState.Checked)
-            {
-                macroThread = new Thread(() => SetMacroTime(count));
-
-                mactimer.Elapsed += OnMacro;
-                mactimer.Enabled = false;
-                macroThread.Start();
-            }
-
-
-            else
-            {
-                MacroCheck.CheckState = CheckState.Unchecked;
-                sw.Stop();
-                mactimer.Enabled = false;
-                mactimer.Elapsed -= OnMacro;
-                mactimer.Enabled = false;
-
-                //SendThread.Abort();
-                macroThread.Abort();
-            }
-        }
 
 
         private void OnTimeEvent(Object source, System.Timers.ElapsedEventArgs e)
@@ -130,70 +104,11 @@ namespace MultiTerminal
             }
         }
 
-        private void OnMacro(Object soruce, System.Timers.ElapsedEventArgs e)
+        private void OnMacro_1(Object soruce, System.Timers.ElapsedEventArgs e)
         {
-            if (connectType == TYPE.SERIAL)
-            {
-                ///여기에 시리얼 센드부분
-                try
-                {
-                    serial[0].SerialSend(this.SendBox1.Text);
-                }
-                catch (Exception ex)
-                {
-                    int lineNum = Convert.ToInt32(ex.StackTrace.Substring(ex.StackTrace.LastIndexOf(' ')));
-                    MessageBox.Show("기타에러 " + lineNum + "에서 발생" + ex.Message);
 
-                }
-            }
-            if (connectType == TYPE.TCP)
-            {
-                try
-                {
-                    if (tserv != null)
-                    {
-                        if (isServ == true && tserv.client.Connected == true)
-                        {
-                            SendThread = new Thread(new ThreadStart(delegate ()
-                            {
-                                this.Invoke(new Action(() =>
-                                {
-                                    tserv.SendMsg(SendBox1.Text);
-                                    ReceiveWindowBox.AppendText("송신 : " + GetTimer() + SendBox1.Text + "\n");
-                                    ReceiveWindowBox.SelectionStart = ReceiveWindowBox.Text.Length;
-                                    ReceiveWindowBox.ScrollToCaret();
-                                }));
-                            }));
-                            SendThread.Start();
-
-                        }
-                    }
-                    if (tcla != null)
-                    {
-                        if (isServ == false && tcla.client.Connected == true)
-                        {
-                            SendThread = new Thread(new ThreadStart(delegate ()
-                            {
-                                this.Invoke(new Action(() =>
-                                {
-                                    tcla.SendMsg(SendBox1.Text);
-
-                                    ReceiveWindowBox.AppendText("송신 : " + GetTimer() + SendBox1.Text + "\n");
-                                    this.ReceiveWindowBox.SelectionStart = ReceiveWindowBox.Text.Length;
-                                    this.ReceiveWindowBox.ScrollToCaret();
-                                }));
-                            }));
-                            SendThread.Start();
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    int lineNum = Convert.ToInt32(ex.StackTrace.Substring(ex.StackTrace.LastIndexOf(' ')));
-                    MessageBox.Show("기타에러 " + lineNum + "에서 발생" + ex.Message);
-
-                }
-            }
+            BattleGround_PlayMore(SendBox1.Text);
+            /*
             if (connectType == TYPE.UDP)
             {
                 try
@@ -242,8 +157,23 @@ namespace MultiTerminal
                     MessageBox.Show("기타에러 " + lineNum + "에서 발생" + ex.Message);
 
                 }
+                
             }
+            */
         }
+        private void OnMacro_2(Object soruce, System.Timers.ElapsedEventArgs e)
+        {
+            BattleGround_PlayMore(SendBox2.Text);
+        }
+        private void OnMacro_3(Object soruce, System.Timers.ElapsedEventArgs e)
+        {
+            BattleGround_PlayMore(SendBox3.Text);
+        }
+        private void OnMacro_4(Object soruce, System.Timers.ElapsedEventArgs e)
+        {
+            BattleGround_PlayMore(SendBox4.Text);
+        }
+
         public string GetTimer()
         {
 
@@ -261,15 +191,213 @@ namespace MultiTerminal
             mactimer.Interval = count;
 
         }
+        private void MacroCheck_1_CheckedChanged(object sender, EventArgs e)
+        {
+            if(MacroCount.Text != null)
+            { 
+                if (MacroCheck_2.CheckState != CheckState.Checked &&
+                      MacroCheck_3.CheckState != CheckState.Checked &&
+                        MacroCheck_4.CheckState != CheckState.Checked)
+                {
+                    int count = Int32.Parse(MacroCount.Text);
 
-        //public void AfterTime(double perSec)
-        //{
-        //    // 초당 10번이면 100/1000
-        //    // 초당 5번 이면 50/1000
-        //    aftertimer.Interval = perSec * 1000;
-        //    aftertimer.Enabled = true;
+                    if (MacroCheck_1.CheckState == CheckState.Checked)
+                    {
+                        macroThread = new Thread(() => SetMacroTime(count));
 
-        //}
+                        mactimer.Elapsed += OnMacro_1;
+                        mactimer.Enabled = false;
+                        macroThread.Start();
+                    }
+
+
+                    else
+                    {
+                        MacroCheck_1.CheckState = CheckState.Unchecked;
+                        sw.Stop();
+                        mactimer.Enabled = false;
+                        mactimer.Elapsed -= OnMacro_1;
+                        mactimer.Enabled = false;
+
+                        //SendThread.Abort();
+                        macroThread.Abort();
+                    }
+                }
+                else
+                {
+                    if(MacroCheck_2.Checked == true) MacroCheck_2.Checked = false;
+                    if (MacroCheck_3.Checked == true) MacroCheck_3.Checked = false;
+                    if (MacroCheck_4.Checked == true) MacroCheck_4.Checked = false;
+                }
+            }
+            else
+            {
+                System.Windows.Forms.MessageBox.Show("반복주기 미입력 에러!!! -> ms 반복 주기를 입력해주세요 ^0^");
+            }
+        }
+
+        private void MacroCheck_2_CheckedChanged(object sender, EventArgs e)
+        {
+            if (MacroCheck_1.CheckState != CheckState.Checked &&
+                  MacroCheck_3.CheckState != CheckState.Checked &&
+                    MacroCheck_4.CheckState != CheckState.Checked)
+            {
+                    int count = Int32.Parse(MacroCount.Text);
+
+                if (MacroCheck_2.CheckState == CheckState.Checked)
+                {
+                    macroThread = new Thread(() => SetMacroTime(count));
+
+                    mactimer.Elapsed += OnMacro_2;
+                    mactimer.Enabled = false;
+                    macroThread.Start();
+                }
+
+
+                else
+                {
+                    MacroCheck_2.CheckState = CheckState.Unchecked;
+                    sw.Stop();
+                    mactimer.Enabled = false;
+                    mactimer.Elapsed -= OnMacro_2;
+                    mactimer.Enabled = false;
+
+                    //SendThread.Abort();
+                macroThread.Abort();
+                }
+            }
+            else
+            {
+                if (MacroCheck_1.Checked == true) MacroCheck_1.Checked = false;
+                if (MacroCheck_3.Checked == true) MacroCheck_3.Checked = false;
+                if (MacroCheck_4.Checked == true) MacroCheck_4.Checked = false;
+            }
+        }
+
+        private void MacroCheck_3_CheckedChanged(object sender, EventArgs e)
+        {
+            if (MacroCheck_1.CheckState != CheckState.Checked &&
+                  MacroCheck_2.CheckState != CheckState.Checked &&
+                    MacroCheck_4.CheckState != CheckState.Checked)
+            {
+                int count = Int32.Parse(MacroCount.Text);
+
+                if (MacroCheck_3.CheckState == CheckState.Checked)
+                {
+                    macroThread = new Thread(() => SetMacroTime(count));
+
+                    mactimer.Elapsed += OnMacro_3;
+                    mactimer.Enabled = false;
+                    macroThread.Start();
+                }
+
+
+                else
+                {
+                    MacroCheck_3.CheckState = CheckState.Unchecked;
+                    sw.Stop();
+                    mactimer.Enabled = false;
+                    mactimer.Elapsed -= OnMacro_3;
+                    mactimer.Enabled = false;
+
+                    //SendThread.Abort();
+                    macroThread.Abort();
+                }
+            }
+            else
+            {
+                if (MacroCheck_1.Checked == true) MacroCheck_1.Checked = false;
+                if (MacroCheck_2.Checked == true) MacroCheck_2.Checked = false;
+                if (MacroCheck_4.Checked == true) MacroCheck_4.Checked = false;
+            }
+        }
+
+        private void MacroCheck_4_CheckedChanged(object sender, EventArgs e)
+        {
+            if (MacroCheck_1.CheckState != CheckState.Checked &&
+                  MacroCheck_2.CheckState != CheckState.Checked &&
+                    MacroCheck_3.CheckState != CheckState.Checked)
+            {
+                int count = Int32.Parse(MacroCount.Text);
+
+                if (MacroCheck_4.CheckState == CheckState.Checked)
+                {
+                    macroThread = new Thread(() => SetMacroTime(count));
+
+                    mactimer.Elapsed += OnMacro_4;
+                    mactimer.Enabled = false;
+                    macroThread.Start();
+                }
+
+
+                else
+                {
+                    MacroCheck_4.CheckState = CheckState.Unchecked;
+                    sw.Stop();
+                    mactimer.Enabled = false;
+                    mactimer.Elapsed -= OnMacro_4;
+                    mactimer.Enabled = false;
+
+                    //SendThread.Abort();
+                    macroThread.Abort();
+                }
+            }
+            else
+            {
+                if (MacroCheck_1.Checked == true) MacroCheck_1.Checked = false;
+                if (MacroCheck_2.Checked == true) MacroCheck_2.Checked = false;
+                if (MacroCheck_3.Checked == true) MacroCheck_3.Checked = false;
+            }
+        }
+
+     
+        private void BattleGround_PlayMore(string SendBox)  // Macro 보내기 전, 통신 방식 확인하고 보내기 위해서 >ㅁ<
+        {
+            int gridcount = PortListGrid.Rows.Count;    // 현재 그리드뷰 리스트의 갯수 가져옴
+
+            for (int i = 0; i <= gridcount; i++) //그리드뷰 리스트 처음부터 순회
+            {
+                if (gridview[i].Type == "SERIAL" && gridview[i].TxCheckedState == true)    // 그리드뷰리스트의 타입이 시리얼, 그리고 송신 체크박스 상태가 체크되어있다면
+                {
+                    serial[gridview[i].Typenum].SerialSend(SendBox);    // serial [그리드뷰 객체에 저장된 시리얼 타입 객체의 순번]
+                    ReceiveWindowBox.AppendText("송신 : " + GetTimer() + SendBox + "\n");
+                    ReceiveWindowBox.SelectionStart = ReceiveWindowBox.Text.Length;
+                    ReceiveWindowBox.ScrollToCaret();
+                }
+                if (gridview[i].Type == "TCP Client" && gridview[i].TxCheckedState == true
+                    && isServ == true && tserv.m_clientCount > 0)    // 서버 -> 클라이언트
+                {
+                    SendThread = new Thread(new ThreadStart(delegate ()
+                    {
+                        this.Invoke(new Action(() =>
+                        {
+                            tserv.SendMsg(SendBox);
+                            ReceiveWindowBox.AppendText("송신 : " + GetTimer() + SendBox + "\n");
+                            ReceiveWindowBox.SelectionStart = ReceiveWindowBox.Text.Length;
+                            ReceiveWindowBox.ScrollToCaret();
+                        }));
+                    }));
+                    SendThread.Start();
+                    
+                }
+                if (gridview[i].Type == "TCP Server" && gridview[i].TxCheckedState == true
+                    && isServ == false && tcla.client.Connected == true) // 클라이언트 -> 서버
+                {
+                    SendThread = new Thread(new ThreadStart(delegate ()
+                    {
+                        this.Invoke(new Action(() =>
+                        {
+                            tcla.SendMsg(SendBox);
+                            ReceiveWindowBox.AppendText("송신 : " + GetTimer() + SendBox + "\n");
+                            this.ReceiveWindowBox.SelectionStart = ReceiveWindowBox.Text.Length;
+                            this.ReceiveWindowBox.ScrollToCaret();
+                        }));
+                    }));
+                    SendThread.Start();
+                }
+            }
+        }
+
 
         #endregion
 
@@ -607,10 +735,7 @@ namespace MultiTerminal
 
         #endregion
 
-        private void button3_Click(object sender, EventArgs e)
-        {
 
-        }
         #region TCP서버여부
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
@@ -706,6 +831,7 @@ namespace MultiTerminal
         }
         #endregion
         #region 보내기 버튼 묶음
+        
         private void RainBowSixSiege(string SendBox)
         {
             int gridcount = PortListGrid.Rows.Count;    // 현재 그리드뷰 리스트의 갯수 가져옴
@@ -816,113 +942,6 @@ namespace MultiTerminal
 
         #endregion
 
-        #region 시리얼 송수신 옵션
-
-        // 시리얼 옵션 체크박스 
-        private void Serial_select_CHK1_CheckedChanged(object sender, EventArgs e)
-        {
-            Update_Serial_Opt();
-        }
-
-        private void Serial_select_CHK2_CheckedChanged(object sender, EventArgs e)
-        {
-            Update_Serial_Opt();
-        }
-        private void Serial_select_CHK3_CheckedChanged(object sender, EventArgs e)
-        {
-            Update_Serial_Opt();
-        }
-        private void Serial_select_CHK4_CheckedChanged(object sender, EventArgs e)
-        {
-            Update_Serial_Opt();
-        }
-        private void Serial_select_CHK11_CheckedChanged(object sender, EventArgs e)
-        {
-            Update_Serial_Opt();
-        }
-        private void Serial_select_CHK22_CheckedChanged(object sender, EventArgs e)
-        {
-            Update_Serial_Opt();
-        }
-        private void Serial_select_CHK33_CheckedChanged(object sender, EventArgs e)
-        {
-            Update_Serial_Opt();
-        }
-        private void Serial_select_CHK44_CheckedChanged(object sender, EventArgs e)
-        {
-            Update_Serial_Opt();
-        }
-        private void Serial_select_CHK5_CheckedChanged(object sender, EventArgs e)
-        {
-            Update_Serial_Opt();
-        }
-        private void Serial_select_CHK55_CheckedChanged(object sender, EventArgs e)
-        {
-            Update_Serial_Opt();
-        }
-        private void Serial_select_CHK6_CheckedChanged(object sender, EventArgs e)
-        {
-            Update_Serial_Opt();
-        }
-        private void Serial_select_CHK7_CheckedChanged(object sender, EventArgs e)
-        {
-            Update_Serial_Opt();
-        }
-        private void Serial_select_CHK8_CheckedChanged(object sender, EventArgs e)
-        {
-            Update_Serial_Opt();
-        }
-        private void Serial_select_CHK66_CheckedChanged(object sender, EventArgs e)
-        {
-            Update_Serial_Opt();
-        }
-        private void Serial_select_CHK77_CheckedChanged(object sender, EventArgs e)
-        {
-            Update_Serial_Opt();
-        }
-        private void Serial_select_CHK88_CheckedChanged(object sender, EventArgs e)
-        {
-            Update_Serial_Opt();
-        }
-        // 체크박스 체크했을 시 변수값 변경...
-        void Update_Serial_Opt()
-        {
-            if (Serial_select_CHK1.Checked) { Serial_Send_Arr[0] = 1; }
-            else { Serial_Send_Arr[0] = 0; }
-            if (Serial_select_CHK2.Checked) { Serial_Send_Arr[1] = 1; }
-            else { Serial_Send_Arr[1] = 0; }
-            if (Serial_select_CHK3.Checked) { Serial_Send_Arr[2] = 1; }
-            else { Serial_Send_Arr[2] = 0; }
-            if (Serial_select_CHK4.Checked) { Serial_Send_Arr[3] = 1; }
-            else { Serial_Send_Arr[3] = 0; }
-            if (Serial_select_CHK4.Checked) { Serial_Send_Arr[4] = 1; }
-            else { Serial_Send_Arr[4] = 0; }
-            if (Serial_select_CHK4.Checked) { Serial_Send_Arr[5] = 1; }
-            else { Serial_Send_Arr[5] = 0; }
-            if (Serial_select_CHK4.Checked) { Serial_Send_Arr[6] = 1; }
-            else { Serial_Send_Arr[6] = 0; }
-            if (Serial_select_CHK4.Checked) { Serial_Send_Arr[7] = 1; }
-            else { Serial_Send_Arr[7] = 0; }
-
-            if (Serial_select_CHK11.Checked) { Serial_Receive_Arr[0] = 1; }
-            else { Serial_Receive_Arr[0] = 0; }
-            if (Serial_select_CHK22.Checked) { Serial_Receive_Arr[1] = 1; }
-            else { Serial_Receive_Arr[1] = 0; }
-            if (Serial_select_CHK33.Checked) { Serial_Receive_Arr[2] = 1; }
-            else { Serial_Receive_Arr[2] = 0; }
-            if (Serial_select_CHK44.Checked) { Serial_Receive_Arr[3] = 1; }
-            else { Serial_Receive_Arr[3] = 0; }
-            if (Serial_select_CHK55.Checked) { Serial_Receive_Arr[4] = 1; }
-            else { Serial_Receive_Arr[4] = 0; }
-            if (Serial_select_CHK66.Checked) { Serial_Receive_Arr[5] = 1; }
-            else { Serial_Receive_Arr[5] = 0; }
-            if (Serial_select_CHK77.Checked) { Serial_Receive_Arr[6] = 1; }
-            else { Serial_Receive_Arr[6] = 0; }
-            if (Serial_select_CHK88.Checked) { Serial_Receive_Arr[7] = 1; }
-            else { Serial_Receive_Arr[7] = 0; }
-        }
-
-        #endregion
 
         #region 수신 옵션들 묶음
         private void Btn_Clear_Click(object sender, EventArgs e)
@@ -1069,7 +1088,7 @@ namespace MultiTerminal
 
 
         // gridview 체크박스 관련 ^-^
-        #region
+        #region 그리드뷰 체크박스
         private void PortListGrid_CellValueChanged(object sender, DataGridViewCellEventArgs e) // 그리드뷰 체크박스 클릭 이벤트
         {
             if (e.ColumnIndex == 4 && e.RowIndex != -1) // Tx부분 체크박스 속성,  열이 3번째이고, 행이 1개 이상 있을때 조건 발생!
@@ -1256,5 +1275,7 @@ namespace MultiTerminal
             analysisForm aF = new analysisForm(ReceiveWindowBox);
             aF.Show();
         }
+
+
     }
 }
