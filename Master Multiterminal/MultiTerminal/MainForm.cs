@@ -87,8 +87,8 @@ namespace MultiTerminal
             {
                 if (userv != null)
                 {
-                        if (userv.m_isConnected == true)
-                            userv.RecvMessage();
+                    if (userv.m_isConnected == true)
+                        userv.RecvMessage();
 
                 }
                 if (ucla != null)
@@ -1248,6 +1248,7 @@ namespace MultiTerminal
         #region
         private void PortListGrid_CellValueChanged(object sender, DataGridViewCellEventArgs e) // 그리드뷰 체크박스 클릭 이벤트
         {
+
             if (connectType == TYPE.SERIAL)
             {
                 if (e.ColumnIndex == 4 && e.RowIndex != -1) // Tx부분 체크박스 속성,  열이 3번째이고, 행이 1개 이상 있을때 조건 발생!
@@ -1276,13 +1277,14 @@ namespace MultiTerminal
             {
                 if(isServ == false && ucla !=null)
                 {
+                  
+
                     if (e.ColumnIndex == 4 && e.RowIndex != -1) // Tx부분 체크박스 속성,  열이 3번째이고, 행이 1개 이상 있을때 조건 발생!
                     {
                         if (gridview[e.RowIndex].TxCheckedState == false)  // 그리드뷰의 현재 클릭 행, 번째의 그리드뷰 클래스안에 체크박스 속성 건드려버리기~
                         {
                             gridview[e.RowIndex].TxCheckedState = true;
                             ucla.bSend = true;
-
                         }
                         else
                         {
@@ -1296,12 +1298,15 @@ namespace MultiTerminal
                         if (gridview[e.RowIndex].RxCheckedState == false)
                         {
                             gridview[e.RowIndex].RxCheckedState = true;
-                            ucla.bRecv = true;
+                            PortListGrid.Rows[e.RowIndex].Cells[5].Value = true;
+                            
+
                         }
                         else
                         {
                             gridview[e.RowIndex].RxCheckedState = false;
-                            ucla.bRecv = false;
+                            PortListGrid.Rows[e.RowIndex].Cells[5].Value = false;
+
                         }
                     }
                 }

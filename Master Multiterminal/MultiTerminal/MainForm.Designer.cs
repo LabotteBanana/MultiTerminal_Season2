@@ -261,6 +261,7 @@
             this.Rx.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             this.Rx.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
             this.Rx.Width = 50;
+            this.Rx.ReadOnly = false;
             // 
             // DisCon
             // 
@@ -1511,7 +1512,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Port;
         private System.Windows.Forms.DataGridViewTextBoxColumn Time;
         private System.Windows.Forms.DataGridViewCheckBoxColumn Tx;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn Rx;
+        public System.Windows.Forms.DataGridViewCheckBoxColumn Rx;
         private System.Windows.Forms.DataGridViewButtonColumn DisCon;
     }
 }

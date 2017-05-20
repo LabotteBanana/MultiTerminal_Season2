@@ -18,7 +18,7 @@ namespace MultiTerminal
         private IPEndPoint Sender;
         private EndPoint remoteEP;
         public bool m_isConnected = false;
-        private static Thread Recvth = null;
+        //private static Thread Recvth = null;
         public bool bSend = false;
         public bool bRecv = false;
         public void Connect(MainForm form, string IP, int port)
@@ -41,9 +41,9 @@ namespace MultiTerminal
                 m_isConnected = true;
 
                 bSend = false;
-                Recvth = new Thread(new ThreadStart(RecvMessage)); //상대 문자열 수신 쓰레드 가동
+                //Recvth = new Thread(new ThreadStart(RecvMessage)); //상대 문자열 수신 쓰레드 가동
                 m_isConnected = true;
-                Recvth.Start();
+                //Recvth.Start();
                 if (main.InvokeRequired)
                 {
                     // 그리드뷰 객체에 적용,   타입형태(시리얼,UDP..), 타입의 순번도 그리드 객체로 슝들어감.    
@@ -77,29 +77,25 @@ namespace MultiTerminal
         {
             try
             {
-                while (m_isConnected)
-                {
-                        byte[] data = new byte[1024];
-                        if (client != null)
+                    byte[] data = new byte[1024];
+                    if (client != null)
+                    {
+                        if (main.RowIndex >= 0)
                         {
-                        if (bRecv == true)
-                        {
-                            if (main.RowIndex >= 0)
+                            string result = main.PortListGrid.Rows[main.RowIndex].Cells[5].Value.ToString();
+                            if (result == "True")
                             {
-                                    int recvi = client.ReceiveFrom(data, data.Length, SocketFlags.None, ref remoteEP);
-                                    string recvMsg = Encoding.Default.GetString(data);
-                                    if (recvi > 0)
-                                    {
-                                        m_isConnected = true;
-                                    }
+                                int recvi = client.ReceiveFrom(data, data.Length, SocketFlags.None, ref remoteEP);
+                                string recvMsg = Encoding.Default.GetString(data);
+                                if (recvi > 0) 
+                                {
+                                    m_isConnected = true;
                                     if (main.InvokeRequired)
                                     {
                                         main.Invoke(new Action(() => main.ReceiveWindowBox.Text += "수신 :" + main.GetTimer() + recvMsg + "\n"));
                                         main.Invoke(new Action(() => main.ReceiveWindowBox.Text += "" + Environment.NewLine));
                                         main.Invoke(new Action(() => main.ReceiveWindowBox.SelectionStart = main.ReceiveWindowBox.Text.Length));
                                         main.Invoke(new Action(() => main.ReceiveWindowBox.ScrollToCaret()));
-
-
                                     }
                                     else
                                     {
@@ -107,17 +103,20 @@ namespace MultiTerminal
                                         main.ReceiveWindowBox.Text += "" + Environment.NewLine;
                                         main.ReceiveWindowBox.SelectionStart = main.ReceiveWindowBox.Text.Length;
                                         main.ReceiveWindowBox.ScrollToCaret();
-
                                     }
+                                    return;
                                 }
+                                else
+                                {
+                                    return;
+                                }
+                            }
+                            else if(result == "False")
+                            {
+                                return;
+                            }
                         }
-                        else
-                        {
-                            return;
-                        }
-
                     }
-                }
             }
             catch (SocketException ex)
             {

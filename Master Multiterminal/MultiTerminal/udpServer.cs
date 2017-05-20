@@ -43,6 +43,7 @@ namespace MultiTerminal
 
                 th = new Thread(new ThreadStart(RecvMessage)); //상대 문자열 수신 쓰레드 가동
                 th.Start();
+
             }
             catch (SocketException ex)
             {
@@ -117,21 +118,22 @@ namespace MultiTerminal
 
                             if (aaaa == true && recvi == 11)
                             {
+                                System.Windows.Forms.DataGridViewCheckBoxColumn udpRx = main.Rx;
                                 m_ClientEP.Add(m_ClientCount++, remoteEP);
                                 if (main.InvokeRequired)
                                 {
-                                    // 그리드뷰 객체에 적용,   타입형태(시리얼,UDP..), 타입의 순번도 그리드 객체로 슝들어감.    
-
+                                    // 그리드뷰 객체에 적용,   타입형태(시리얼,UDP..), 타입의 순번도 그리드 객체로 슝들어감.
                                     main.Invoke(new Action(() => main.gridview[main.GridList.Count] = new GridView(main.GridList.Count, PortStr.ToString(), "UDPClient", m_ClientCount)));
                                     main.Invoke(new Action(() => main.DrawGrid(main.gridview[main.GridList.Count].MyNum, main.gridview[main.GridList.Count].Type, main.gridview[main.GridList.Count].Portname, main.gridview[main.GridList.Count].Time)));
                                     main.Invoke(new Action(() => main.GridList.Add(main.gridview[main.GridList.Count])));
-                    
+                                    main.Invoke(new Action(() => udpRx.ReadOnly = true));
                                 }
                                 else
                                 {
                                     main.gridview[main.GridList.Count] = new GridView(main.GridList.Count, PortStr.ToString(), "UDPClient", m_ClientCount);
                                     main.DrawGrid(main.gridview[main.GridList.Count].MyNum, main.gridview[main.GridList.Count].Type, main.gridview[main.GridList.Count].Portname, main.gridview[main.GridList.Count].Time);
                                     main.GridList.Add(main.gridview[main.GridList.Count]);
+                                    udpRx.ReadOnly = true;
                                 }
                             }
                             if (main.RowIndex >= 0 && main.GridList[main.RowIndex].RxCheckedState == true)
