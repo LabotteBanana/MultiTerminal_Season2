@@ -230,30 +230,30 @@ namespace MultiTerminal
                 {
                     if (gridlist[i].Type == "TCP Client")
                     {
-                        if (m_ClientList[i].Connected == true)
+                        if (m_ClientList[0].Connected == true)
                         {
-                            if (m_ns[i] != null)
+                            if (m_ns[0] != null)
                             {
-                                m_ns[i].Close();
-                                m_ns.RemoveAt(i);
+                                m_ns[0].Close();
+                                m_ns.RemoveAt(0);
                             }
-                            if (m_sr[i] != null)
+                            if (m_sr[0] != null)
                             {
-                                m_sr[i].Close();
-                                m_sr.RemoveAt(i);
+                                m_sr[0].Close();
+                                m_sr.RemoveAt(0);
                             }
-                            if (m_sw[i] != null)
+                            if (m_sw[0] != null)
                             {
-                                m_sw[i].Close();
-                                m_sw.RemoveAt(i);
+                                m_sw[0].Close();
+                                m_sw.RemoveAt(0);
                             }
-                            if (m_ClientList[i] != null)
+                            if (m_ClientList[0] != null)
                             {
-                                decreaseTypeNum(i);
-                                m_ClientList[i].Shutdown(SocketShutdown.Both);
-                                m_ClientList[i].Disconnect(true);
-                                m_ClientList[i].Close();
-                                m_ClientList.RemoveAt(i);
+                                decreaseTypeNum(0);
+                                m_ClientList[0].Shutdown(SocketShutdown.Both);
+                                m_ClientList[0].Disconnect(true);
+                                m_ClientList[0].Close();
+                                m_ClientList.RemoveAt(0);
                             }
                         }
                     }
