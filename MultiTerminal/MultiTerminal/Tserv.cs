@@ -17,23 +17,23 @@ namespace MultiTerminal
         MainForm main = null;
         public Socket server =null; //listening socket
         public Socket client = null;
-        public GridView[] gridview = null;
+        public GridView gridview = null;
         public List<GridView> gridlist = null;
         private string ip;
         private bool m_isConncted = false;
         private IPEndPoint ipep;
-        private Dictionary<int, string> m_ipList = new Dictionary<int, string>();
+        private List< string> m_ipList = new List< string>();
         private int port;
         private Thread th;
         public NetworkInterface[] adapters = NetworkInterface.GetAllNetworkInterfaces();
-        private Dictionary<int,NetworkStream> m_ns = new Dictionary<int, NetworkStream>();
-        private Dictionary<int, StreamReader> m_sr = new Dictionary<int, StreamReader>();
-        private Dictionary<int, StreamWriter> m_sw = new Dictionary<int, StreamWriter>();
-        public Dictionary<int, string> m_NetInfo = new Dictionary<int, string>();
-        public Dictionary<int, Socket> m_ClientList = new Dictionary<int, Socket>();
-        public int m_clientCount = 0;
+        private List<NetworkStream> m_ns = new List< NetworkStream>();
+        private List< StreamReader> m_sr = new List< StreamReader>();
+        private List< StreamWriter> m_sw = new List< StreamWriter>();
+        public List< string> m_NetInfo = new List<string>();
+        public List< Socket> m_ClientList = new List< Socket>();
+        public bool exitClickedState = false;
 
-        public Tserv(MainForm Main,int Port, GridView[] GridView, List<GridView> GridList) //서버로 만들때
+        public Tserv(MainForm Main,int Port, GridView GridView, List<GridView> GridList) //서버로 만들때
         {
             main = Main;
             port = Port;
@@ -41,7 +41,7 @@ namespace MultiTerminal
             gridlist = GridList;
         }
 
-        public Tserv(MainForm Main, string IP, int Port, GridView[] GridView, List<GridView> GridList) //클라로 만들때
+        public Tserv(MainForm Main, string IP, int Port, GridView GridView, List<GridView> GridList) //클라로 만들때
         {
             main = Main;
             port = Port;
@@ -73,25 +73,25 @@ namespace MultiTerminal
                             string client_ip = claIP.Address.ToString();
                             if (newclient.Connected == true)
                             {
-                                ++m_clientCount;
-                                m_ClientList.Add(m_clientCount - 1, newclient);
-                                m_ipList.Add(m_clientCount - 1, client_ip);
+                                m_ClientList.Add(newclient);
+                                m_ipList.Add(client_ip);
                                 NetworkStream ns = new NetworkStream(newclient);
                                 StreamReader sr = new StreamReader(ns);
                                 StreamWriter sw = new StreamWriter(ns);
-                                m_ns.Add(m_clientCount - 1, ns);
-                                m_sr.Add(m_clientCount - 1, sr);
-                                m_sw.Add(m_clientCount - 1, sw);
+                                m_ns.Add( ns);
+                                m_sr.Add( sr);
+                                m_sw.Add( sw);
                                 Thread th = new Thread(new ThreadStart(RecvMsg)); //상대 문자열 수신 쓰레드 가동
                                 th.Start();
                                 //그리드뷰에 등록
-                                int size = gridlist.Count;
                                 string client_IP = client_ip;  // client ip 가져오기
-
-                                gridview[gridlist.Count] = new GridView(gridlist.Count, client_IP, "TCP Client", m_clientCount - 1);  // 그리드뷰 객체에 적용,   타입형태(시리얼,UDP..), 타입의 순번도 그리드 객체로 슝들어감.    
-                                main.DrawGrid(gridview[gridlist.Count].MyNum, gridview[gridlist.Count].Type, gridview[gridlist.Count].Portname, gridview[gridlist.Count].Time);
-
-                                gridlist.Add(gridview[gridlist.Count]);
+                                
+                                main.Invoke(new Action(() =>
+                                {
+                                    gridview = new GridView(gridlist.Count, client_IP, "TCP Client", m_ClientList.Count-1);  // 그리드뷰 객체에 적용,   타입형태(시리얼,UDP..), 타입의 순번도 그리드 객체로 슝들어감.    
+                                    main.DrawGrid(gridview.MyNum, gridview.Type, gridview.Portname, gridview.Time);
+                                    gridlist.Add(gridview);
+                                }));
                             }
                         }
                     }
@@ -166,27 +166,27 @@ namespace MultiTerminal
             {
                 if (m_ClientList[selectClient].Connected == true)
                 {
-                    if (m_ns[selectClient] != null)
+                     if (m_ns[selectClient] != null)
                     {
                         m_ns[selectClient].Close();
-                        m_ns.Remove(selectClient);
+                        m_ns.RemoveAt(selectClient);
                     }
                     if (m_sr[selectClient] != null)
                     {
                         m_sr[selectClient].Close();
-                        m_sr.Remove(selectClient);
+                        m_sr.RemoveAt(selectClient);
                     }
                     if (m_sw[selectClient] != null)
                     {
                         m_sw[selectClient].Close();
-                        m_sw.Remove(selectClient);
+                        m_sw.RemoveAt(selectClient);
                     }
                     if (m_ClientList[selectClient] != null)
                     {
                         m_ClientList[selectClient].Shutdown(SocketShutdown.Both);
                         m_ClientList[selectClient].Disconnect(true);
                         m_ClientList[selectClient].Close();
-                        m_ClientList.Remove(selectClient);
+                        m_ClientList.RemoveAt(selectClient);
                     }
                 }
                 m_isConncted = false;
@@ -225,46 +225,40 @@ namespace MultiTerminal
             try
             {
                 //수정 필요(for문에서 사용하는 m_clientCount. 0부터 순차적으로 사용되지 않는 경우가 있을 수 있음.
-                for (int i = 0; i < m_clientCount; i++)
+                for (int i = 0; i < gridlist.Count; i++)
                 {
-                    if (m_ClientList[i].Connected == true)
+                    if (gridlist[i].Portname == "TCP Client")
                     {
-                        if (m_ns[i] != null)
+                        if (m_ClientList[i].Connected == true)
                         {
-                            m_ns[i].Close();
-                            m_ns.Remove(i);
-                        }
-                        if (m_sr[i] != null)
-                        {
-                            m_sr[i].Close();
-                            m_sr.Remove(i);
-                        }
-                        if (m_sw[i] != null)
-                        {
-                            m_sw[i].Close();
-                            m_sw.Remove(i);
-                        }
-                        if (m_ClientList[i] != null)
-                        {
-                            m_ClientList[i].Disconnect(true);
-                            m_ClientList[i].Close();
-                            m_ClientList.Remove(i);
+                            if (m_ns[i] != null)
+                            {
+                                m_ns[i].Close();
+                                m_ns.RemoveAt(i);
+                            }
+                            if (m_sr[i] != null)
+                            {
+                                m_sr[i].Close();
+                                m_sr.RemoveAt(i);
+                            }
+                            if (m_sw[i] != null)
+                            {
+                                m_sw[i].Close();
+                                m_sw.RemoveAt(i);
+                            }
+                            if (m_ClientList[i] != null)
+                            {
+                                m_ClientList[i].Disconnect(true);
+                                m_ClientList[i].Close();
+                                m_ClientList.RemoveAt(i);
+                            }
                         }
                     }
                 }
                 m_isConncted = false;
-                if (server.IsBound == true)
-                {
-                    server.Shutdown(SocketShutdown.Both);
-                    server.Disconnect(true);
-                    server.Close();
-                }
-                else
-                {
-                    server.Shutdown(SocketShutdown.Both);
-                    server.Disconnect(true);
-                    server.Close();
-                }
+                server.Shutdown(SocketShutdown.Both);
+                server.Disconnect(true);
+                server.Close();
             }
             catch (SocketException ex)
             {
@@ -316,11 +310,13 @@ namespace MultiTerminal
                 //그리드뷰에 등록
                 int size = gridlist.Count;
                 string server_IP = ip;  // client ip 가져오기
-                ++m_clientCount;
-                gridview[gridlist.Count] = new GridView(gridlist.Count, server_IP, "TCP Server", m_clientCount - 1);  // 그리드뷰 객체에 적용,   타입형태(시리얼,UDP..), 타입의 순번도 그리드 객체로 슝들어감.    
-                main.DrawGrid(gridview[gridlist.Count].MyNum, gridview[gridlist.Count].Type, gridview[gridlist.Count].Portname, gridview[gridlist.Count].Time);
 
-                gridlist.Add(gridview[gridlist.Count]);
+                main.Invoke(new Action(() =>
+                {
+                    gridview = new GridView(gridlist.Count, server_IP, "TCP Server", m_ClientList.Count);  // 그리드뷰 객체에 적용,   타입형태(시리얼,UDP..), 타입의 순번도 그리드 객체로 슝들어감.    
+                    main.DrawGrid(gridview.MyNum, gridview.Type, gridview.Portname, gridview.Time);
+                    gridlist.Add(gridview);
+                }));
                 return true;
             }
             catch (SocketException ex)
@@ -395,7 +391,7 @@ namespace MultiTerminal
                 }
                 else if (server!=null)
                 {
-                    for (int i = 0; i < m_clientCount; i++)
+                    for (int i = 0; i < m_ClientList.Count; i++)
                     {
                         m_sw[i].WriteLine(msg);
                         m_sw[i].Flush();
@@ -415,11 +411,13 @@ namespace MultiTerminal
                 System.Windows.Forms.MessageBox.Show("기타에러 " + lineNum + "에서 발생" + ex.Message);
             }
         }
+        public void setExitClickedState(bool exitClickedState) {
+            this.exitClickedState = exitClickedState;
+        }
         public void RecvMsg()
         {
             try
             {
-                int uniqueClientNum = m_clientCount-1;
                 m_isConncted = true;
                 ///Client의 Recv
                 if (client != null)
@@ -436,6 +434,17 @@ namespace MultiTerminal
                         StreamReader sr = new StreamReader(ns);
                         StreamWriter sw = new StreamWriter(ns);
                         string msg = sr.ReadLine();
+                        //임시조치.. 서버에서 disconnect하면 client로 null값이 계속 도는데 그거 처리하는 부분
+                        if (msg == null)
+                        {
+                            if (exitClickedState)
+                            {
+                                exitClickedState = false;
+                                break;
+                            }
+                            main.RemoveGridforIP(ip);
+                            break;
+                        }
                         if (main.InvokeRequired)
                         {
                             main.Invoke(new Action(() =>
@@ -456,11 +465,24 @@ namespace MultiTerminal
                 //Server의 receive
                 else if(server!=null)
                 {
+                    int uniqueClientNum = m_ClientList.Count - 1;
+
                     m_isConncted = true;
                     while (m_ClientList[uniqueClientNum].Connected)
                     {
                         string msg = m_sr[uniqueClientNum].ReadLine();
 
+                        //임시조치..
+                        if (msg == null)
+                        {
+                            if (exitClickedState)
+                            {
+                                exitClickedState = false;
+                                break;
+                            }
+                            main.RemoveGridforIP(m_ipList[uniqueClientNum]);
+                            break;
+                        }
                         if (main.InvokeRequired)
                         {
                             ///비정상 종료시 계속 되는이유
@@ -477,7 +499,7 @@ namespace MultiTerminal
                             main.ReceiveWindowBox.SelectionStart = main.ReceiveWindowBox.Text.Length;
                             main.ReceiveWindowBox.ScrollToCaret();
                         }
-                    }
+                    }/*
                     //클라이언트 종료감지
                     if (m_ClientList[uniqueClientNum].Connected == false)
                     {
@@ -488,7 +510,7 @@ namespace MultiTerminal
                         m_ClientList[uniqueClientNum].Shutdown(SocketShutdown.Both);
                         m_ClientList[uniqueClientNum].Disconnect(true);
                         m_ClientList.Remove(uniqueClientNum);
-                    }
+                    }*/
                 }
             }
             catch (SocketException ex)
@@ -499,24 +521,24 @@ namespace MultiTerminal
 
             catch (Exception ex)
             {
+                System.Windows.Forms.MessageBox.Show(ex.ToString());
                 if(server !=null)
                 {
                     //클라이언트 종료감지
                     if (ex.TargetSite.DeclaringType.Name == "NetworkStream")
                     {
-                        for (int i = 0; i < m_clientCount; i++)
+                        for (int i = 0; i < m_ClientList.Count; i++)
                         {
 
                             if (m_ClientList[i].Connected == false)
                             {
-                                m_ns.Remove(i);
-                                m_sr.Remove(i);
-                                m_sw.Remove(i);
-                                m_ipList.Remove(i);
+                                m_ns.RemoveAt(i);
+                                m_sr.RemoveAt(i);
+                                m_sw.RemoveAt(i);
+                                m_ipList.RemoveAt(i);
                                 m_ClientList[i].Shutdown(SocketShutdown.Both);
                                 m_ClientList[i].Disconnect(true);
-                                m_ClientList.Remove(i);
-                                m_clientCount--;
+                                m_ClientList.RemoveAt(i);
                             }
                         }
                     }
@@ -588,7 +610,7 @@ namespace MultiTerminal
                         netInfo += "DNS Servers : " + dns.ToString() + "\n"; //DNS 주소
                     }
                 }
-                m_NetInfo.Add(i, netInfo);
+                m_NetInfo.Add(netInfo);
                 netInfo = "";
                 System.Windows.Forms.MessageBox.Show(m_NetInfo[i]);
                 i++;

@@ -98,9 +98,5 @@ namespace MultiTerminal
         {
 
         }
-
-        
     }
-
-
 }
