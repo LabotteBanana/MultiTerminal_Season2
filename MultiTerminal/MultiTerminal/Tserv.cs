@@ -78,9 +78,9 @@ namespace MultiTerminal
                                 NetworkStream ns = new NetworkStream(newclient);
                                 StreamReader sr = new StreamReader(ns);
                                 StreamWriter sw = new StreamWriter(ns);
-                                m_ns.Add( ns);
-                                m_sr.Add( sr);
-                                m_sw.Add( sw);
+                                m_ns.Add(ns);
+                                m_sr.Add(sr);
+                                m_sw.Add(sw);
                                 Thread th = new Thread(new ThreadStart(RecvMsg)); //상대 문자열 수신 쓰레드 가동
                                 th.Start();
                                 //그리드뷰에 등록
@@ -183,6 +183,7 @@ namespace MultiTerminal
                     }
                     if (m_ClientList[selectClient] != null)
                     {
+                        decreaseTypeNum(selectClient);
                         m_ClientList[selectClient].Shutdown(SocketShutdown.Both);
                         m_ClientList[selectClient].Disconnect(true);
                         m_ClientList[selectClient].Close();
@@ -227,30 +228,32 @@ namespace MultiTerminal
                 //수정 필요(for문에서 사용하는 m_clientCount. 0부터 순차적으로 사용되지 않는 경우가 있을 수 있음.
                 for (int i = 0; i < gridlist.Count; i++)
                 {
-                    if (gridlist[i].Portname == "TCP Client")
+                    if (gridlist[i].Type == "TCP Client")
                     {
-                        if (m_ClientList[i].Connected == true)
+                        if (m_ClientList[0].Connected == true)
                         {
-                            if (m_ns[i] != null)
+                            if (m_ns[0] != null)
                             {
-                                m_ns[i].Close();
-                                m_ns.RemoveAt(i);
+                                m_ns[0].Close();
+                                m_ns.RemoveAt(0);
                             }
-                            if (m_sr[i] != null)
+                            if (m_sr[0] != null)
                             {
-                                m_sr[i].Close();
-                                m_sr.RemoveAt(i);
+                                m_sr[0].Close();
+                                m_sr.RemoveAt(0);
                             }
-                            if (m_sw[i] != null)
+                            if (m_sw[0] != null)
                             {
-                                m_sw[i].Close();
-                                m_sw.RemoveAt(i);
+                                m_sw[0].Close();
+                                m_sw.RemoveAt(0);
                             }
-                            if (m_ClientList[i] != null)
+                            if (m_ClientList[0] != null)
                             {
-                                m_ClientList[i].Disconnect(true);
-                                m_ClientList[i].Close();
-                                m_ClientList.RemoveAt(i);
+                                decreaseTypeNum(0);
+                                m_ClientList[0].Shutdown(SocketShutdown.Both);
+                                m_ClientList[0].Disconnect(true);
+                                m_ClientList[0].Close();
+                                m_ClientList.RemoveAt(0);
                             }
                         }
                     }
@@ -288,7 +291,15 @@ namespace MultiTerminal
                 System.Windows.Forms.MessageBox.Show("기타에러 " + lineNum + "에서 발생" + ex.Message);
             }
         }
-        #endregion 
+        #endregion
+        private void decreaseTypeNum(int selectedNum)
+        {
+            for (int i = selectedNum+1; i < gridlist.Count; i++)
+            {
+                if(gridlist[i].Type == "TCP Server" || gridlist[i].Type == "TCP Client")
+                    gridlist[i].Typenum--;
+            }
+        }
 
         #region Client
         //채팅 서버와 연결 시도
@@ -341,18 +352,24 @@ namespace MultiTerminal
                 if (client != null)
                 {
                     m_isConncted = false;
-                    if (client.Connected)
+                    for (int i = 0; i < gridlist.Count; i++)
                     {
-                        NetworkStream ns = new NetworkStream(client);
-                        StreamReader sr = new StreamReader(ns);
-                        StreamWriter sw = new StreamWriter(ns);
+                        if (gridlist[i].Type == "TCP Server")
+                        {
+                            if (client.Connected)
+                            {
+                                NetworkStream ns = new NetworkStream(client);
+                                StreamReader sr = new StreamReader(ns);
+                                StreamWriter sw = new StreamWriter(ns);
 
-                        if (ns != null) ns.Close();
-                        if (sw != null) sw.Close();
-                        if (sr != null) sr.Close();
-                        client.Shutdown(SocketShutdown.Both);
-                        client.Disconnect(true);
-                        client.Close();
+                                if (ns != null) ns.Close();
+                                if (sw != null) sw.Close();
+                                if (sr != null) sr.Close();
+                                client.Shutdown(SocketShutdown.Both);
+                                client.Disconnect(true);
+                                client.Close();
+                            }
+                        }
                     }
                 }
             }

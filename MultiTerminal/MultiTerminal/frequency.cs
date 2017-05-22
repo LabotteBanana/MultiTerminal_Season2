@@ -100,8 +100,8 @@ namespace MultiTerminal
                 {
                     if (frewow[ii].Contains("수신")) //수신 문장에 한해서
                     {
-                        int end = frewow[ii].IndexOf(')');
-                        string buf = frewow[ii].Substring(3, end - 2);
+                        int end = frewow[ii].IndexOf('}');
+                        string buf = frewow[ii].Substring(3, end - 3);
                         int row = connectedName.IndexOf(buf);
                         allTime += getAllTime(frewow[ii]);
                         //사용자가 선택한 인덱스가 아니라면 continue를 통해 문장 스킵
