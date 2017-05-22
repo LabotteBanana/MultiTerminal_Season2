@@ -123,16 +123,16 @@ namespace MultiTerminal
                                 if (main.InvokeRequired)
                                 {
                                     // 그리드뷰 객체에 적용,   타입형태(시리얼,UDP..), 타입의 순번도 그리드 객체로 슝들어감.
-                                    main.Invoke(new Action(() => main.gridview[main.GridList.Count] = new GridView(main.GridList.Count, PortStr.ToString(), "UDPClient", m_ClientCount)));
-                                    main.Invoke(new Action(() => main.DrawGrid(main.gridview[main.GridList.Count].MyNum, main.gridview[main.GridList.Count].Type, main.gridview[main.GridList.Count].Portname, main.gridview[main.GridList.Count].Time)));
-                                    main.Invoke(new Action(() => main.GridList.Add(main.gridview[main.GridList.Count])));
+                                    main.Invoke(new Action(() => main.gridview= new GridView(main.GridList.Count, PortStr.ToString(), "UDPClient", m_ClientCount)));
+                                    main.Invoke(new Action(() => main.DrawGrid(main.GridList[main.GridList.Count].MyNum, main.GridList[main.GridList.Count].Type, main.GridList[main.GridList.Count].Portname, main.GridList[main.GridList.Count].Time)));
+                                    main.Invoke(new Action(() => main.GridList.Add(main.GridList[main.GridList.Count])));
                                     main.Invoke(new Action(() => udpRx.ReadOnly = true));
                                 }
                                 else
                                 {
-                                    main.gridview[main.GridList.Count] = new GridView(main.GridList.Count, PortStr.ToString(), "UDPClient", m_ClientCount);
-                                    main.DrawGrid(main.gridview[main.GridList.Count].MyNum, main.gridview[main.GridList.Count].Type, main.gridview[main.GridList.Count].Portname, main.gridview[main.GridList.Count].Time);
-                                    main.GridList.Add(main.gridview[main.GridList.Count]);
+                                    main.GridList[main.GridList.Count] = new GridView(main.GridList.Count, PortStr.ToString(), "UDPClient", m_ClientCount);
+                                    main.DrawGrid(main.GridList[main.GridList.Count].MyNum, main.GridList[main.GridList.Count].Type, main.GridList[main.GridList.Count].Portname, main.GridList[main.GridList.Count].Time);
+                                    main.GridList.Add(main.GridList[main.GridList.Count]);
                                     udpRx.ReadOnly = true;
                                 }
                             }

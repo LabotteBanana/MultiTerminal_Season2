@@ -567,11 +567,11 @@ namespace MultiTerminal
                 string portname = Serial_Combo_Port.Items[Serial_Combo_Port.SelectedIndex].ToString();  // 연결에 성공한 시리얼 객체의 포트네임 가져옴
 
 
-                gridview[GridList.Count] = new GridView(GridList.Count, portname, "SERIAL", Sport_Count);  // 그리드뷰 객체에 적용,   타입형태(시리얼,UDP..), 타입의 순번도 그리드 객체로 슝들어감.    
-                DrawGrid(gridview[GridList.Count].MyNum, gridview[GridList.Count].Type, gridview[GridList.Count].Portname, gridview[GridList.Count].Time);
+                gridview = new GridView(GridList.Count, portname, "SERIAL", Sport_Count);  // 그리드뷰 객체에 적용,   타입형태(시리얼,UDP..), 타입의 순번도 그리드 객체로 슝들어감.    
+                DrawGrid(gridview.MyNum, gridview.Type, gridview.Portname, gridview.Time);
 
                 Sport_Count++;
-                GridList.Add(gridview[GridList.Count]);
+                GridList.Add(gridview);
                 //DrawGrid(gridview[Grid_Count].MyNum, gridview[Grid_Count].Portname, gridview[Grid_Count].Time); // 그리드뷰 객체를 UI에 적용
 
                 //GridList.Add(gridview[Grid_Count]);                
@@ -923,12 +923,12 @@ namespace MultiTerminal
 
             for (int i = 0; i <= gridcount; i++) //그리드뷰 리스트 처음부터 순회
             {
-                if (gridview[i].Type == "SERIAL" && gridview[i].TxCheckedState == true)    // 그리드뷰리스트의 타입이 시리얼, 그리고 송신 체크박스 상태가 체크되어있다면
+                if (gridview.Type == "SERIAL" && gridview.TxCheckedState == true)    // 그리드뷰리스트의 타입이 시리얼, 그리고 송신 체크박스 상태가 체크되어있다면
                 {
                     ReceiveWindowBox.AppendText("송신 : " + GetTimer() + msg + "\n");
                     this.ReceiveWindowBox.SelectionStart = ReceiveWindowBox.Text.Length;
                     this.ReceiveWindowBox.ScrollToCaret();
-                    serial[gridview[i].Typenum].SerialSend(msg);    // serial [그리드뷰 객체에 저장된 시리얼 타입 객체의 순번]
+                    serial[gridview.Typenum].SerialSend(msg);    // serial [그리드뷰 객체에 저장된 시리얼 타입 객체의 순번]
                 }
             }
 
@@ -941,7 +941,7 @@ namespace MultiTerminal
 
             for (int i = 0; i <= gridcount; i++) //그리드뷰 리스트 처음부터 순회
             {
-                if (gridview[i].Type == "SERIAL" && gridview[i].TxCheckedState == true)    // 그리드뷰리스트의 타입이 시리얼, 그리고 송신 체크박스 상태가 체크되어있다면
+                if (gridview.Type == "SERIAL" && gridview.TxCheckedState == true)    // 그리드뷰리스트의 타입이 시리얼, 그리고 송신 체크박스 상태가 체크되어있다면
                 {
                     tserv.SendMsg(SendBox1.Text);
                 }
@@ -1253,23 +1253,23 @@ namespace MultiTerminal
             {
                 if (e.ColumnIndex == 4 && e.RowIndex != -1) // Tx부분 체크박스 속성,  열이 3번째이고, 행이 1개 이상 있을때 조건 발생!
                 {
-                    if (gridview[e.RowIndex].TxCheckedState == false)  // 그리드뷰의 현재 클릭 행, 번째의 그리드뷰 클래스안에 체크박스 속성 건드려버리기~
-                    { gridview[e.RowIndex].TxCheckedState = true; }
+                    if (GridList[e.RowIndex].TxCheckedState == false)  // 그리드뷰의 현재 클릭 행, 번째의 그리드뷰 클래스안에 체크박스 속성 건드려버리기~
+                    { GridList[e.RowIndex].TxCheckedState = true; }
                     else
-                    { gridview[e.RowIndex].TxCheckedState = false; }
+                    { GridList[e.RowIndex].TxCheckedState = false; }
                 }
 
                 if (e.ColumnIndex == 5 && e.RowIndex != -1) // Rx부분 체크박스 속성,   열이 4번째이고, 행이 1개 이상 있을때 조건 발생!
                 {
-                    if (gridview[e.RowIndex].RxCheckedState == false)
+                    if (GridList[e.RowIndex].RxCheckedState == false)
                     {
-                        gridview[e.RowIndex].RxCheckedState = true;
-                        serial[gridview[e.RowIndex].Typenum].RxState = true;
+                        GridList[e.RowIndex].RxCheckedState = true;
+                        serial[GridList[e.RowIndex].Typenum].RxState = true;
                     }
                     else
                     {
-                        gridview[e.RowIndex].RxCheckedState = false;
-                        serial[gridview[e.RowIndex].Typenum].RxState = false;
+                        GridList[e.RowIndex].RxCheckedState = false;
+                        serial[GridList[e.RowIndex].Typenum].RxState = false;
                     }
                 }
             }
@@ -1281,30 +1281,30 @@ namespace MultiTerminal
 
                     if (e.ColumnIndex == 4 && e.RowIndex != -1) // Tx부분 체크박스 속성,  열이 3번째이고, 행이 1개 이상 있을때 조건 발생!
                     {
-                        if (gridview[e.RowIndex].TxCheckedState == false)  // 그리드뷰의 현재 클릭 행, 번째의 그리드뷰 클래스안에 체크박스 속성 건드려버리기~
+                        if (GridList[e.RowIndex].TxCheckedState == false)  // 그리드뷰의 현재 클릭 행, 번째의 그리드뷰 클래스안에 체크박스 속성 건드려버리기~
                         {
-                            gridview[e.RowIndex].TxCheckedState = true;
+                            GridList[e.RowIndex].TxCheckedState = true;
                             ucla.bSend = true;
                         }
                         else
                         {
-                            gridview[e.RowIndex].TxCheckedState = false;
+                            GridList[e.RowIndex].TxCheckedState = false;
                             ucla.bSend = false;
 
                         }
                     }
                     if (e.ColumnIndex == 5 && e.RowIndex != -1) // Rx부분 체크박스 속성,   열이 4번째이고, 행이 1개 이상 있을때 조건 발생!
                     {
-                        if (gridview[e.RowIndex].RxCheckedState == false)
+                        if (GridList[e.RowIndex].RxCheckedState == false)
                         {
-                            gridview[e.RowIndex].RxCheckedState = true;
+                            GridList[e.RowIndex].RxCheckedState = true;
                             PortListGrid.Rows[e.RowIndex].Cells[5].Value = true;
                             
 
                         }
                         else
                         {
-                            gridview[e.RowIndex].RxCheckedState = false;
+                            GridList[e.RowIndex].RxCheckedState = false;
                             PortListGrid.Rows[e.RowIndex].Cells[5].Value = false;
 
                         }
@@ -1314,9 +1314,9 @@ namespace MultiTerminal
                 {
                     if (e.ColumnIndex == 4 && e.RowIndex != -1) // Tx부분 체크박스 속성,  열이 3번째이고, 행이 1개 이상 있을때 조건 발생!
                     {
-                        if (gridview[e.RowIndex].TxCheckedState == false)  // 그리드뷰의 현재 클릭 행, 번째의 그리드뷰 클래스안에 체크박스 속성 건드려버리기~
+                        if (GridList[e.RowIndex].TxCheckedState == false)  // 그리드뷰의 현재 클릭 행, 번째의 그리드뷰 클래스안에 체크박스 속성 건드려버리기~
                         {
-                            gridview[e.RowIndex].TxCheckedState = true;
+                            GridList[e.RowIndex].TxCheckedState = true;
                             if (userv.m_bSendList.ContainsKey(e.RowIndex) == false)
                             {
                                 userv.m_bSendList.Add(e.RowIndex, true);
@@ -1328,7 +1328,7 @@ namespace MultiTerminal
                         }
                         else
                         {
-                            gridview[e.RowIndex].TxCheckedState = false;
+                            GridList[e.RowIndex].TxCheckedState = false;
                             if (userv.m_bSendList.ContainsKey(e.RowIndex) == false)
                             {
                                 userv.m_bSendList.Add(e.RowIndex, false);
@@ -1342,14 +1342,14 @@ namespace MultiTerminal
                     }
                     if (e.ColumnIndex == 5 && e.RowIndex != -1) // Rx부분 체크박스 속성,   열이 4번째이고, 행이 1개 이상 있을때 조건 발생!
                     {
-                        if (gridview[e.RowIndex].RxCheckedState == false)
+                        if (GridList[e.RowIndex].RxCheckedState == false)
                         {
-                            gridview[e.RowIndex].RxCheckedState = true;
+                            GridList[e.RowIndex].RxCheckedState = true;
                                 userv.m_bRecv= true;
                         }
                         else
                         {
-                            gridview[e.RowIndex].RxCheckedState = false;
+                            GridList[e.RowIndex].RxCheckedState = false;
                             userv.m_bRecv = false;
                         }
                     }
@@ -1359,8 +1359,8 @@ namespace MultiTerminal
 
         private void button1_Click(object sender, EventArgs e)
         {
-            bool fuck1 = gridview[0].TxCheckedState;
-            bool fuck2 = gridview[0].RxCheckedState;
+            bool fuck1 = GridList[0].TxCheckedState;
+            bool fuck2 = GridList[0].RxCheckedState;
             MessageBox.Show(fuck1.ToString() + " " + fuck2.ToString());
         }
 
@@ -1385,7 +1385,7 @@ namespace MultiTerminal
                 e.RowIndex >= 0)
             {
                 int Selected_Grid_Num = e.RowIndex;
-                string Selected_Grid_Type = gridview[Selected_Grid_Num].Type;
+                string Selected_Grid_Type = GridList[Selected_Grid_Num].Type;
 
                 // 이곳이 바로 취소버튼을 누르면, 타입별로 연결 해제 하는 부분 ^오^
                 switch (Selected_Grid_Type)
@@ -1394,8 +1394,8 @@ namespace MultiTerminal
                         {
                             try
                             {
-                                serial[gridview[Selected_Grid_Num].Typenum].DisConSerial();   // 시리얼 연결 해제 ^-^
-                                MessageBox.Show(gridview[Selected_Grid_Num].Portname + "가 연결해제 되었습니다."); // ex: 0번 시리얼이 연결 해제되었습니다.
+                                serial[GridList[Selected_Grid_Num].Typenum].DisConSerial();   // 시리얼 연결 해제 ^-^
+                                MessageBox.Show(GridList[Selected_Grid_Num].Portname + "가 연결해제 되었습니다."); // ex: 0번 시리얼이 연결 해제되었습니다.
 
                             }
                             catch (Exception ex)
@@ -1419,12 +1419,12 @@ namespace MultiTerminal
                             if (userv != null && isServ == true)
                             {
                                 userv.DisConnect();   // 시리얼 연결 해제 ^-^
-                                MessageBox.Show(gridview[Selected_Grid_Num].Portname + "가 연결해제 되었습니다."); // ex: 0번 시리얼이 연결 해제되었습니다.
+                                MessageBox.Show(GridList[Selected_Grid_Num].Portname + "가 연결해제 되었습니다."); // ex: 0번 시리얼이 연결 해제되었습니다.
                             }
                             else if(ucla!=null && isServ == false)
                             {
                                 ucla.DisConnect();   // 시리얼 연결 해제 ^-^
-                                MessageBox.Show(gridview[Selected_Grid_Num].Portname + "가 연결해제 되었습니다."); // ex: 0번 시리얼이 연결 해제되었습니다.
+                                MessageBox.Show(GridList[Selected_Grid_Num].Portname + "가 연결해제 되었습니다."); // ex: 0번 시리얼이 연결 해제되었습니다.
                             }
 
                         }
@@ -1434,8 +1434,8 @@ namespace MultiTerminal
                 {
                     for (int i = Selected_Grid_Num + 1; i <= GridList.Count - 1; i++)
                     {
-                        gridview[i].MyNum = gridview[i].MyNum - 1;
-                        PortListGrid.Rows[i].Cells[0].Value = gridview[i].MyNum.ToString(); // 다이렉트로 순번을 수정함!
+                        GridList[i].MyNum = GridList[i].MyNum - 1;
+                        PortListGrid.Rows[i].Cells[0].Value = GridList[i].MyNum.ToString(); // 다이렉트로 순번을 수정함!
                     }
                 }
                 GridList.RemoveAt(Selected_Grid_Num);           // 자체 그리드 객체에서의 리스트 삭제
@@ -1455,8 +1455,8 @@ namespace MultiTerminal
             PortListGrid.Rows.Add(row);
             PortListGrid.Rows[num].Cells[4].Value = true;
             PortListGrid.Rows[num].Cells[5].Value = true;
-            gridview[RowIndex].RxCheckedState = true;
-            gridview[RowIndex].TxCheckedState = true;
+            gridview.RxCheckedState = true;
+            gridview.TxCheckedState = true;
         }
 
 

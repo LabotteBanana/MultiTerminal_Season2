@@ -48,15 +48,15 @@ namespace MultiTerminal
                 {
                     // 그리드뷰 객체에 적용,   타입형태(시리얼,UDP..), 타입의 순번도 그리드 객체로 슝들어감.    
 
-                    main.Invoke(new Action(() => main.gridview[main.GridList.Count] = new GridView(main.GridList.Count, port.ToString(), "UDPServer", main.GridList.Count)));
-                    main.Invoke(new Action(() => main.DrawGrid(main.gridview[main.GridList.Count].MyNum, main.gridview[main.GridList.Count].Type, main.gridview[main.GridList.Count].Portname, main.gridview[main.GridList.Count].Time)));
-                    main.Invoke(new Action(() => main.GridList.Add(main.gridview[main.GridList.Count])));
+                    main.Invoke(new Action(() => main.gridview = new GridView(main.GridList.Count, port.ToString(), "UDPServer", main.GridList.Count)));
+                    main.Invoke(new Action(() => main.DrawGrid(main.GridList[main.GridList.Count].MyNum, main.GridList[main.GridList.Count].Type, main.GridList[main.GridList.Count].Portname, main.GridList[main.GridList.Count].Time)));
+                 //   main.Invoke(new Action(() => main.GridList.Add(main.gridview)));
                 }
                 else
                 {
-                    main.gridview[main.GridList.Count] = new GridView(main.GridList.Count, port.ToString(), "UDPServer", main.GridList.Count);
-                    main.DrawGrid(main.gridview[main.GridList.Count].MyNum, main.gridview[main.GridList.Count].Type, main.gridview[main.GridList.Count].Portname, main.gridview[main.GridList.Count].Time);
-                    main.GridList.Add(main.gridview[main.GridList.Count]);
+                    main.gridview = new GridView(main.GridList.Count, port.ToString(), "UDPServer", main.GridList.Count);
+                    main.DrawGrid(main.GridList[main.GridList.Count].MyNum, main.GridList[main.GridList.Count].Type, main.GridList[main.GridList.Count].Portname, main.GridList[main.GridList.Count].Time);
+              //      main.GridList.Add(main.GridList[main.GridList.Count]);
                 }
 
             }
@@ -177,7 +177,7 @@ namespace MultiTerminal
                 main.PortListGrid.Update();
                 main.PortListGrid.Refresh();
 
-                main.GridList.Remove(main.gridview[main.RowIndex]);
+                main.GridList.Remove(main.GridList[main.RowIndex]);
 
                 client.Close();
             }
