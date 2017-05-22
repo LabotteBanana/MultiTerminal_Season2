@@ -17,6 +17,7 @@ namespace MultiTerminal
         // 연결 타입 정의 ^0^/
         enum TYPE { SERIAL = 0, TCP, UDP };
 
+
         public bool isServ = false;
         private TYPE connectType;
         public Tserv tserv = null;
@@ -35,7 +36,6 @@ namespace MultiTerminal
         // 시리얼 부분.
         public Serial[] serial = new Serial[99];    // 동적 배열 객체로 바꾸어야 한다... ㅎㅎㅎㅎ;
         public int Sport_Count = 0;
-        public int Udp_Count = 0;
         public int[] Serial_Send_Arr = new int[8];       // 시리얼 선택적 송신 체크 옵션
         public int[] Serial_Receive_Arr = new int[8];    // 시리얼 선택적 수신 체크 옵션
         private string[] SerialOpt = new string[6];
@@ -44,15 +44,18 @@ namespace MultiTerminal
         public System.Timers.Timer timer = null;
         Stopwatch sw = new Stopwatch();
         public static System.Timers.Timer mactimer = null;
+        public System.Timers.Timer aftertimer = null;
         private DateTime nowTime;
 
         // 다중 연결 리스트 부분
-        public GridView gridview = null;
-        public List<string> connetName = new List<string>();
+        private GridView[] gridview = new GridView[99];
+        private List<string> connetName = new List<string>();
 
         //리스트를 이용한 다중연결 관리
-        public List<GridView> GridList = new List<GridView>();
-        public int RowIndex=0,ColumnIndex=0;
+        private List<Serial> SerialList = new List<Serial>();
+        private List<GridView> GridList = new List<GridView>();
+
+
 
         public MainForm()
         {
@@ -87,12 +90,11 @@ namespace MultiTerminal
             {
                 if (userv != null)
                 {
-                    if (userv.m_isConnected == true)
-                        userv.RecvMessage();
-
+                    
                 }
                 if (ucla != null)
                 {
+                    if (ucla.client != null)
                         if (ucla.m_isConnected == true)
                             ucla.RecvMessage();
                 }
@@ -716,12 +718,15 @@ namespace MultiTerminal
 
             timer = new System.Timers.Timer();
             mactimer = new System.Timers.Timer();
+            aftertimer = new System.Timers.Timer();
             timer.Interval = 0.0001; // 1000==>1초 0.0001==>1000만분의1
             timer.Enabled = true;
             mactimer.Enabled = true;
             timer.AutoReset = true;
             mactimer.AutoReset = true;
 
+            aftertimer.Enabled = true;
+            aftertimer.AutoReset = true;
             timer.Elapsed += OnTimeEvent;
             timer.Elapsed += RecvEvent;
 
@@ -777,7 +782,8 @@ namespace MultiTerminal
                           {
                               this.Invoke(new Action(() =>
                               {
-                                  userv.SendMessage(SendBox1.Text);
+                                  byte[] send = Encoding.UTF8.GetBytes(SendBox1.Text);
+
                                   ReceiveWindowBox.AppendText("송신 : " + GetTimer() + SendBox1.Text + "\n");
                                   ReceiveWindowBox.SelectionStart = ReceiveWindowBox.Text.Length;
                                   ReceiveWindowBox.ScrollToCaret();
@@ -1161,6 +1167,18 @@ namespace MultiTerminal
 
         private void Udp_Connect_Click(object sender, EventArgs e)
         {
+            if (UServerCheck.Checked == true)
+            {
+                int port = Int32.Parse(UPortNumber.Text);
+                userv.Connect(this, port);
+
+            }
+            else
+            {
+                int port = Int32.Parse(UPortNumber.Text);
+                string ip = UIPNumber.Text;
+                ucla.Connect(this, ip, port);
+            }
 
         }
 
@@ -1244,118 +1262,35 @@ namespace MultiTerminal
         }
 
 
+
         // gridview 체크박스 관련 ^-^
         #region
         private void PortListGrid_CellValueChanged(object sender, DataGridViewCellEventArgs e) // 그리드뷰 체크박스 클릭 이벤트
         {
-
-            if (connectType == TYPE.SERIAL)
+            if (e.ColumnIndex == 4 && e.RowIndex != -1) // Tx부분 체크박스 속성,  열이 3번째이고, 행이 1개 이상 있을때 조건 발생!
             {
-                if (e.ColumnIndex == 4 && e.RowIndex != -1) // Tx부분 체크박스 속성,  열이 3번째이고, 행이 1개 이상 있을때 조건 발생!
-                {
-                    if (gridview[e.RowIndex].TxCheckedState == false)  // 그리드뷰의 현재 클릭 행, 번째의 그리드뷰 클래스안에 체크박스 속성 건드려버리기~
-                    { gridview[e.RowIndex].TxCheckedState = true; }
-                    else
-                    { gridview[e.RowIndex].TxCheckedState = false; }
-                }
+                if (gridview[e.RowIndex].TxCheckedState == false)  // 그리드뷰의 현재 클릭 행, 번째의 그리드뷰 클래스안에 체크박스 속성 건드려버리기~
+                { gridview[e.RowIndex].TxCheckedState = true; }
+                else
+                { gridview[e.RowIndex].TxCheckedState = false; }
+            }
 
-                if (e.ColumnIndex == 5 && e.RowIndex != -1) // Rx부분 체크박스 속성,   열이 4번째이고, 행이 1개 이상 있을때 조건 발생!
+            if (e.ColumnIndex == 5 && e.RowIndex != -1) // Rx부분 체크박스 속성,   열이 4번째이고, 행이 1개 이상 있을때 조건 발생!
+            {
+                if (gridview[e.RowIndex].RxCheckedState == false)
                 {
-                    if (gridview[e.RowIndex].RxCheckedState == false)
-                    {
-                        gridview[e.RowIndex].RxCheckedState = true;
-                        serial[gridview[e.RowIndex].Typenum].RxState = true;
-                    }
-                    else
-                    {
-                        gridview[e.RowIndex].RxCheckedState = false;
-                        serial[gridview[e.RowIndex].Typenum].RxState = false;
-                    }
+                    gridview[e.RowIndex].RxCheckedState = true;
+                    serial[gridview[e.RowIndex].Typenum].RxState = true;
+                }
+                else
+                {
+                    gridview[e.RowIndex].RxCheckedState = false;
+                    serial[gridview[e.RowIndex].Typenum].RxState = false;
                 }
             }
-            if (connectType == TYPE.UDP)
-            {
-                if(isServ == false && ucla !=null)
-                {
-                  
 
-                    if (e.ColumnIndex == 4 && e.RowIndex != -1) // Tx부분 체크박스 속성,  열이 3번째이고, 행이 1개 이상 있을때 조건 발생!
-                    {
-                        if (gridview[e.RowIndex].TxCheckedState == false)  // 그리드뷰의 현재 클릭 행, 번째의 그리드뷰 클래스안에 체크박스 속성 건드려버리기~
-                        {
-                            gridview[e.RowIndex].TxCheckedState = true;
-                            ucla.bSend = true;
-                        }
-                        else
-                        {
-                            gridview[e.RowIndex].TxCheckedState = false;
-                            ucla.bSend = false;
-
-                        }
-                    }
-                    if (e.ColumnIndex == 5 && e.RowIndex != -1) // Rx부분 체크박스 속성,   열이 4번째이고, 행이 1개 이상 있을때 조건 발생!
-                    {
-                        if (gridview[e.RowIndex].RxCheckedState == false)
-                        {
-                            gridview[e.RowIndex].RxCheckedState = true;
-                            PortListGrid.Rows[e.RowIndex].Cells[5].Value = true;
-                            
-
-                        }
-                        else
-                        {
-                            gridview[e.RowIndex].RxCheckedState = false;
-                            PortListGrid.Rows[e.RowIndex].Cells[5].Value = false;
-
-                        }
-                    }
-                }
-                else if (userv !=null & isServ == true)
-                {
-                    if (e.ColumnIndex == 4 && e.RowIndex != -1) // Tx부분 체크박스 속성,  열이 3번째이고, 행이 1개 이상 있을때 조건 발생!
-                    {
-                        if (gridview[e.RowIndex].TxCheckedState == false)  // 그리드뷰의 현재 클릭 행, 번째의 그리드뷰 클래스안에 체크박스 속성 건드려버리기~
-                        {
-                            gridview[e.RowIndex].TxCheckedState = true;
-                            if (userv.m_bSendList.ContainsKey(e.RowIndex) == false)
-                            {
-                                userv.m_bSendList.Add(e.RowIndex, true);
-                            }
-                            else
-                            {
-                                userv.m_bSendList[e.RowIndex] = true;
-                            }
-                        }
-                        else
-                        {
-                            gridview[e.RowIndex].TxCheckedState = false;
-                            if (userv.m_bSendList.ContainsKey(e.RowIndex) == false)
-                            {
-                                userv.m_bSendList.Add(e.RowIndex, false);
-                            }
-                            else
-                            {
-                                userv.m_bSendList[e.RowIndex] = false;
-
-                            }
-                        }
-                    }
-                    if (e.ColumnIndex == 5 && e.RowIndex != -1) // Rx부분 체크박스 속성,   열이 4번째이고, 행이 1개 이상 있을때 조건 발생!
-                    {
-                        if (gridview[e.RowIndex].RxCheckedState == false)
-                        {
-                            gridview[e.RowIndex].RxCheckedState = true;
-                                userv.m_bRecv= true;
-                        }
-                        else
-                        {
-                            gridview[e.RowIndex].RxCheckedState = false;
-                            userv.m_bRecv = false;
-                        }
-                    }
-                }
-            }
         }
+
 
         private void button1_Click(object sender, EventArgs e)
         {
@@ -1416,16 +1351,6 @@ namespace MultiTerminal
 
                     case "UDP":
                         {
-                            if (userv != null && isServ == true)
-                            {
-                                userv.DisConnect();   // 시리얼 연결 해제 ^-^
-                                MessageBox.Show(gridview[Selected_Grid_Num].Portname + "가 연결해제 되었습니다."); // ex: 0번 시리얼이 연결 해제되었습니다.
-                            }
-                            else if(ucla!=null && isServ == false)
-                            {
-                                ucla.DisConnect();   // 시리얼 연결 해제 ^-^
-                                MessageBox.Show(gridview[Selected_Grid_Num].Portname + "가 연결해제 되었습니다."); // ex: 0번 시리얼이 연결 해제되었습니다.
-                            }
 
                         }
                         break;
@@ -1449,14 +1374,10 @@ namespace MultiTerminal
             }
         }
 
-        public void DrawGrid(int num, string type, string name, string time)    // 그리드에 열 추가 ~~
+        private void DrawGrid(int num, string type, string name, string time)    // 그리드에 열 추가 ~~
         {
             string[] row = new string[] { num.ToString(), type, name, time };
             PortListGrid.Rows.Add(row);
-            PortListGrid.Rows[num].Cells[4].Value = true;
-            PortListGrid.Rows[num].Cells[5].Value = true;
-            gridview[RowIndex].RxCheckedState = true;
-            gridview[RowIndex].TxCheckedState = true;
         }
 
 
@@ -1506,47 +1427,6 @@ namespace MultiTerminal
             this.SendToBack();
             analysisForm aF = new analysisForm(ReceiveWindowBox);
             aF.Show();
-        }
-        //혹시나 필요하면 추가할것 (Error발생 제거)
-        private void PortListGrid_Click(object sender, EventArgs e)
-        {
-            if (PortListGrid.CurrentCell != null)
-            {
-                RowIndex = PortListGrid.CurrentCell.RowIndex;
-                ColumnIndex = PortListGrid.CurrentCell.ColumnIndex;
-            }
-        }
-
-        private void Udp_Btn_DisCon_Click(object sender, EventArgs e)
-        {
-            int port;
-            if (Udp_Btn_DisCon.Text == "연결")
-            {
-                if (UServerCheck.Checked == true && userv != null && isServ == true)
-                {
-                    port = Int32.Parse(UPortNumber.Text);
-                    userv.Connect(this, port);
-                }
-                else if(ucla != null && isServ == false)
-                {
-                    port = Int32.Parse(UPortNumber.Text);
-                    string ip = UIPNumber.Text;
-                    ucla.Connect(this, ip, port);
-                }
-                Udp_Btn_DisCon.Text = "연결해제";
-                return;
-            }
-            else if (Udp_Btn_DisCon.Text == "연결해제")
-            {
-                if (userv != null && isServ == true)
-                    userv.DisConnect();
-                else if (ucla != null && isServ == false)
-                {
-                    ucla.DisConnect();
-                }
-                Udp_Btn_DisCon.Text = "연결";
-                return;
-            }
         }
     }
 }
