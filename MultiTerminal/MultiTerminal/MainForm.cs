@@ -367,6 +367,10 @@ namespace MultiTerminal
         private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
         {
             Process currentProcess = Process.GetCurrentProcess();
+            if (tcla != null)
+                tcla.setExitClickedState(true);
+            if (tserv != null)
+                tserv.setExitClickedState(true);
             currentProcess.Kill();
         }
 
@@ -1373,7 +1377,7 @@ namespace MultiTerminal
             }
             if (tcla != null)
                 tcla.DisConnect();
-            Invoke(new Action(() =>
+            this.Invoke(new MethodInvoker(delegate()
             {
                 if(tcla != null)
                     Tcp_Btn_DisCon.Text = "연결";
@@ -1385,6 +1389,10 @@ namespace MultiTerminal
         #endregion
         private void Tcp_Btn_DisCon_Click(object sender, EventArgs e)
         {
+            if (tcla != null)
+                tcla.setExitClickedState(true);
+            if (tserv != null)
+                tserv.setExitClickedState(true);
             //comboBox5 -> IP, comboBox6 -> Port
             if (Tcp_Btn_DisCon.Text == "연결")
             {
@@ -1411,11 +1419,14 @@ namespace MultiTerminal
                 else if (tcla != null && isServ == false)
                 {
                     tcla.DisConnect();
+                    for (int i = 0; i < GridList.Count; i++)
+                    {
+                        if(GridList[i].Type =="TCP Server")
+                            fixGridListSequence(i);
+                    }
                 }
             }
             Tcp_Btn_DisCon.Text = "연결";
-            return;
-
         }
 
         //분석 폼 열기

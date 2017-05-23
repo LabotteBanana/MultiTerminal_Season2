@@ -108,7 +108,7 @@ namespace MultiTerminal
 
                     if (ex.ErrorCode == 10004)
                     {
-                        System.Windows.Forms.MessageBox.Show("소켓에러 " + lineNum + "에서 발생 \n Interrupted 펑션 콜");
+                        //System.Windows.Forms.MessageBox.Show("소켓에러 " + lineNum + "에서 발생 \n Interrupted 펑션 콜");
                         return;
                     }
 
@@ -226,7 +226,7 @@ namespace MultiTerminal
             try
             {
                 //수정 필요(for문에서 사용하는 m_clientCount. 0부터 순차적으로 사용되지 않는 경우가 있을 수 있음.
-                for (int i = 0; i < m_ClientList.Count; i++)
+                for (int i = 0; i < gridlist.Count; i++)
                 {
                     if (gridlist[i].Type == "TCP Client")
                     {
@@ -249,19 +249,21 @@ namespace MultiTerminal
                             }
                             if (m_ClientList[0] != null)
                             {
-                                decreaseTypeNum(0);
+                                decreaseTypeNum(i);
                                 m_ClientList[0].Shutdown(SocketShutdown.Both);
                                 m_ClientList[0].Disconnect(true);
                                 m_ClientList[0].Close();
                                 m_ClientList.RemoveAt(0);
                                 main.fixGridListSequence(i);
+                                setExitClickedState(true);
+                                i--;
                             }
                         }
                     }
                 }
                 m_isConncted = false;
-                server.Shutdown(SocketShutdown.Both);
-                server.Disconnect(true);
+                //server.Shutdown(SocketShutdown.Both);
+                //server.Disconnect(true);
                 server.Close();
             }
             catch (SocketException ex)
