@@ -1330,13 +1330,13 @@ namespace MultiTerminal
                             }
                         }
                         break;
-                    //server side
+
                     case "TCP Client":
                         {
                             tserv.ServerStop(GridList[Selected_Grid_Num].Typenum);
                         }   
                         break;
-                    //client side
+
                     case "TCP Server":
                         {
                             tcla.DisConnect();
@@ -1358,7 +1358,7 @@ namespace MultiTerminal
                 MessageBox.Show(prePortName + "가 연결해제 되었습니다."); // ex: 0번 시리얼이 연결 해제되었습니다.
             }
         }
-        //그리드 리스트 수정하는 부분
+
         public void fixGridListSequence(int Selected_Grid_Num)
         {
             if (GridList.Count > Selected_Grid_Num + 1)    // 이 부분이 바로 바뀐 순서번호, 고치는 부분~~~!
@@ -1382,7 +1382,6 @@ namespace MultiTerminal
             string[] row = new string[] { num.ToString(), type, name, time };
             PortListGrid.Rows.Add(row);
         }
-        //tcp에서 ip찾아 그리드뷰 수정하는 부분, 클라이언트 종료->서버 종료나 서버 종료->클라이언트 종료일 때 실행
         public void RemoveGridforIP(string ip) {
             int rowIndex = 0;
             foreach (DataGridViewRow row in PortListGrid.Rows)
@@ -1393,10 +1392,8 @@ namespace MultiTerminal
                     break;
                 }
             }
-            if (tserv != null)
-            {
+            if(tserv!=null)
                 tserv.ServerStop(GridList[rowIndex].Typenum);
-            }
             if (tcla != null)
                 tcla.DisConnect();
             if (userv != null)
@@ -1405,8 +1402,6 @@ namespace MultiTerminal
                 ucla.DisConnect();
             Invoke(new Action(() =>
             {
-                if(tcla != null)
-                    Tcp_Btn_DisCon.Text = "연결";
                 fixGridListSequence(rowIndex);
             }));
             MessageBox.Show(prePortName + "가 연결해제 되었습니다."); // ex: 0번 시리얼이 연결 해제되었습니다.
@@ -1447,9 +1442,7 @@ namespace MultiTerminal
                 if (tserv != null && isServ == true)
                     tserv.ServerStop();
                 else if (tcla != null && isServ == false)
-                {
                     tcla.DisConnect();
-                }
             }
             Tcp_Btn_DisCon.Text = "연결";
             return;
