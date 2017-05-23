@@ -54,7 +54,7 @@ namespace MultiTerminal
         //리스트를 이용한 다중연결 관리
         private List<Serial> SerialList = new List<Serial>();
         private List<GridView> GridList = new List<GridView>();
-        public int RowIndex = 0, ColumnIndex = 0;
+
         public string prePortName = null;
 
         public MainForm()
@@ -260,7 +260,6 @@ namespace MultiTerminal
         private void TCP_Tile_Click(object sender, EventArgs e)
         {
             OptionSelect(1);
-            isServ = false;
 
             this.UART_Tile.Style = MetroFramework.MetroColorStyle.Silver; // 클릭시 박스 색 변경
             this.TCP_Tile.Style = MetroFramework.MetroColorStyle.Pink;
@@ -751,7 +750,7 @@ namespace MultiTerminal
                           {
                               this.Invoke(new Action(() =>
                               {
-                                  userv.SendMessage(SendBox1.Text);
+                                  byte[] send = Encoding.UTF8.GetBytes(SendBox1.Text);
 
                                   ReceiveWindowBox.AppendText("송신 : " + GetTimer() + SendBox1.Text + "\n");
                                   ReceiveWindowBox.SelectionStart = ReceiveWindowBox.Text.Length;
@@ -1135,39 +1134,19 @@ namespace MultiTerminal
 
         private void Udp_Connect_Click(object sender, EventArgs e)
         {
-            if (Udp_Btn_Con.Text == "연결")
+            if (UServerCheck.Checked == true)
             {
-
-                if (UServerCheck.Checked == true)
-                {
-                    int port = Int32.Parse(UPortNumber.Text);
-                    userv.Connect(this, port, gridview, GridList);
-
-                }
-                else
-                {
-                    int port = Int32.Parse(UPortNumber.Text);
-                    string ip = UIPNumber.Text;
-                    ucla.Connect(this, ip, port, gridview, GridList);
-                }
-                Udp_Btn_Con.Text = "연결해제";
-                return;
-            }
-            else if(Udp_Btn_Con.Text == "연결해제")
-            {
-                if (UServerCheck.Checked == true)
-                {
-                    userv.DisConnect();
-
-                }
-                else
-                {
-                    ucla.DisConnect();
-                }
-                Udp_Btn_Con.Text = "연결";
-                return;
+                int port = Int32.Parse(UPortNumber.Text);
+                userv.Connect(this, port);
 
             }
+            else
+            {
+                int port = Int32.Parse(UPortNumber.Text);
+                string ip = UIPNumber.Text;
+                ucla.Connect(this, ip, port);
+            }
+
         }
 
         private void saveLog_Click(object sender, EventArgs e)
@@ -1330,35 +1309,30 @@ namespace MultiTerminal
                             }
                         }
                         break;
-
+                    //server side
                     case "TCP Client":
                         {
                             tserv.ServerStop(GridList[Selected_Grid_Num].Typenum);
                         }   
                         break;
-
+                    //client side
                     case "TCP Server":
                         {
                             tcla.DisConnect();
                             Tcp_Btn_DisCon.Text = "연결";
                         }
                         break;
-                    case "UDP Server":
+                    case "UDP":
                         {
-                            ucla.DisConnect();
-                            Udp_Btn_Con.Text = "연결";
+
                         }
                         break;
-                    case "UDP Client":
-                        {
-                            userv.DisConnect(GridList[Selected_Grid_Num].Typenum);
-                        }break;
                 }
                 fixGridListSequence(Selected_Grid_Num);
                 MessageBox.Show(prePortName + "가 연결해제 되었습니다."); // ex: 0번 시리얼이 연결 해제되었습니다.
             }
         }
-
+        //그리드 리스트 수정하는 부분
         public void fixGridListSequence(int Selected_Grid_Num)
         {
             if (GridList.Count > Selected_Grid_Num + 1)    // 이 부분이 바로 바뀐 순서번호, 고치는 부분~~~!
@@ -1382,6 +1356,7 @@ namespace MultiTerminal
             string[] row = new string[] { num.ToString(), type, name, time };
             PortListGrid.Rows.Add(row);
         }
+        //tcp에서 ip찾아 그리드뷰 수정하는 부분, 클라이언트 종료->서버 종료나 서버 종료->클라이언트 종료일 때 실행
         public void RemoveGridforIP(string ip) {
             int rowIndex = 0;
             foreach (DataGridViewRow row in PortListGrid.Rows)
@@ -1392,27 +1367,19 @@ namespace MultiTerminal
                     break;
                 }
             }
-            if(tserv!=null)
+            if (tserv != null)
+            {
                 tserv.ServerStop(GridList[rowIndex].Typenum);
+            }
             if (tcla != null)
                 tcla.DisConnect();
-            if (userv != null)
-                userv.DisConnect();
-            if (ucla != null)
-                ucla.DisConnect();
             Invoke(new Action(() =>
             {
+                if(tcla != null)
+                    Tcp_Btn_DisCon.Text = "연결";
                 fixGridListSequence(rowIndex);
             }));
             MessageBox.Show(prePortName + "가 연결해제 되었습니다."); // ex: 0번 시리얼이 연결 해제되었습니다.
-        }
-        private void PortListGrid_Click(object sender, EventArgs e)
-        {
-            if (PortListGrid.CurrentCell != null)
-            {
-                RowIndex = PortListGrid.CurrentCell.RowIndex;
-                ColumnIndex = PortListGrid.CurrentCell.ColumnIndex;
-            }
         }
 
         #endregion
@@ -1442,7 +1409,9 @@ namespace MultiTerminal
                 if (tserv != null && isServ == true)
                     tserv.ServerStop();
                 else if (tcla != null && isServ == false)
+                {
                     tcla.DisConnect();
+                }
             }
             Tcp_Btn_DisCon.Text = "연결";
             return;
