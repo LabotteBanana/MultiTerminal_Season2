@@ -31,7 +31,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.metroPanel1 = new MetroFramework.Controls.MetroPanel();
             this.button1 = new System.Windows.Forms.Button();
             this.panel5 = new System.Windows.Forms.Panel();
@@ -70,8 +70,8 @@
             this.Serial_Btn_Con = new System.Windows.Forms.Button();
             this.Serial_Btn_DisCon = new System.Windows.Forms.Button();
             this.UdpPanel = new System.Windows.Forms.Panel();
-            this.Udp_Btn_DisCon = new System.Windows.Forms.Button();
             this.Udp_Btn_Con = new System.Windows.Forms.Button();
+            this.Udp_Btn_Opt = new System.Windows.Forms.Button();
             this.UServerCheck = new System.Windows.Forms.CheckBox();
             this.UPortNumber = new System.Windows.Forms.ComboBox();
             this.UIPNumber = new System.Windows.Forms.ComboBox();
@@ -220,6 +220,7 @@
             this.PortListGrid.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.PortListGrid_CellValue);
             this.PortListGrid.CellMouseUp += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.PortListGrid_CellMouseUp);
             this.PortListGrid.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.PortListGrid_CellValueChanged);
+            this.PortListGrid.Click += new System.EventHandler(this.PortListGrid_Click);
             // 
             // Num
             // 
@@ -265,9 +266,9 @@
             // DisCon
             // 
             this.DisCon.DataPropertyName = "Discon";
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle1.NullValue = "dd";
-            this.DisCon.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle2.NullValue = "dd";
+            this.DisCon.DefaultCellStyle = dataGridViewCellStyle2;
             this.DisCon.HeaderText = "X";
             this.DisCon.Name = "DisCon";
             this.DisCon.Resizable = System.Windows.Forms.DataGridViewTriState.True;
@@ -545,8 +546,8 @@
             // 
             // UdpPanel
             // 
-            this.UdpPanel.Controls.Add(this.Udp_Btn_DisCon);
             this.UdpPanel.Controls.Add(this.Udp_Btn_Con);
+            this.UdpPanel.Controls.Add(this.Udp_Btn_Opt);
             this.UdpPanel.Controls.Add(this.UServerCheck);
             this.UdpPanel.Controls.Add(this.UPortNumber);
             this.UdpPanel.Controls.Add(this.UIPNumber);
@@ -561,24 +562,24 @@
             this.UdpPanel.TabIndex = 15;
             this.UdpPanel.Visible = false;
             // 
-            // Udp_Btn_DisCon
-            // 
-            this.Udp_Btn_DisCon.Location = new System.Drawing.Point(11, 222);
-            this.Udp_Btn_DisCon.Name = "Udp_Btn_DisCon";
-            this.Udp_Btn_DisCon.Size = new System.Drawing.Size(62, 23);
-            this.Udp_Btn_DisCon.TabIndex = 19;
-            this.Udp_Btn_DisCon.Text = "연결해제";
-            this.Udp_Btn_DisCon.UseVisualStyleBackColor = true;
-            // 
             // Udp_Btn_Con
             // 
-            this.Udp_Btn_Con.Location = new System.Drawing.Point(81, 222);
+            this.Udp_Btn_Con.Location = new System.Drawing.Point(11, 222);
             this.Udp_Btn_Con.Name = "Udp_Btn_Con";
             this.Udp_Btn_Con.Size = new System.Drawing.Size(62, 23);
-            this.Udp_Btn_Con.TabIndex = 18;
-            this.Udp_Btn_Con.Text = "옵션적용";
+            this.Udp_Btn_Con.TabIndex = 19;
+            this.Udp_Btn_Con.Text = "연결";
             this.Udp_Btn_Con.UseVisualStyleBackColor = true;
             this.Udp_Btn_Con.Click += new System.EventHandler(this.Udp_Connect_Click);
+            // 
+            // Udp_Btn_Opt
+            // 
+            this.Udp_Btn_Opt.Location = new System.Drawing.Point(81, 222);
+            this.Udp_Btn_Opt.Name = "Udp_Btn_Opt";
+            this.Udp_Btn_Opt.Size = new System.Drawing.Size(62, 23);
+            this.Udp_Btn_Opt.TabIndex = 18;
+            this.Udp_Btn_Opt.Text = "옵션적용";
+            this.Udp_Btn_Opt.UseVisualStyleBackColor = true;
             // 
             // UServerCheck
             // 
@@ -1157,7 +1158,7 @@
             // 
             // Btn_AEAS4
             // 
-            this.Btn_AEAS4.Font = new System.Drawing.Font("Gulim", 7F);
+            this.Btn_AEAS4.Font = new System.Drawing.Font("굴림", 7F);
             this.Btn_AEAS4.Location = new System.Drawing.Point(504, 112);
             this.Btn_AEAS4.Name = "Btn_AEAS4";
             this.Btn_AEAS4.Size = new System.Drawing.Size(31, 47);
@@ -1167,7 +1168,7 @@
             // 
             // Btn_AEAS3
             // 
-            this.Btn_AEAS3.Font = new System.Drawing.Font("Gulim", 7F);
+            this.Btn_AEAS3.Font = new System.Drawing.Font("굴림", 7F);
             this.Btn_AEAS3.Location = new System.Drawing.Point(504, 83);
             this.Btn_AEAS3.Name = "Btn_AEAS3";
             this.Btn_AEAS3.Size = new System.Drawing.Size(31, 25);
@@ -1177,7 +1178,7 @@
             // 
             // Btn_AEAS2
             // 
-            this.Btn_AEAS2.Font = new System.Drawing.Font("Gulim", 7F);
+            this.Btn_AEAS2.Font = new System.Drawing.Font("굴림", 7F);
             this.Btn_AEAS2.Location = new System.Drawing.Point(504, 53);
             this.Btn_AEAS2.Name = "Btn_AEAS2";
             this.Btn_AEAS2.Size = new System.Drawing.Size(31, 25);
@@ -1187,7 +1188,7 @@
             // 
             // Btn_AEAS1
             // 
-            this.Btn_AEAS1.Font = new System.Drawing.Font("Gulim", 7F);
+            this.Btn_AEAS1.Font = new System.Drawing.Font("굴림", 7F);
             this.Btn_AEAS1.Location = new System.Drawing.Point(504, 23);
             this.Btn_AEAS1.Name = "Btn_AEAS1";
             this.Btn_AEAS1.Size = new System.Drawing.Size(31, 25);
@@ -1468,8 +1469,8 @@
         private System.Windows.Forms.TextBox MacroCount;
         private System.Windows.Forms.CheckBox MacroCheck;
         private System.Windows.Forms.ComboBox PortNumber;
-        private System.Windows.Forms.Button Udp_Btn_DisCon;
         private System.Windows.Forms.Button Udp_Btn_Con;
+        private System.Windows.Forms.Button Udp_Btn_Opt;
         private System.Windows.Forms.Button Serial_Btn_F5;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.CheckBox Serial_select_CHK4;

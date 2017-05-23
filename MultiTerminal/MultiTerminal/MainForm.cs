@@ -29,7 +29,7 @@ namespace MultiTerminal
         public static Thread AcceptThread;
         public static Thread RecvThread;
         public delegate void TRecvCallBack();
-
+        public int RowIndex = 0, ColumnIndex = 0;
         // 체크박스 부분
         static public int Chk_Hexa_Flag = 0;
 
@@ -221,6 +221,15 @@ namespace MultiTerminal
             string now = null;
             now = "[" + nowTime.Hour + ":" + nowTime.Minute + ":" + nowTime.Second + ":" + nowTime.Millisecond + "]";
             return now;
+        }
+
+        private void PortListGrid_Click(object sender, EventArgs e)
+        {
+            if (PortListGrid.CurrentCell != null)
+            {
+                RowIndex = PortListGrid.CurrentCell.RowIndex;
+                ColumnIndex = PortListGrid.CurrentCell.ColumnIndex;
+            }
         }
 
 
@@ -750,7 +759,7 @@ namespace MultiTerminal
                           {
                               this.Invoke(new Action(() =>
                               {
-                                  byte[] send = Encoding.UTF8.GetBytes(SendBox1.Text);
+                                  userv.SendMessage(SendBox1.Text);
 
                                   ReceiveWindowBox.AppendText("송신 : " + GetTimer() + SendBox1.Text + "\n");
                                   ReceiveWindowBox.SelectionStart = ReceiveWindowBox.Text.Length;
@@ -1134,17 +1143,38 @@ namespace MultiTerminal
 
         private void Udp_Connect_Click(object sender, EventArgs e)
         {
-            if (UServerCheck.Checked == true)
+            if (Udp_Btn_Con.Text == "연결")
             {
-                int port = Int32.Parse(UPortNumber.Text);
-                userv.Connect(this, port);
 
+                if (UServerCheck.Checked == true)
+                {
+                    int port = Int32.Parse(UPortNumber.Text);
+                    userv.Connect(this, port, gridview, GridList);
+
+                }
+                else
+                {
+                    int port = Int32.Parse(UPortNumber.Text);
+                    string ip = UIPNumber.Text;
+                    ucla.Connect(this, ip, port, gridview, GridList);
+                }
+                Udp_Btn_Con.Text = "연결해제";
+                return;
             }
-            else
+            else if (Udp_Btn_Con.Text == "연결해제")
             {
-                int port = Int32.Parse(UPortNumber.Text);
-                string ip = UIPNumber.Text;
-                ucla.Connect(this, ip, port);
+                if (UServerCheck.Checked == true)
+                {
+                    userv.DisConnect();
+
+                }
+                else
+                {
+                    ucla.DisConnect();
+                }
+                Udp_Btn_Con.Text = "연결";
+                return;
+
             }
 
         }
