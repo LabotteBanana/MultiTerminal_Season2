@@ -7,48 +7,53 @@ using System.Net;
 using System.Net.Sockets;
 using System.Diagnostics;
 using System.Threading;
-
+using System.Collections;
 namespace MultiTerminal
 {
     public class udpServer
     {
         MainForm main = null;
-        private string nowPortSt;
-        private Dictionary<int, EndPoint> m_ClientEP = new Dictionary<int, EndPoint>();
-        //private int m_ClientCount;
-        public Socket server;
-        private IPEndPoint EP;
-        public int port;
-        public bool m_isConnected = false;
-        private static Thread th = null;
-        private List<string> m_PortList = new List<string>();
-        //public Dictionary<int, bool> m_bSendList = new Dictionary<int, bool>();
-        //public bool m_bRecv = true;
-        private GridView gridview = null;
-        private List<GridView> gridList = null;
+        public struct User
+        {
+            public EndPoint m_UserEP;
+            public string m_UserName;
+        }
+        public ArrayList m_ClientList = new ArrayList();
+        public byte[] datatStream = new byte[1024];
+        private delegate void UpdateStatusDelegate(string status);
+        private UpdateStatusDelegate updateStatusDelegate = null;
 
-        public void Connect(MainForm form, int Port, GridView Gridview, List<GridView> GridList)
+        //private IPEndPoint EP;
+        public Socket server;
+        private bool m_isConnected = false;
+        //private static Thread th = null;
+        byte[] data = new byte[1024];
+        //byte[] recv = new byte[1024];
+        //byte[] send = new byte[1024];
+        public void Connect(MainForm form,int Port)
         {
             try
             {
-                main = form;
-                EP = new IPEndPoint(IPAddress.Any, Port);
-                port = Port;
-                gridList = GridList;
-                gridview = Gridview;
-                server = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-                server.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, 1);
-                server.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Broadcast, 1);
-                server.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.DontRoute, 1);
+               main = form;
+               IPEndPoint serverEP = new IPEndPoint(IPAddress.Any, Port);
+               server = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
                 if (server.IsBound == false)
                 {
-                    server.Bind(EP);
+                    server.Bind(serverEP);
                 }
-                m_isConnected = true;
+                //this.updateStatusDelegate = new UpdateStatusDelegate(this.UpdateStatus);
 
-                th = new Thread(new ThreadStart(RecvMessage)); //상대 문자열 수신 쓰레드 가동
-                th.Start();
+                IPEndPoint client = new IPEndPoint(IPAddress.Any, 0);
+                EndPoint clientEP = (EndPoint)client;
 
+                //server.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, 1);
+                //server.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Broadcast, 1);
+                //server.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.DontRoute, 1);
+
+
+                //server.BeginReceiveFrom(datatStream, 0, datatStream.Length, SocketFlags.None, ref clientEP, new AsyncCallback(RecvMessage), clientEP);
+                //server.BeginSendTo(send, 0, send.Length, SocketFlags.None, clientEP, new AsyncCallback(SendMessage), clientEP);
+                //server.BeginReceiveFrom(recv, 0, recv.Length, SocketFlags.None, ref clientEP, new AsyncCallback(RecvMessage), null);
             }
             catch (SocketException ex)
             {
@@ -67,22 +72,9 @@ namespace MultiTerminal
             try
             {
                 byte[] data = new byte[1024];
-                data = Encoding.UTF8.GetBytes(sendMsg);
 
-                if (server != null)
-                {
-                    for (int i = 0; i < gridList.Count; i++)
-                    {
-                        //if (m_bSendList[i] == true)
-                        {
-                            server.SendTo(data, m_ClientEP[i]);
-                        }
-                    }
-                }
-                else
-                {
-                    return;
-                }
+                data = Encoding.Default.GetBytes(sendMsg);
+                //server.SendTo(data, data.Length, SocketFlags.None, EP);
             }
             catch (SocketException ex)
             {
@@ -97,115 +89,17 @@ namespace MultiTerminal
             }
 
         }
-        public void RecvMessage()
+
+        public void SendMessage(IAsyncResult asyncResult)
         {
             try
             {
-                while (m_isConnected)
-                {
-                    byte[] recv = new byte[1024];
-                    IPEndPoint Sender = new IPEndPoint(IPAddress.Any, 0);
-                    EndPoint remoteEP = Sender;
-
-                    if (server != null)
-                    {
-                        int recvi = server.ReceiveFrom(recv, ref remoteEP);
-                        //어느 클라이언트에서 보냈는지 판단 가능
-                        string recvMsg = Encoding.Default.GetString(recv);
-                        bool connectMsg = recvMsg.StartsWith("서버로 접속");
-                        bool disconnectMsg = recvMsg.StartsWith("서버로 해제");
-                        if (recvi > 0) //메시지 도달
-                        {
-                            m_isConnected = true;
-                            String ClientInfo = remoteEP.ToString();
-                            int StrStart = ClientInfo.IndexOf(':');
-                            String PortStr = ClientInfo.Substring(StrStart + 1); //접속해온 곳의 Port번호 확인
-                            nowPortSt = PortStr;
-
-                            if (connectMsg == true && recvi == 11)
-                            {
-                                ///추가
-                                //System.Windows.Forms.DataGridViewCheckBoxColumn udpRx = main.Rx;
-                                m_ClientEP.Add(gridList.Count, remoteEP);
-                                //m_bSendList.Add(gridList.Count, true);
-                                if (main.InvokeRequired)
-                                {
-                                    // 그리드뷰 객체에 적용,   타입형태(시리얼,UDP..), 타입의 순번도 그리드 객체로 슝들어감.
-                                    main.Invoke(new Action(() => gridview = new GridView(gridList.Count, PortStr.ToString(), "UDP Client", gridList.Count)));
-                                    main.Invoke(new Action(() => main.DrawGrid(gridview.MyNum, gridview.Type, gridview.Portname, gridview.Time)));
-                                    main.Invoke(new Action(() => gridList.Add(gridview)));
-                                    m_PortList.Add(PortStr.ToString());
-                                    //main.Invoke(new Action(() => udpRx.ReadOnly = true));
-                                }
-                                else
-                                {
-                                    gridview = new GridView(gridList.Count, PortStr.ToString(), "UDP Client", gridList.Count);
-                                    main.DrawGrid(gridview.MyNum, gridview.Type, gridview.Portname, gridview.Time);
-                                    gridList.Add(gridview);
-                                    m_PortList.Add(PortStr.ToString());
-
-                                    //udpRx.ReadOnly = true;
-                                }
-                            }
-                            if (disconnectMsg == true && recvi == 11)
-                            {
-                                for (int i = 0; i < m_PortList.Count; i++)
-                                {
-                                    if (PortStr == m_PortList[i])
-                                    {
-                                        m_ClientEP.Remove(i);
-                                        main.RemoveGridforIP(m_PortList[i]);
-                                    }
-                                }
-                            }
-                            if (main.RowIndex >= 0)
-                            {
-                                {
-                                    if (main.InvokeRequired)
-                                    {
-                                        main.Invoke(new Action(() => main.ReceiveWindowBox.Text += "수신 :" + main.GetTimer() + recvMsg + "\n"));
-                                        main.Invoke(new Action(() => main.ReceiveWindowBox.Text += "" + Environment.NewLine));
-                                        main.Invoke(new Action(() => main.ReceiveWindowBox.SelectionStart = main.ReceiveWindowBox.Text.Length));
-                                        main.Invoke(new Action(() => main.ReceiveWindowBox.ScrollToCaret()));
-                                    }
-                                    else
-                                    {
-                                        main.ReceiveWindowBox.Text += "수신 :" + main.GetTimer() + recvMsg + "\n";
-                                        main.ReceiveWindowBox.Text += "" + Environment.NewLine;
-                                        main.ReceiveWindowBox.SelectionStart = main.ReceiveWindowBox.Text.Length;
-                                        main.ReceiveWindowBox.ScrollToCaret();
-                                    }
-                                }
-                                //else
-                                //continue;
-                            }
-                        }
-                    }
-                }
-            }
+                server.EndSend(asyncResult);
+           }
             catch (SocketException ex)
             {
-                //클라이언트의 접속종료를 알게되는 시점 (보내봐야안다.)
-                if (ex.ErrorCode == 10054)
-                {
-                    System.Windows.Forms.MessageBox.Show(nowPortSt + "포트 클라이언트에서 연결을 종료했습니다.");
-
-                    //System.Windows.Forms.MessageBox.Show(m_DisConnectNum + "번 클라이언트에서 연결을 종료했습니다.");
-                    //m_ClientEP.Remove(m_DisConnectNum);
-                    //gridList.RemoveAt(m_DisConnectNum);
-
-                    //m_bSendList.Remove(m_DisConnectNum);
-                    //main.PortListGrid.Rows.RemoveAt(m_DisConnectNum);
-                    //main.PortListGrid.Update();
-                    //main.PortListGrid.Refresh();
-
-                    ///
-                }
-                else
-                {
-                    int lineNum = Convert.ToInt32(ex.StackTrace.Substring(ex.StackTrace.LastIndexOf(' ')));
-                    System.Windows.Forms.MessageBox.Show("소켓에러 " + lineNum + "에서 발생" + ex.Message);
-                }
+                int lineNum = Convert.ToInt32(ex.StackTrace.Substring(ex.StackTrace.LastIndexOf(' ')));
+                System.Windows.Forms.MessageBox.Show("소켓에러 " + lineNum + "에서 발생" + ex.Message);
             }
 
             catch (Exception ex)
@@ -213,44 +107,109 @@ namespace MultiTerminal
                 int lineNum = Convert.ToInt32(ex.StackTrace.Substring(ex.StackTrace.LastIndexOf(' ')));
                 System.Windows.Forms.MessageBox.Show("기타에러 " + lineNum + "에서 발생" + ex.Message);
             }
-        }
-        public void DisConnect(int i)
-        {
-            if (server != null)
-            {
-                IPEndPoint Sender = new IPEndPoint(IPAddress.Any, 0);
-                EndPoint remoteEP = (EndPoint)Sender;
-                String ClientInfo = remoteEP.ToString();
-                int StrStart = ClientInfo.IndexOf(':');
-                String PortStr = ClientInfo.Substring(StrStart + 1); //접속해온 곳의 Port번호 확인
-                if (PortStr == m_PortList[i])
-                {
-                    m_ClientEP.Remove(i);
-                    main.RemoveGridforIP(m_PortList[i]);
-                }
-            }
+
         }
 
+        //public void RecvMessage(IAsyncResult asyncResult)
+        //{
+        //    try
+        //    {
+        //        //byte[] data;
+
+        //        Packet ReceiveData = new Packet(this.datatStream);
+        //        if (main.InvokeRequired)
+        //        {
+        //            main.Invoke(new Action(delegate ()
+        //            {
+        //                data = Encoding.Default.GetBytes(main.SendBox1.Text);
+        //            }));
+        //        }
+        //        else
+        //        {
+        //            data = Encoding.Default.GetBytes(main.SendBox1.Text);
+        //        }
+        //        Packet SendData = new Packet(data);
+
+        //        IPEndPoint clients = new IPEndPoint(IPAddress.Any, 0);
+        //        EndPoint clientEP = (EndPoint)clients;
+        //        server.EndReceiveFrom(asyncResult, ref clientEP);
+        //        SendData.ChatName = ReceiveData.ChatName;
+
+
+        //        // Populate client object
+        //        User client = new User();
+        //        client.m_UserEP =clientEP;
+        //        client.m_UserName = ReceiveData.ChatName;
+
+        //        // Add client to list
+        //        this.m_ClientList.Add(client);
+
+        //        SendData.ChatMessage = string.Format("-- {0} is online --", ReceiveData.ChatName);
+
+        //            //case DataIdentifier.Logout:
+        //            //    // Remove current client from list
+        //            //    foreach (User c in this.m_ClientList)
+        //            //    {
+        //            //        if (c.m_UserEP.Equals(clientEP))
+        //            //        {
+        //            //            this.m_ClientList.Remove(c);
+        //            //            break;
+        //            //        }
+        //            //    }
+
+
+        //        data = SendData.GetDataStream();
+
+        //        foreach (User c in this.m_ClientList)
+        //        {
+        //            if (c.m_UserEP != clientEP)
+        //            {
+        //                // Broadcast to all logged on users
+        //                server.BeginSendTo(data, 0, data.Length, SocketFlags.None, c.m_UserEP, new AsyncCallback(this.SendMessage), c.m_UserEP);
+        //            }
+        //        }
+
+        //           server.BeginReceiveFrom(this.datatStream, 0, this.datatStream.Length, SocketFlags.None, ref clientEP, new AsyncCallback(RecvMessage), clientEP);
+        //        //if (main.InvokeRequired)
+        //        //    main.Invoke(this.updateStatusDelegate, new object[] { SendData.ChatMessage });
+
+        //        //if (data.Length == 0) return;
+        //        string recvMsg = Encoding.Default.GetString(data);
+        //        ///이부분 문제
+        //        if (main.InvokeRequired)
+        //        {
+        //            if (main.InvokeRequired)
+        //            {
+        //                main.Invoke(new Action(() => main.ReceiveWindowBox.AppendText("수신 :" + main.GetTimer() + recvMsg)));
+        //                main.Invoke(new Action(() => main.ReceiveWindowBox.AppendText("" + Environment.NewLine)));
+        //                main.ReceiveWindowBox.SelectionStart = main.ReceiveWindowBox.Text.Length;
+        //                main.ReceiveWindowBox.ScrollToCaret();
+
+        //            }
+        //            else
+        //            {
+        //                main.ReceiveWindowBox.AppendText("수신 : " + main.GetTimer() + recvMsg + "\n");
+        //                main.ReceiveWindowBox.SelectionStart = main.ReceiveWindowBox.Text.Length;
+        //                main.ReceiveWindowBox.ScrollToCaret();
+        //            }
+        //        }
+        //    }
+        //    catch (SocketException ex)
+        //    {
+        //        int lineNum = Convert.ToInt32(ex.StackTrace.Substring(ex.StackTrace.LastIndexOf(' ')));
+        //        System.Windows.Forms.MessageBox.Show("소켓에러 " + lineNum + "에서 발생" + ex.Message);
+        //    }
+
+        //    catch (Exception ex)
+        //    {
+        //        int lineNum = Convert.ToInt32(ex.StackTrace.Substring(ex.StackTrace.LastIndexOf(' ')));
+        //        System.Windows.Forms.MessageBox.Show("기타에러 " + lineNum + "에서 발생" + ex.Message);
+        //    }
+        //}
         public void DisConnect()
         {
-            if (server != null)
-            {
-                //int row;
-                //m_isConnected = false;
-                //string udpclient = "UDPClient";
-                ////그리드 리스트의 n번째 인덱스
-                //if (main.PortListGrid.Columns[2].ToString() == udpclient)
-                //{
-                //    row = main.PortListGrid.CurrentCell.RowIndex;
-                //    main.GridList.RemoveAt(row);
-                //    main.PortListGrid.Rows.RemoveAt(row);
-                //}
-                //main.PortListGrid.Update();
-                //main.PortListGrid.Refresh();
-
-                //main.RemoveGridforIP(Ip);
-                server.Close();
-            }
+            if(server!=null)
+            server.Close();
         }
         public bool isConnected()
         {
@@ -261,6 +220,26 @@ namespace MultiTerminal
             return m_isConnected;
         }
 
+        private void UpdateStatus(string status)
+        {
+            string recvMsg = Encoding.Default.GetString(data);
+
+            if (main.InvokeRequired)
+            {
+                main.Invoke(new Action(() => main.ReceiveWindowBox.AppendText("수신 :" + main.GetTimer() + recvMsg)));
+                main.Invoke(new Action(() => main.ReceiveWindowBox.AppendText("" + Environment.NewLine)));
+                main.ReceiveWindowBox.SelectionStart = main.ReceiveWindowBox.Text.Length;
+                main.ReceiveWindowBox.ScrollToCaret();
+
+            }
+            else
+            {
+                main.ReceiveWindowBox.AppendText("수신 : " + main.GetTimer() + recvMsg + "\n");
+                main.ReceiveWindowBox.SelectionStart = main.ReceiveWindowBox.Text.Length;
+                main.ReceiveWindowBox.ScrollToCaret();
+            }
+            Array.Clear(data, 0, data.Length);
+        }
 
     }
 }
