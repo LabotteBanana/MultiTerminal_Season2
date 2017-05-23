@@ -90,8 +90,8 @@ namespace MultiTerminal
             this.Typenum = typenum;
             this.portname = portname;
             this.time = System.DateTime.Now.ToString("HH:mm:ss");
-            this.txCheckedState = false;
-            this.rxCheckedState = false;
+            this.txCheckedState = true;
+            this.rxCheckedState = true;
         }
 
         public void Grid_DisCon_Button()

@@ -15,13 +15,12 @@ namespace MultiTerminal
         public SerialPort sPort = null;
         public string receivedata = null;   // 시리얼 데이터 받기위한 임시 전역 변수...
         public int MyNum;
-        public bool RxState;    // 수신 여부 상태... 나중에 그리드뷰에서 체크하면 트루로 바뀜.
+        public bool RxState = true;    // 수신 여부 상태... 나중에 그리드뷰에서 체크하면 트루로 바뀜.
         private MainForm realForm = null;
         private string portname = null;
 
         public Serial(MainForm realForm, string portname)
         {
-            RxState = false;
             this.realForm = realForm;
             this.portname = portname;
         }
