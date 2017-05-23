@@ -260,7 +260,6 @@ namespace MultiTerminal
         private void TCP_Tile_Click(object sender, EventArgs e)
         {
             OptionSelect(1);
-            isServ = false;
 
             this.UART_Tile.Style = MetroFramework.MetroColorStyle.Silver; // 클릭시 박스 색 변경
             this.TCP_Tile.Style = MetroFramework.MetroColorStyle.Pink;

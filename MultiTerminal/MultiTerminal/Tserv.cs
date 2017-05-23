@@ -226,7 +226,7 @@ namespace MultiTerminal
             try
             {
                 //수정 필요(for문에서 사용하는 m_clientCount. 0부터 순차적으로 사용되지 않는 경우가 있을 수 있음.
-                for (int i = 0; i < gridlist.Count; i++)
+                for (int i = 0; i < m_ClientList.Count; i++)
                 {
                     if (gridlist[i].Type == "TCP Client")
                     {
@@ -254,6 +254,7 @@ namespace MultiTerminal
                                 m_ClientList[0].Disconnect(true);
                                 m_ClientList[0].Close();
                                 m_ClientList.RemoveAt(0);
+                                main.fixGridListSequence(i);
                             }
                         }
                     }
