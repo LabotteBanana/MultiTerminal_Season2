@@ -106,60 +106,7 @@ namespace MultiTerminal
 
         private void OnMacro_1(Object soruce, System.Timers.ElapsedEventArgs e)
         {
-
             BattleGround_PlayMore(SendBox1.Text);
-            /*
-            if (connectType == TYPE.UDP)
-            {
-                try
-                {
-                    if (userv != null)
-                    {
-                        if (isServ == true)
-                        {
-                            SendThread = new Thread(new ThreadStart(delegate ()
-                            {
-                                this.Invoke(new Action(() =>
-                                {
-                                    userv.SendMessage(SendBox1.Text);
-
-                                    ReceiveWindowBox.AppendText("송신 : " + GetTimer() + SendBox1.Text + "\n");
-                                    this.ReceiveWindowBox.SelectionStart = ReceiveWindowBox.Text.Length;
-                                    this.ReceiveWindowBox.ScrollToCaret();
-                                }));
-                            }));
-                            SendThread.Start();
-
-                        }
-                    }
-                    if (ucla != null)
-                    {
-                        if (isServ == false)
-                        {
-                            SendThread = new Thread(new ThreadStart(delegate ()
-                            {
-                                this.Invoke(new Action(() =>
-                                {
-                                    ucla.SendMessage(SendBox1.Text);
-
-                                    ReceiveWindowBox.AppendText("송신 : " + GetTimer() + SendBox1.Text + "\n");
-                                    this.ReceiveWindowBox.SelectionStart = ReceiveWindowBox.Text.Length;
-                                    this.ReceiveWindowBox.ScrollToCaret();
-                                }));
-                            }));
-                            SendThread.Start();
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    int lineNum = Convert.ToInt32(ex.StackTrace.Substring(ex.StackTrace.LastIndexOf(' ')));
-                    MessageBox.Show("기타에러 " + lineNum + "에서 발생" + ex.Message);
-
-                }
-                
-            }
-            */
         }
         private void OnMacro_2(Object soruce, System.Timers.ElapsedEventArgs e)
         {
@@ -232,7 +179,7 @@ namespace MultiTerminal
             }
             else
             {
-                System.Windows.Forms.MessageBox.Show("반복주기 미입력 에러!!! -> ms 반복 주기를 입력해주세요 ^0^");
+                MessageBox.Show("반복주기 미입력 에러!!! -> ms 반복 주기를 입력해주세요 ^0^");
             }
         }
 
@@ -329,21 +276,13 @@ namespace MultiTerminal
                     macroThread.Start();
                 }
 
-        private void PortListGrid_Click(object sender, EventArgs e)
-        {
-            if (PortListGrid.CurrentCell != null)
-            {
-                RowIndex = PortListGrid.CurrentCell.RowIndex;
-                ColumnIndex = PortListGrid.CurrentCell.ColumnIndex;
-            }
-        }
 
                 else
                 {
                     MacroCheck_4.CheckState = CheckState.Unchecked;
                     sw.Stop();
                     mactimer.Enabled = false;
-                    mactimer.Elapsed -= OnMacro_4;
+                    mactimer.Elapsed -= OnMacro_3;
                     mactimer.Enabled = false;
 
                     //SendThread.Abort();
@@ -358,37 +297,39 @@ namespace MultiTerminal
             }
         }
 
+        private void PortListGrid_Click(object sender, EventArgs e)
+        {
+            if (PortListGrid.CurrentCell != null)
+            {
+                RowIndex = PortListGrid.CurrentCell.RowIndex;
+                ColumnIndex = PortListGrid.CurrentCell.ColumnIndex;
+            }
+        }
+
      
         private void BattleGround_PlayMore(string SendBox)  // Macro 보내기 전, 통신 방식 확인하고 보내기 위해서 >ㅁ<
         {
             int gridcount = PortListGrid.Rows.Count;    // 현재 그리드뷰 리스트의 갯수 가져옴
 
-            for (int i = 0; i <= gridcount; i++) //그리드뷰 리스트 처음부터 순회
+            for (int i = 0; i < gridcount; i++) //그리드뷰 리스트 처음부터 순회
             {
-                if (gridview[i].Type == "SERIAL" && gridview[i].TxCheckedState == true)    // 그리드뷰리스트의 타입이 시리얼, 그리고 송신 체크박스 상태가 체크되어있다면
+                if (GridList[i].Type == "SERIAL" && GridList[i].TxCheckedState == true)    // 그리드뷰리스트의 타입이 시리얼, 그리고 송신 체크박스 상태가 체크되어있다면
                 {
-                    serial[gridview[i].Typenum].SerialSend(SendBox);    // serial [그리드뷰 객체에 저장된 시리얼 타입 객체의 순번]
-                    ReceiveWindowBox.AppendText("송신 : " + GetTimer() + SendBox + "\n");
-                    ReceiveWindowBox.SelectionStart = ReceiveWindowBox.Text.Length;
-                    ReceiveWindowBox.ScrollToCaret();
+                    serial[GridList[i].Typenum].SerialSend(SendBox);    // serial [그리드뷰 객체에 저장된 시리얼 타입 객체의 순번]
                 }
-                if (gridview[i].Type == "TCP Client" && gridview[i].TxCheckedState == true
-                    && isServ == true && tserv.m_clientCount > 0)    // 서버 -> 클라이언트
+                if (GridList[i].Type == "TCP Client" && GridList[i].TxCheckedState == true
+                    && isServ == true && tserv.m_ClientList.Count > 0)    // 서버 -> 클라이언트
                 {
                     SendThread = new Thread(new ThreadStart(delegate ()
                     {
                         this.Invoke(new Action(() =>
                         {
                             tserv.SendMsg(SendBox);
-                            ReceiveWindowBox.AppendText("송신 : " + GetTimer() + SendBox + "\n");
-                            ReceiveWindowBox.SelectionStart = ReceiveWindowBox.Text.Length;
-                            ReceiveWindowBox.ScrollToCaret();
                         }));
                     }));
                     SendThread.Start();
-                    
                 }
-                if (gridview[i].Type == "TCP Server" && gridview[i].TxCheckedState == true
+                if (GridList[i].Type == "TCP Server" && GridList[i].TxCheckedState == true
                     && isServ == false && tcla.client.Connected == true) // 클라이언트 -> 서버
                 {
                     SendThread = new Thread(new ThreadStart(delegate ()
@@ -396,14 +337,17 @@ namespace MultiTerminal
                         this.Invoke(new Action(() =>
                         {
                             tcla.SendMsg(SendBox);
-                            ReceiveWindowBox.AppendText("송신 : " + GetTimer() + SendBox + "\n");
-                            this.ReceiveWindowBox.SelectionStart = ReceiveWindowBox.Text.Length;
-                            this.ReceiveWindowBox.ScrollToCaret();
                         }));
                     }));
                     SendThread.Start();
                 }
             }
+            this.Invoke(new Action(() =>
+            {
+                ReceiveWindowBox.AppendText("송신 : " + GetTimer() + SendBox + "\n");
+                ReceiveWindowBox.SelectionStart = ReceiveWindowBox.Text.Length;
+                ReceiveWindowBox.ScrollToCaret();
+            }));
         }
 
 
@@ -454,18 +398,6 @@ namespace MultiTerminal
 
                         TcpPanel.Visible = false;
                         UdpPanel.Visible = false;
-                        //Serial_Combo_Init();
-                        /*
-                        if (tserv != null)
-                            tserv.ServerStop();
-                        if (tcla != null)
-                            tcla.DisConnect();
-                        if (userv != null)
-                            userv.DisConnect();
-                        if (ucla != null)
-                            ucla.DisConnect();
-                            */
-
                     }
                     break;
                 case 1:
@@ -476,12 +408,6 @@ namespace MultiTerminal
 
                         SerialPanel.Visible = false;
                         UdpPanel.Visible = false;
-                        /*
-                        if (userv != null)
-                            userv.DisConnect();
-                        if (ucla != null)
-                            ucla.DisConnect();
-                            */
                     }
                     break;
                 case 2:
@@ -492,26 +418,6 @@ namespace MultiTerminal
 
                         SerialPanel.Visible = false;
                         TcpPanel.Visible = false;
-                        if (tserv != null)
-                            tserv.ServerStop();
-                        if (tcla != null)
-                            tcla.DisConnect();
-                    }
-                    break;
-                default:
-                    {
-                        SerialPanel.Visible = false;
-                        TcpPanel.Visible = false;
-                        UdpPanel.Visible = false;
-                        if (tserv != null)
-                            tserv.ServerStop();
-                        if (tcla != null)
-                            tcla.DisConnect();
-                        if (userv != null)
-                            userv.DisConnect();
-                        if (ucla != null)
-                            ucla.DisConnect();
-
                     }
                     break;
             }
@@ -519,16 +425,6 @@ namespace MultiTerminal
 
 
         #endregion
-
-        private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            Process currentProcess = Process.GetCurrentProcess();
-            if (tcla != null)
-                tcla.setExitClickedState(true);
-            if (tserv != null)
-                tserv.setExitClickedState(true);
-            currentProcess.Kill();
-        }
 
         #region 시리얼 설정 부분~!
         //시리얼 포트 초기화
@@ -843,46 +739,33 @@ namespace MultiTerminal
         {
             int gridcount = PortListGrid.Rows.Count;    // 현재 그리드뷰 리스트의 갯수 가져옴
 
-            for (int i = 0; i <= gridcount; i++) //그리드뷰 리스트 처음부터 순회
+            for (int i = 0; i < gridcount; i++) //그리드뷰 리스트 처음부터 순회
             {
-                if (gridview[i].Type == "SERIAL" && gridview[i].TxCheckedState == true)    // 그리드뷰리스트의 타입이 시리얼, 그리고 송신 체크박스 상태가 체크되어있다면
+                if (GridList[i].Type == "SERIAL" && GridList[i].TxCheckedState == true)    // 그리드뷰리스트의 타입이 시리얼, 그리고 송신 체크박스 상태가 체크되어있다면
                 {
-                    ReceiveWindowBox.AppendText("송신 : " + GetTimer() + SendBox + "\n");
-                    this.ReceiveWindowBox.SelectionStart = ReceiveWindowBox.Text.Length;
-                    this.ReceiveWindowBox.ScrollToCaret();
-                    serial[gridview[i].Typenum].SerialSend(SendBox);    // serial [그리드뷰 객체에 저장된 시리얼 타입 객체의 순번]
+                    serial[GridList[i].Typenum].SerialSend(SendBox);    // serial [그리드뷰 객체에 저장된 시리얼 타입 객체의 순번]
                 }
-                if (gridview[i].Type == "TCP Client" && gridview[i].TxCheckedState == true
-                    && isServ == true && tserv.m_clientCount > 0)    // 서버 -> 클라이언트
+                if (GridList[i].Type == "TCP Client" && GridList[i].TxCheckedState == true
+                    && isServ == true && tserv.m_ClientList.Count > 0)    // 서버 -> 클라이언트
                 {
-                    ReceiveWindowBox.AppendText("송신 : " + GetTimer() + SendBox + "\n");
-                    this.ReceiveWindowBox.SelectionStart = ReceiveWindowBox.Text.Length;
-                    this.ReceiveWindowBox.ScrollToCaret();
                     tserv.SendMsg(SendBox);
                 }
-                if (gridview[i].Type == "TCP Server" && gridview[i].TxCheckedState == true
+                if (GridList[i].Type == "TCP Server" && GridList[i].TxCheckedState == true
                     && isServ == false && tcla.client.Connected == true) // 클라이언트 -> 서버
                 {
-                    ReceiveWindowBox.AppendText("송신 : " + GetTimer() + SendBox + "\n");
-                    this.ReceiveWindowBox.SelectionStart = ReceiveWindowBox.Text.Length;
-                    this.ReceiveWindowBox.ScrollToCaret();
                     tcla.SendMsg(SendBox);
                 }
 
-                if (gridview[i].Type == "UDP" && gridview[i].TxCheckedState == true)    // 그리드뷰리스트의 타입이 시리얼, 그리고 송신 체크박스 상태가 체크되어있다면
+                if (GridList[i].Type == "UDP" && GridList[i].TxCheckedState == true)    // 그리드뷰리스트의 타입이 시리얼, 그리고 송신 체크박스 상태가 체크되어있다면
                 {
                     if (isServ == true)
                     {
                         SendThread = new Thread(new ThreadStart(delegate ()
                         {
-                            this.Invoke(new Action(() =>
-                            {
-                                byte[] send = Encoding.UTF8.GetBytes(SendBox);
-
-                                ReceiveWindowBox.AppendText("송신 : " + GetTimer() + SendBox + "\n");
-                                ReceiveWindowBox.SelectionStart = ReceiveWindowBox.Text.Length;
-                                ReceiveWindowBox.ScrollToCaret();
-                            }));
+                            //this.Invoke(new Action(() =>
+                            //{
+                                userv.SendMessage(SendBox);
+                            //}));
                         }));
                         SendThread.Start();
                     }
@@ -890,19 +773,22 @@ namespace MultiTerminal
                     {
                         SendThread = new Thread(new ThreadStart(delegate ()
                         {
-                            this.Invoke(new Action(() =>
-                            {
+                            //this.Invoke(new Action(() =>
+                            //{
                                 ucla.SendMessage(SendBox);
-                                ReceiveWindowBox.AppendText("송신 : " + GetTimer() + SendBox + "\n");
-                                ReceiveWindowBox.SelectionStart = ReceiveWindowBox.Text.Length;
-                                ReceiveWindowBox.ScrollToCaret();
-                            }));
+                            //}));
                         }));
                         SendThread.Start();
 
                     }
                 }
             }
+            this.Invoke(new Action(() =>
+            {
+                ReceiveWindowBox.AppendText("송신 : " + GetTimer() + SendBox + "\n");
+                this.ReceiveWindowBox.SelectionStart = ReceiveWindowBox.Text.Length;
+                this.ReceiveWindowBox.ScrollToCaret();
+            }));
         }
         private void Btn_Send1_Click(object sender, EventArgs e)
         {
@@ -968,6 +854,10 @@ namespace MultiTerminal
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
+            if (tcla != null)
+                tcla.setExitClickedState(true);
+            if (tserv != null)
+                tserv.setExitClickedState(true);
             if (tserv != null)
                 tserv.ServerStop();
             if (tcla != null)
@@ -986,7 +876,6 @@ namespace MultiTerminal
             {
                 UIPNumber.Enabled = false;
                 isServ = true;
-
             }
             else
             {
@@ -1119,66 +1008,7 @@ namespace MultiTerminal
         #region 그리드뷰 체크박스
         private void PortListGrid_CellValueChanged(object sender, DataGridViewCellEventArgs e) // 그리드뷰 체크박스 클릭 이벤트
         {
-            if (e.ColumnIndex == 4 && e.RowIndex != -1) // Tx부분 체크박스 속성,  열이 3번째이고, 행이 1개 이상 있을때 조건 발생!
-            {
-                if (GridList[e.RowIndex].TxCheckedState == false)  // 그리드뷰의 현재 클릭 행, 번째의 그리드뷰 클래스안에 체크박스 속성 건드려버리기~
-                { GridList[e.RowIndex].TxCheckedState = true; }
-                else
-                { GridList[e.RowIndex].TxCheckedState = false; }
-            }
 
-            if (e.ColumnIndex == 5 && e.RowIndex != -1) // Rx부분 체크박스 속성,   열이 4번째이고, 행이 1개 이상 있을때 조건 발생!
-            {
-                if (GridList[e.RowIndex].RxCheckedState == false)
-                {
-                    gridview[e.RowIndex].RxCheckedState = true;
-
-                    if (gridview[e.RowIndex].Type == "SERIAL")  // 시리얼일 경우
-                    {
-                        serial[gridview[e.RowIndex].Typenum].RxState = true;
-                    }
-                    if (gridview[e.RowIndex].Type == "TCP Server")  // 서버일 경우
-                    {
-                        tcla.RxState = true;
-                    }
-                    if (gridview[e.RowIndex].Type == "TCP Client")  // 클라이언트일 경우
-                    {
-                        tserv.RxState = true;
-                    }
-                }
-                    GridList[e.RowIndex].RxCheckedState = true;
-                    serial[GridList[e.RowIndex].Typenum].RxState = true;
-                }
-                else
-                {
-                    gridview[e.RowIndex].RxCheckedState = false;
-
-                    if (gridview[e.RowIndex].Type == "SERIAL")  // 시리얼일 경우
-                    {
-                        serial[gridview[e.RowIndex].Typenum].RxState = false;
-                    }
-                    if (gridview[e.RowIndex].Type == "TCP Server")  // 서버일 경우
-                    {
-                        tcla.RxState = false;
-                    }
-                    if (gridview[e.RowIndex].Type == "TCP Client")  // 클라이언트일 경우
-                    {
-                        tserv.RxState = false;
-                    }
-                }
-                    GridList[e.RowIndex].RxCheckedState = false;
-                    serial[GridList[e.RowIndex].Typenum].RxState = false;
-                }
-            }
-
-        }
-
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            bool fuck1 = GridList[0].TxCheckedState;
-            bool fuck2 = GridList[0].RxCheckedState;
-            MessageBox.Show(fuck1.ToString() + " " + fuck2.ToString());
         }
 
         private void PortListGrid_CellMouseUp(object sender, DataGridViewCellMouseEventArgs e)
@@ -1351,7 +1181,5 @@ namespace MultiTerminal
             analysisForm aF = new analysisForm(ReceiveWindowBox);
             aF.Show();
         }
-
-
     }
 }

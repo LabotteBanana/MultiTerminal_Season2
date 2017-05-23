@@ -35,6 +35,13 @@
             this.metroPanel1 = new MetroFramework.Controls.MetroPanel();
             this.panel5 = new System.Windows.Forms.Panel();
             this.PortListGrid = new System.Windows.Forms.DataGridView();
+            this.Num = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Type = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Port = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Time = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Tx = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.Rx = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.Discon = new System.Windows.Forms.DataGridViewButtonColumn();
             this.panel4 = new System.Windows.Forms.Panel();
             this.TcpPanel = new System.Windows.Forms.Panel();
             this.ServerCheck = new System.Windows.Forms.CheckBox();
@@ -106,13 +113,6 @@
             this.빈도분석ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.설정ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.Num = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Type = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Port = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Time = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Tx = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.Rx = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.Discon = new System.Windows.Forms.DataGridViewButtonColumn();
             this.metroPanel1.SuspendLayout();
             this.panel5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.PortListGrid)).BeginInit();
@@ -159,6 +159,7 @@
             // 
             // PortListGrid
             // 
+            this.PortListGrid.AllowUserToAddRows = false;
             this.PortListGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.PortListGrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Num,
@@ -176,6 +177,61 @@
             this.PortListGrid.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.PortListGrid_CellValue);
             this.PortListGrid.CellMouseUp += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.PortListGrid_CellMouseUp);
             this.PortListGrid.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.PortListGrid_CellValueChanged);
+            this.PortListGrid.Click += new System.EventHandler(this.PortListGrid_Click);
+            // 
+            // Num
+            // 
+            this.Num.HeaderText = "No";
+            this.Num.Name = "Num";
+            this.Num.ReadOnly = true;
+            this.Num.Width = 50;
+            // 
+            // Type
+            // 
+            this.Type.HeaderText = "Type";
+            this.Type.Name = "Type";
+            // 
+            // Port
+            // 
+            this.Port.HeaderText = "연결 이름";
+            this.Port.Name = "Port";
+            this.Port.ReadOnly = true;
+            this.Port.Width = 200;
+            // 
+            // Time
+            // 
+            this.Time.HeaderText = "Time";
+            this.Time.Name = "Time";
+            this.Time.ReadOnly = true;
+            // 
+            // Tx
+            // 
+            this.Tx.HeaderText = "Tx";
+            this.Tx.Name = "Tx";
+            this.Tx.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.Tx.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.Tx.Width = 50;
+            // 
+            // Rx
+            // 
+            this.Rx.HeaderText = "Rx";
+            this.Rx.Name = "Rx";
+            this.Rx.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.Rx.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.Rx.Width = 50;
+            // 
+            // Discon
+            // 
+            this.Discon.DataPropertyName = "Discon";
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle1.NullValue = "X";
+            this.Discon.DefaultCellStyle = dataGridViewCellStyle1;
+            this.Discon.HeaderText = "X";
+            this.Discon.Name = "Discon";
+            this.Discon.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.Discon.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.Discon.Text = "X";
+            this.Discon.Width = 50;
             // 
             // panel4
             // 
@@ -922,60 +978,6 @@
             // 
             this.contextMenuStrip1.Name = "contextMenuStrip1";
             this.contextMenuStrip1.Size = new System.Drawing.Size(61, 4);
-            // 
-            // Num
-            // 
-            this.Num.HeaderText = "No";
-            this.Num.Name = "Num";
-            this.Num.ReadOnly = true;
-            this.Num.Width = 50;
-            // 
-            // Type
-            // 
-            this.Type.HeaderText = "Type";
-            this.Type.Name = "Type";
-            // 
-            // Port
-            // 
-            this.Port.HeaderText = "연결 이름";
-            this.Port.Name = "Port";
-            this.Port.ReadOnly = true;
-            this.Port.Width = 200;
-            // 
-            // Time
-            // 
-            this.Time.HeaderText = "Time";
-            this.Time.Name = "Time";
-            this.Time.ReadOnly = true;
-            // 
-            // Tx
-            // 
-            this.Tx.HeaderText = "Tx";
-            this.Tx.Name = "Tx";
-            this.Tx.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.Tx.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            this.Tx.Width = 50;
-            // 
-            // Rx
-            // 
-            this.Rx.HeaderText = "Rx";
-            this.Rx.Name = "Rx";
-            this.Rx.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.Rx.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            this.Rx.Width = 50;
-            // 
-            // Discon
-            // 
-            this.Discon.DataPropertyName = "Discon";
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle1.NullValue = "X";
-            this.Discon.DefaultCellStyle = dataGridViewCellStyle1;
-            this.Discon.HeaderText = "X";
-            this.Discon.Name = "Discon";
-            this.Discon.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.Discon.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            this.Discon.Text = "X";
-            this.Discon.Width = 50;
             // 
             // MainForm
             // 

@@ -33,6 +33,9 @@ namespace MultiTerminal
         public List< Socket> m_ClientList = new List< Socket>();
         public bool exitClickedState = false;
 
+        //수신 체크박스 변수
+        public bool RxState = true;
+
         public Tserv(MainForm Main,int Port, GridView GridView, List<GridView> GridList) //서버로 만들때
         {
             main = Main;
@@ -450,35 +453,38 @@ namespace MultiTerminal
                     }
                     while (client.Connected)
                     {
-                        NetworkStream ns = new NetworkStream(client);
-                        StreamReader sr = new StreamReader(ns);
-                        StreamWriter sw = new StreamWriter(ns);
-                        string msg = sr.ReadLine();
-                        //임시조치.. 서버에서 disconnect하면 client로 null값이 계속 도는데 그거 처리하는 부분
-                        if (msg == null)
+                        if (RxState == true)
                         {
-                            if (exitClickedState)
+                            NetworkStream ns = new NetworkStream(client);
+                            StreamReader sr = new StreamReader(ns);
+                            StreamWriter sw = new StreamWriter(ns);
+                            string msg = sr.ReadLine();
+                            //임시조치.. 서버에서 disconnect하면 client로 null값이 계속 도는데 그거 처리하는 부분
+                            if (msg == null)
                             {
-                                exitClickedState = false;
+                                if (exitClickedState)
+                                {
+                                    exitClickedState = false;
+                                    break;
+                                }
+                                main.RemoveGridforIP(ip);
                                 break;
                             }
-                            main.RemoveGridforIP(ip);
-                            break;
-                        }
-                        if (main.InvokeRequired)
-                        {
-                            main.Invoke(new Action(() =>
+                            if (main.InvokeRequired)
+                            {
+                                main.Invoke(new Action(() =>
+                                {
+                                    main.ReceiveWindowBox.AppendText("수신{" + ip + "}" + main.GetTimer() + msg + "\n");
+                                    main.ReceiveWindowBox.SelectionStart = main.ReceiveWindowBox.Text.Length;
+                                    main.ReceiveWindowBox.ScrollToCaret();
+                                }));
+                            }
+                            else
                             {
                                 main.ReceiveWindowBox.AppendText("수신{" + ip + "}" + main.GetTimer() + msg + "\n");
                                 main.ReceiveWindowBox.SelectionStart = main.ReceiveWindowBox.Text.Length;
                                 main.ReceiveWindowBox.ScrollToCaret();
-                            }));
-                        }
-                        else
-                        {
-                            main.ReceiveWindowBox.AppendText("수신{" + ip + "}" + main.GetTimer() + msg + "\n");
-                            main.ReceiveWindowBox.SelectionStart = main.ReceiveWindowBox.Text.Length;
-                            main.ReceiveWindowBox.ScrollToCaret();
+                            }
                         }
                     }
                 }
@@ -490,47 +496,39 @@ namespace MultiTerminal
                     m_isConncted = true;
                     while (m_ClientList[uniqueClientNum].Connected)
                     {
-                        string msg = m_sr[uniqueClientNum].ReadLine();
-
-                        //임시조치..
-                        if (msg == null)
+                        if (RxState == true)
                         {
-                            if (exitClickedState)
+                            string msg = m_sr[uniqueClientNum].ReadLine();
+
+                            //임시조치..
+                            if (msg == null)
                             {
-                                exitClickedState = false;
+                                if (exitClickedState)
+                                {
+                                    exitClickedState = false;
+                                    break;
+                                }
+                                main.RemoveGridforIP(m_ipList[uniqueClientNum]);
                                 break;
                             }
-                            main.RemoveGridforIP(m_ipList[uniqueClientNum]);
-                            break;
-                        }
-                        if (main.InvokeRequired)
-                        {
-                            ///비정상 종료시 계속 되는이유
-                            main.Invoke(new Action(() =>
+                            if (main.InvokeRequired)
+                            {
+                                ///비정상 종료시 계속 되는이유
+                                main.Invoke(new Action(() =>
+                                {
+                                    main.ReceiveWindowBox.AppendText("수신{" + m_ipList[uniqueClientNum] + "}" + main.GetTimer() + msg + "\n");
+                                    main.ReceiveWindowBox.SelectionStart = main.ReceiveWindowBox.Text.Length;
+                                    main.ReceiveWindowBox.ScrollToCaret();
+                                }));
+                            }
+                            else
                             {
                                 main.ReceiveWindowBox.AppendText("수신{" + m_ipList[uniqueClientNum] + "}" + main.GetTimer() + msg + "\n");
                                 main.ReceiveWindowBox.SelectionStart = main.ReceiveWindowBox.Text.Length;
                                 main.ReceiveWindowBox.ScrollToCaret();
-                            }));
+                            }
                         }
-                        else
-                        {
-                            main.ReceiveWindowBox.AppendText("수신{" + m_ipList[uniqueClientNum] + "}" + main.GetTimer() + msg + "\n");
-                            main.ReceiveWindowBox.SelectionStart = main.ReceiveWindowBox.Text.Length;
-                            main.ReceiveWindowBox.ScrollToCaret();
-                        }
-                    }/*
-                    //클라이언트 종료감지
-                    if (m_ClientList[uniqueClientNum].Connected == false)
-                    {
-                        m_ns.Remove(uniqueClientNum);
-                        m_sr.Remove(uniqueClientNum);
-                        m_sw.Remove(uniqueClientNum);
-                        m_ipList.Remove(uniqueClientNum);
-                        m_ClientList[uniqueClientNum].Shutdown(SocketShutdown.Both);
-                        m_ClientList[uniqueClientNum].Disconnect(true);
-                        m_ClientList.Remove(uniqueClientNum);
-                    }*/
+                    }
                 }
             }
             catch (SocketException ex)
