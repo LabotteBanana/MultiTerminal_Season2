@@ -160,22 +160,25 @@ namespace MultiTerminal
                             }
                             if (main.RowIndex >= 0)
                             {
+                                string buf = null;
+                                buf = "수신 :" + main.GetTimer() + recvMsg + "\n" + "" + Environment.NewLine;
+                                myQueue.enqueue(buf);
+                                /*
+                                if (main.InvokeRequired)
                                 {
-                                    if (main.InvokeRequired)
-                                    {
-                                        main.Invoke(new Action(() => main.ReceiveWindowBox.Text += "수신 :" + main.GetTimer() + recvMsg + "\n"));
-                                        main.Invoke(new Action(() => main.ReceiveWindowBox.Text += "" + Environment.NewLine));
-                                        main.Invoke(new Action(() => main.ReceiveWindowBox.SelectionStart = main.ReceiveWindowBox.Text.Length));
-                                        main.Invoke(new Action(() => main.ReceiveWindowBox.ScrollToCaret()));
-                                    }
-                                    else
-                                    {
-                                        main.ReceiveWindowBox.Text += "수신 :" + main.GetTimer() + recvMsg + "\n";
-                                        main.ReceiveWindowBox.Text += "" + Environment.NewLine;
-                                        main.ReceiveWindowBox.SelectionStart = main.ReceiveWindowBox.Text.Length;
-                                        main.ReceiveWindowBox.ScrollToCaret();
-                                    }
+                                    main.Invoke(new Action(() => main.ReceiveWindowBox.Text += "수신 :" + main.GetTimer() + recvMsg + "\n"));
+                                    main.Invoke(new Action(() => main.ReceiveWindowBox.Text += "" + Environment.NewLine));
+                                    main.Invoke(new Action(() => main.ReceiveWindowBox.SelectionStart = main.ReceiveWindowBox.Text.Length));
+                                    main.Invoke(new Action(() => main.ReceiveWindowBox.ScrollToCaret()));
                                 }
+                                else
+                                {
+                                    main.ReceiveWindowBox.Text += "수신 :" + main.GetTimer() + recvMsg + "\n";
+                                    main.ReceiveWindowBox.Text += "" + Environment.NewLine;
+                                    main.ReceiveWindowBox.SelectionStart = main.ReceiveWindowBox.Text.Length;
+                                    main.ReceiveWindowBox.ScrollToCaret();
+                                }
+                                */
                                 //else
                                 //continue;
                             }

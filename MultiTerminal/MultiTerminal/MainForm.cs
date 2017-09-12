@@ -57,6 +57,8 @@ namespace MultiTerminal
 
         public string prePortName = null;
 
+        System.Threading.Timer viewTimer;
+
         public MainForm()
         {
             InitializeComponent();
@@ -73,8 +75,10 @@ namespace MultiTerminal
                 this.Invoke(new Action(() =>
                 {
                     Serial_Combo_Init();
+                    myQueue.Initialize(this,ReceiveWindowBox);
                 }));
             }));
+            viewTimer = new System.Threading.Timer(myQueue.viewwindow, null, 1000, 20);
             thread.Start();
         }
 

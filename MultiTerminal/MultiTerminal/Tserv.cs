@@ -470,6 +470,10 @@ namespace MultiTerminal
                                 main.RemoveGridforIP(ip);
                                 break;
                             }
+                            string buf = null;
+                            buf = "수신{" + ip + "}" + main.GetTimer() + msg + "\n";
+                            myQueue.enqueue(buf);
+                            /*
                             if (main.InvokeRequired)
                             {
                                 main.Invoke(new Action(() =>
@@ -485,6 +489,7 @@ namespace MultiTerminal
                                 main.ReceiveWindowBox.SelectionStart = main.ReceiveWindowBox.Text.Length;
                                 main.ReceiveWindowBox.ScrollToCaret();
                             }
+                            */
                         }
                     }
                 }
@@ -511,6 +516,10 @@ namespace MultiTerminal
                                 main.RemoveGridforIP(m_ipList[uniqueClientNum]);
                                 break;
                             }
+                            string buf = null;
+                            buf = "수신{" + ip + "}" + main.GetTimer() + msg + "\n";
+                            myQueue.enqueue(buf);
+                            /*
                             if (main.InvokeRequired)
                             {
                                 ///비정상 종료시 계속 되는이유
@@ -527,6 +536,7 @@ namespace MultiTerminal
                                 main.ReceiveWindowBox.SelectionStart = main.ReceiveWindowBox.Text.Length;
                                 main.ReceiveWindowBox.ScrollToCaret();
                             }
+                            */
                         }
                     }
                 }

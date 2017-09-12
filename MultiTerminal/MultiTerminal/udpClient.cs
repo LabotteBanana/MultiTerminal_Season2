@@ -103,15 +103,19 @@ namespace MultiTerminal
                             //{
                             if (recvi > 0)
                             {
+                                string buf = null;
                                 m_isConnected = true;
-                                if (main.InvokeRequired)
-                                {
-                                    main.Invoke(new Action(() => main.ReceiveWindowBox.Text += "수신 :" + main.GetTimer() + recvMsg + "\n"));
-                                    main.Invoke(new Action(() => main.ReceiveWindowBox.Text += "" + Environment.NewLine));
-                                    main.Invoke(new Action(() => main.ReceiveWindowBox.SelectionStart = main.ReceiveWindowBox.Text.Length));
-                                    main.Invoke(new Action(() => main.ReceiveWindowBox.ScrollToCaret()));
-                                }
-                                else
+                                buf = "수신 :" + main.GetTimer() + recvMsg + "\n" + "" + Environment.NewLine;
+                                myQueue.enqueue(buf);
+                                /*
+                                 if (main.InvokeRequired)
+                                 {
+                                     main.Invoke(new Action(() => main.ReceiveWindowBox.Text += "수신 :" + main.GetTimer() + recvMsg + "\n"));
+                                     main.Invoke(new Action(() => main.ReceiveWindowBox.Text += "" + Environment.NewLine));
+                                     main.Invoke(new Action(() => main.ReceiveWindowBox.SelectionStart = main.ReceiveWindowBox.Text.Length));
+                                     main.Invoke(new Action(() => main.ReceiveWindowBox.ScrollToCaret()));
+                                 }
+                                 else
                                 {
                                     main.ReceiveWindowBox.Text += "수신 :" + main.GetTimer() + recvMsg + "\n";
                                     main.ReceiveWindowBox.Text += "" + Environment.NewLine;
@@ -119,6 +123,7 @@ namespace MultiTerminal
                                     main.ReceiveWindowBox.ScrollToCaret();
                                 }
                                 return;
+                                */
                             }
                             //}
                             //else if (result == "False")

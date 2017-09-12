@@ -161,9 +161,14 @@ namespace MultiTerminal
                     else
                     { Global.globalVar = Encoding.UTF8.GetString(buff); }
 
+                    string buf = null;
+                    buf = "수신{" + portname + "} : " + realForm.GetTimer() + Global.globalVar + "\n";
+                    myQueue.enqueue(buf);
+                    /*
                     realForm.ReceiveWindowBox.AppendText("수신{" + portname + "} : " + realForm.GetTimer() + Global.globalVar + "\n");
                     realForm.ReceiveWindowBox.SelectionStart = realForm.ReceiveWindowBox.Text.Length;
                     realForm.ReceiveWindowBox.ScrollToCaret();
+                    */
                 }
             }
         }
