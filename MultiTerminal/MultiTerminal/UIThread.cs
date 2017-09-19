@@ -45,7 +45,7 @@ namespace MultiTerminal
     {
         private static List<string> nodes = new List<string>();
         private static int front = 0, rear = 0;
-        private static int MAX_QUEUE = 10000;
+        private static int MAX_QUEUE = 100;
 
         public static int Capacity { get { return MAX_QUEUE; } }
         public static int Front { get { return front; } }
@@ -72,15 +72,17 @@ namespace MultiTerminal
             
             if (IsFull)
             {
+                /*
                 if (front < rear) {
                     rear = 1;
                     front = 2;
                 }
                 else
                 {
-                    rear++; front++;
+                    front++;
                 }
-
+                */
+                return;
             }
 
             int position = 0;
@@ -89,7 +91,7 @@ namespace MultiTerminal
             if (rear == MAX_QUEUE)
             {
                 // 후방의 index를 0으로 초기화(순환 큐이므로 계속 돌아온다.)
-                rear = 1;
+                rear = 0;
                 position = 0;
             }
             else // 그렇지 않다면 그대로 증가
@@ -146,7 +148,7 @@ namespace MultiTerminal
             {
                 // 전방 index가 후방 index보다 앞에 위치해 있다면
                 if (front < rear)
-                    return (rear - front) == MAX_QUEUE;
+                    return (rear - front) + 1 == MAX_QUEUE;
                 else
                     return (rear + 1) == front;
             }
@@ -157,7 +159,9 @@ namespace MultiTerminal
             {
                 MyForm.Invoke(new Action(() =>
                 {
-                    Rtb.AppendText(dequeue());
+                    string buf = dequeue();
+                    if (buf == null) return;
+                    Rtb.AppendText(buf);
                     Rtb.SelectionStart = Rtb.Text.Length;
                     Rtb.ScrollToCaret();
                 }));

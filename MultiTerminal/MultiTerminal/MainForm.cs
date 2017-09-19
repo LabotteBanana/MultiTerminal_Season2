@@ -78,12 +78,13 @@ namespace MultiTerminal
                     myQueue.Initialize(this,ReceiveWindowBox);
                 }));
             }));
+            //큐를 1초 후에 20ms마다 실행한다.
             viewTimer = new System.Threading.Timer(myQueue.viewwindow, null, 1000, 20);
+
             thread.Start();
         }
 
         #region 매크로 기능
-
 
 
         private void OnTimeEvent(Object source, System.Timers.ElapsedEventArgs e)
